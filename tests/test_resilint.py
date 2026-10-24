@@ -586,3 +586,41 @@ def test_cell_plain_values_untouched():
     from resilint.roi import _cell
     assert _cell("Example Co") == "Example Co"
     assert _cell(4.0) == "4"
+
+
+# --- v0.4: export hardening ---
+
+def test_cell_keeps_original_text_when_safe_or_prefixed():
+    from resilint.roi import _cell
+    assert _cell("Ｅｘａｍｐｌｅ Ｃｏ") == "Ｅｘａｍｐｌｅ Ｃｏ"
+    assert _cell("ﬁnance") == "ﬁnance"
+    assert _cell("＝1+1") == "'＝1+1"
+
+
+def test_export_force_validates_all_targets_before_writing(tmp_path):
+    from resilint.roi import export
+    reg = load("examples/vendors.yaml")
+    names = list(export(reg))
+    out = tmp_path / "roi"
+    out.mkdir()
+    for n in names[:-1]:
+        (out / n).write_text("old")
+    victim = tmp_path / "victim.txt"
+    victim.write_text("keep")
+    (out / names[-1]).symlink_to(victim)
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(out), "--force"]) == 2
+    assert victim.read_text() == "keep"
+    assert all((out / n).read_text() == "old" for n in names[:-1])
+
+
+def test_export_force_refuses_input_as_target_before_writing(tmp_path):
+    from resilint.roi import export
+    names = list(export(load("examples/vendors.yaml")))
+    out = tmp_path / "roi"
+    out.mkdir()
+    for n in names[:-1]:
+        (out / n).write_text("old")
+    reg = out / names[-1]
+    reg.write_bytes(Path("examples/vendors.yaml").read_bytes())
+    assert main(["export-roi", str(reg), "--out-dir", str(out), "--force"]) == 2
+    assert all((out / n).read_text() == "old" for n in names[:-1])

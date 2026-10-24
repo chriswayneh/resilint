@@ -23,8 +23,9 @@ def _cell(value) -> str:
         return "true" if value else "false"
     if isinstance(value, float):
         value = f"{value:g}"
-    s = unicodedata.normalize("NFKC", str(value))
-    if s.lstrip(" \t\r\n\u3000").startswith(_UNSAFE) or s[:1] in ("\t", "\r", "\n"):
+    s = str(value)
+    probe = unicodedata.normalize("NFKC", s)  # used only to detect unsafe leading characters
+    if probe.lstrip(" \t\r\n\u3000").startswith(_UNSAFE) or probe[:1] in ("\t", "\r", "\n"):
         s = "'" + s
     return s.replace("\r", " ").replace("\n", " ")
 

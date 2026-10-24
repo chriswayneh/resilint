@@ -7,6 +7,8 @@
 - README "See it in 60 seconds" section with generated sample output.
 ### Security
 - Drill logs use the register's safe YAML loading, alias refusal, and 5 MB cap; notes are limited to 500 characters; writes use the no-follow, not-the-input, and `RESILINT_OUTPUT_ROOT` checks.
+- `export-roi` uses NFKC normalization only to detect formula-injection characters and writes the original text (prefixed with `'` when unsafe).
+- `export-roi --force` validates every target file (symlink, output root, input file) before writing any of them.
 
 ## [0.3.0] - unreleased (in review)
 ### Added

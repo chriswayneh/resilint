@@ -20,9 +20,8 @@ def _within(path: str, root: str) -> bool:
     return os.path.commonpath([real, base]) == base
 
 
-def write_file(path: str, content: str, input_file: str | None = None,
-               exclusive: bool = False) -> str | None:
-    """Write without following symlinks. Returns an error message, or None on success."""
+def check_target(path: str, input_file: str | None = None) -> str | None:
+    """Validate an output path (root, not the input, not a symlink). Error message or None."""
     root = os.environ.get("RESILINT_OUTPUT_ROOT")
     try:
         if root and not _within(path, root):
@@ -31,6 +30,18 @@ def write_file(path: str, content: str, input_file: str | None = None,
             return "--output must not be the input file"
         if os.path.islink(path):
             return f"output path {path} must not be a symlink"
+    except (OSError, ValueError) as e:
+        return f"cannot write {path} ({getattr(e, 'strerror', None) or e})"
+    return None
+
+
+def write_file(path: str, content: str, input_file: str | None = None,
+               exclusive: bool = False) -> str | None:
+    """Write without following symlinks. Returns an error message, or None on success."""
+    err = check_target(path, input_file)
+    if err:
+        return err
+    try:
         flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
         if exclusive:
             flags |= os.O_EXCL
@@ -63,6 +74,11 @@ def _export(args) -> int:
         if existing:
             print(f"resilint: error: {', '.join(existing)} already exist in {out}; "
                   "use --force to overwrite", file=sys.stderr)
+            return 2
+    for name in files:  # validate every target before writing any
+        err = check_target(os.path.join(out, name), args.file)
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
             return 2
     for name, content in files.items():
         err = write_file(os.path.join(out, name), content, args.file,
