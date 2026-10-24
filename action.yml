@@ -1,0 +1,28 @@
+name: resilint
+description: Offline vendor resilience checks on a vendor register (YAML or CSV)
+inputs:
+  file:
+    description: Path to the vendor register
+    required: true
+  fail-on:
+    description: Lowest severity that fails the step (low, medium, high, critical)
+    default: high
+  format:
+    description: Output format (text, json, md)
+    default: text
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
+      with:
+        python-version: "3.12"
+    - shell: bash
+      run: |
+        pip install --require-hashes -r "$GITHUB_ACTION_PATH/requirements-lock.txt"
+        pip install --no-deps "$GITHUB_ACTION_PATH"
+    - shell: bash
+      env:
+        RL_FILE: ${{ inputs.file }}
+        RL_FAIL_ON: ${{ inputs.fail-on }}
+        RL_FORMAT: ${{ inputs.format }}
+      run: resilint check "$RL_FILE" --fail-on "$RL_FAIL_ON" --format "$RL_FORMAT"

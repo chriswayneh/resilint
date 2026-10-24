@@ -3,13 +3,13 @@
 # resilint
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Status: planned](https://img.shields.io/badge/status-planned-lightgrey.svg)](ROADMAP.md)
+[![Status: v0.1 in review](https://img.shields.io/badge/status-v0.1%20in%20review-yellow.svg)](ROADMAP.md)
 
 ### Vendor resilience checks that run every time your vendor list changes.
 
-A planned open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
+An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Status:** Planned - design stage, no release yet. Nothing below is installable today. See the [roadmap](ROADMAP.md).
+**Status:** v0.1 in review - not yet released. See the [roadmap](ROADMAP.md).
 
 </div>
 
@@ -25,14 +25,14 @@ A planned open-source command-line tool and GitHub Action that reads your critic
 
 Regulators now expect firms to show this is managed continuously, not once a year.
 
-## What resilint will do
+## What resilint does
 
-Your team keeps critical vendors and the business processes that depend on them in a plain YAML file under version control. On every change (pull request, commit, or scheduled run), resilint checks it and reports:
+Your team keeps critical vendors and the business processes that depend on them in a plain YAML file under version control, or exports a CSV from the spreadsheet they already keep. On every change (pull request, commit, or scheduled run), resilint checks it and reports:
 
-**Missing commitments** for any vendor marked critical:
+**Missing commitments** for any vendor marked critical or high:
 - No incident notification time (SLA)
 - No recovery time commitment
-- No reachable contact, or a contact not verified recently
+- No email or phone contact
 - No documented exit plan
 - No resilience test or exercise within the required window
 
@@ -42,70 +42,121 @@ Your team keeps critical vendors and the business processes that depend on them 
 
 It is read-only, runs offline, and works only on your own data. It does not contact vendors, scrape websites, or send anything anywhere.
 
-## Evidence it will produce
+## Evidence it produces (v0.1: text, JSON, Markdown; SARIF planned)
 
 | Audience | What they get |
 |---|---|
 | Board and risk committee | A short Markdown summary: how many critical vendors, how many have gaps, and where concentration risk sits |
 | Internal and external auditors | Timestamped JSON findings tied to a Git commit, so every result is reproducible from history |
-| Regulators | Each finding mapped to the article it relates to, plus (planned) export toward the DORA register-of-information templates |
+| Regulators | Each finding tagged with a draft article mapping, plus (planned) export toward the DORA register-of-information templates |
 | Engineering and procurement | Pull request annotations (SARIF) showing exactly which entry needs fixing |
 
 Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen severity, `2` bad input.
 
-## Example (planned, illustrative only)
+## Quick start
 
-`vendors.yml`:
+```bash
+pip install git+https://github.com/chriswayneh/resilint
+resilint check examples/vendors.yaml               # text
+resilint check examples/vendors.csv --format md    # one-page gap report for leadership
+resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
+```
+
+Options: `--format text|json|md`, `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3).
+Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
+
+Example Markdown report (from the fictional `examples/` data):
+
+```markdown
+# Vendor resilience gap report
+
+- Vendors in register: **2**
+- Critical/high vendors checked: **2**
+- Vendors with gaps: **1**
+- Findings: **2** high, **1** medium
+
+| Severity | Vendor | Gap | Rule | Maps to |
+|---|---|---|---|---|
+| high | example-cloud-wms | no documented exit plan | RL004 | DORA Art. 28(8), Art. 30(3)(f); ... |
+| high | example-cloud-wms | recovery time 8h exceeds order-fulfilment RTO 4h | RL006 | DORA Art. 30(2)(e), 30(3)(a); ... |
+| medium | example-cloud-wms | last resilience test 2024-11-12 is older than 365 days | RL005 | ... |
+```
+
+### GitHub Action
+
+```yaml
+- uses: actions/checkout@v4
+- uses: chriswayneh/resilint@main   # pin to a release tag once one exists
+  with:
+    file: vendors.yaml
+    fail-on: high
+```
+
+## Input schema
+
+YAML anchors and aliases (`&name` / `*name`) are refused (exit 2) to block alias-expansion attacks.
+
+YAML (`examples/vendors.yaml`):
 
 ```yaml
 processes:
-  - id: order-fulfilment
-    criticality: critical
-    recovery_time_objective: 4h
-    vendors: [example-cloud-wms]
-
+  - id: order-fulfilment        # required
+    name: Order fulfilment
+    criticality: critical       # critical|high|medium|low (default critical)
+    rto_hours: 4                # recovery time objective
 vendors:
-  - id: example-cloud-wms
+  - id: example-cloud-wms       # required, unique
     name: Example Cloud WMS Ltd
-    criticality: critical
-    notification_sla: 24h
-    recovery_time: 8h
-    contacts:
-      - role: incident
-        email: incidents@example.com
-        verified: 2026-03-01
-    exit_plan: null
-    last_resilience_test: 2024-11-12
+    criticality: critical       # required: critical|high|medium|low
+    notification_sla_hours: 24
+    recovery_time_hours: 8
+    contacts:                   # at least one email or phone
+      - email: incidents@example.com
+      - phone: "+1-555-0100"
+    exit_plan: docs/exit/wms.md # true/false or a document reference
+    last_tested: 2024-11-12     # ISO date
+    supports_processes: [order-fulfilment]
 ```
 
-Planned output:
+CSV (`examples/vendors.csv`), one row per record, header row required:
 
-```text
-$ resilint check vendors.yml
+| Column | Notes |
+|---|---|
+| `record_type` | `vendor` (default) or `process` |
+| `id`, `name`, `criticality` | as in YAML |
+| `notification_sla_hours`, `recovery_time_hours`, `exit_plan`, `last_tested` | vendor rows |
+| `contacts`, `supports_processes` | vendor rows; multiple values separated by `;` |
+| `rto_hours` | process rows |
 
-HIGH  RTO-MISMATCH   example-cloud-wms  recovery_time 8h exceeds order-fulfilment RTO 4h
-                     maps to: DORA Art. 28, Art. 30; PRA SS2/21
-HIGH  NO-EXIT-PLAN   example-cloud-wms  critical vendor has no exit plan
-                     maps to: DORA Art. 28(8); PRA SS2/21
-MED   STALE-TEST     example-cloud-wms  last resilience test older than 12 months
-                     maps to: DORA Art. 30; NIS2 Art. 21(2)(d)
+Only vendors marked `critical` or `high` are checked. Files are read with safe YAML loading, limited to 5 MB, and never sent anywhere.
 
-3 findings (2 high, 1 medium). Exit code 1.
-```
+## Rules
 
-Rule IDs, article references, and output format are draft and may change before v0.1.
+| ID | Severity | Finding |
+|---|---|---|
+| RL001 | high | No notification SLA |
+| RL002 | high | No recovery time |
+| RL003 | high | No email or phone contact |
+| RL004 | high | No exit plan |
+| RL005 | medium | Last test missing or older than `--stale-days` |
+| RL006 | high | Vendor recovery time exceeds the RTO of a process it supports |
+| RL007 | medium | Vendor supports more than `--max-critical` critical processes |
 
 ## Regulatory mapping (draft)
 
-| Check | DORA (EU 2022/2554) | NIS2 (EU 2022/2555) | UK PRA SS2/21 |
+Each finding carries a `regulation` field and the label "draft mapping, not legal advice".
+
+| Rule | DORA (EU 2022/2554) | NIS2 (EU 2022/2555) | UK PRA SS2/21 |
 |---|---|---|---|
-| Critical vendor recorded with dependent processes | Art. 28(3) register of information | Art. 21(2)(d) supply chain security | Outsourcing register |
-| Notification SLA present | Art. 30 contract terms | Art. 21(2)(d) | Contractual requirements |
-| Recovery time present and consistent with process targets | Art. 30 service levels | Art. 21(2)(c) business continuity | Business continuity |
-| Reachable, recently verified contact | Art. 30 | Art. 21(2)(d) | Contractual requirements |
-| Exit plan documented | Art. 28(8) exit strategies | Art. 21(2)(d) | Exit planning |
-| Recent resilience test | Art. 30 participation in testing | Art. 21(2)(f) effectiveness assessment | Business continuity testing |
-| Concentration on one vendor | Art. 28, Art. 29 concentration risk | Art. 21(2)(d) | Concentration risk |
+| RL001 notification SLA | Art. 30(3)(b) notice periods and reporting obligations; Art. 30(2)(f) incident assistance | Art. 21(2)(d) supply chain security | Ch. 6 outsourcing agreements |
+| RL002 recovery time | Art. 30(2)(e), 30(3)(a) service level descriptions | Art. 21(2)(c) business continuity | Ch. 6 outsourcing agreements |
+| RL003 contact | Art. 30(2) contract terms | Art. 21(2)(d) | Ch. 6 outsourcing agreements |
+| RL004 exit plan | Art. 28(8) exit strategies; Art. 30(3)(f) | Art. 21(2)(d) | Ch. 10 business continuity and exit plans |
+| RL005 recent test | Art. 30(3)(c) contingency plan testing, 30(3)(d) TLPT participation | Art. 21(2)(f) effectiveness assessment | Ch. 10 business continuity and exit plans |
+| RL006 recovery vs. RTO | Art. 30(2)(e), 30(3)(a) | Art. 21(2)(c) | Ch. 10 business continuity and exit plans |
+| RL007 concentration | Art. 28(4)(c), Art. 29 concentration risk | Art. 21(2)(d) | Ch. 5 pre-outsourcing (materiality and risk assessment) |
+
+DORA Art. 30(3) applies to contracts supporting critical or important functions.
 
 Sources: [DORA, Regulation (EU) 2022/2554](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) · [NIS2, Directive (EU) 2022/2555](https://eur-lex.europa.eu/eli/dir/2022/2555/oj) · [Bank of England PRA SS2/21, Outsourcing and third party risk management](https://www.bankofengland.co.uk/prudential-regulation/publication/2021/march/outsourcing-and-third-party-risk-management-ss).
 
@@ -116,14 +167,14 @@ This mapping is a working aid, not legal advice. Confirm interpretations with yo
 resilint **complements, and does not replace,** third-party risk management (TPRM) and GRC platforms.
 
 - **TPRM platforms** run questionnaires, due diligence, and vendor scoring. resilint checks that the commitments you already hold are recorded, current, and consistent.
-- **Tabletop exercise tools** run scenarios but do not model contract commitments. resilint records whether a test happened and (planned) attaches the result to each vendor.
+- **Tabletop exercise tools** run scenarios but do not model contract commitments. resilint records whether a test happened and (planned, v0.4) attaches the result to each vendor.
 - **DORA register-of-information validators** check that a file has the right format. resilint checks whether the underlying commitments actually exist and make sense together.
 
 Because the register lives in Git, every change has an author, a review, and a history auditors can follow.
 
 ## Status
 
-**Planned - design stage, no release yet.** There is no code, package, or Action published. See the [roadmap](ROADMAP.md).
+**v0.1 in review.** Not yet released or tagged. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
 
 ## Security
 
@@ -131,7 +182,7 @@ See [SECURITY.md](SECURITY.md).
 
 ## Built with
 
-- Python (planned implementation language)
+- Python 3.10+ (standard library + PyYAML)
 - AI-assisted development with Grok Bot, Cursor, Codex, and Claude
 
 ## License
