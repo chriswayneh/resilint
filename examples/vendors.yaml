@@ -1,0 +1,32 @@
+# FICTIONAL EXAMPLE DATA. Vendors and processes are made up for illustration.
+processes:
+  - id: order-fulfilment
+    name: Order fulfilment
+    criticality: critical
+    rto_hours: 4
+  - id: payroll
+    name: Payroll
+    criticality: critical
+    rto_hours: 48
+
+vendors:
+  - id: example-cloud-wms
+    name: Example Cloud WMS Ltd
+    criticality: critical
+    notification_sla_hours: 24
+    recovery_time_hours: 8
+    contacts:
+      - email: incidents@example.com
+    exit_plan: false
+    last_tested: 2024-11-12
+    supports_processes: [order-fulfilment]
+  - id: example-payroll-co
+    name: Example Payroll Co
+    criticality: high
+    notification_sla_hours: 4
+    recovery_time_hours: 24
+    contacts:
+      - phone: "+1-555-0100"
+    exit_plan: docs/exit/example-payroll-co.md
+    last_tested: 2026-06-01
+    supports_processes: [payroll]

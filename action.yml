@@ -1,0 +1,26 @@
+name: resilint
+description: Offline vendor resilience checks on a vendor register (YAML or CSV)
+inputs:
+  file:
+    description: Path to the vendor register
+    required: true
+  fail-on:
+    description: Lowest severity that fails the step (low, medium, high, critical)
+    default: high
+  format:
+    description: Output format (text, json, md)
+    default: text
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.12"
+    - shell: bash
+      run: pip install "$GITHUB_ACTION_PATH"
+    - shell: bash
+      env:
+        RL_FILE: ${{ inputs.file }}
+        RL_FAIL_ON: ${{ inputs.fail-on }}
+        RL_FORMAT: ${{ inputs.format }}
+      run: resilint check "$RL_FILE" --fail-on "$RL_FAIL_ON" --format "$RL_FORMAT"

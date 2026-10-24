@@ -1,17 +1,18 @@
 # Roadmap
 
-Status: **Planned - design stage, no release yet.** Milestones and scope may change.
+Status: **v0.1 in review.** Milestones and scope may change.
 
-## v0.1 - Core checks
-- Versioned YAML schema for vendors and business processes
-- Missing-field rules for critical vendors: notification SLA, recovery time, reachable contact, exit plan, recent resilience test date
-- Exit codes: `0` clean, `1` findings at or above `--fail-on`, `2` bad input
-- JSON and Markdown evidence output
+## v0.1 - Core checks (in review)
+- YAML schema for vendors and business processes, plus CSV import from spreadsheet exports
+- Missing-field rules for critical/high vendors: notification SLA, recovery time, contact, exit plan, recent resilience test
+- Consistency rules: vendor recovery time vs. dependent process RTO; concentration of critical processes on one vendor
+- Draft regulation reference on every finding (DORA, NIS2, UK PRA SS2/21)
+- Text, JSON, and Markdown output; exit codes `0`/`1`/`2`
+- Minimal composite GitHub Action
 
-## v0.2 - Consistency and CI
-- Consistency rules: vendor recovery time vs. dependent process recovery target; concentration of critical processes on one vendor
-- GitHub Action wrapper
+## v0.2 - CI polish
 - SARIF output for pull request annotations
+- Contact verification dates and versioned schema
 
 ## v0.3 - Regulatory reporting
 - Regulation mapping report (DORA, NIS2, UK PRA SS2/21) per finding
