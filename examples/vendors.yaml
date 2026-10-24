@@ -22,6 +22,8 @@ vendors:
     exit_plan: false
     last_tested: 2024-11-12
     contacts_verified: 2025-01-15
+    lei: 9845000EXAMPLE000048
+    country: IE
     supports_processes: [order-fulfilment]
   - id: example-payroll-co
     name: Example Payroll Co

@@ -347,7 +347,7 @@ def test_lei_and_country():
     v = normalize({"vendors": [good_vendor(lei="9845000EXAMPLE000048", country="ie")]})
     assert v["vendors"][0]["lei"] == "9845000EXAMPLE000048"
     assert v["vendors"][0]["country"] == "IE"
-    for bad in ({"lei": "SHORT"}, {"lei": "9845000EXAMPLE000049"}, {"country": "IRL"}):
+    for bad in ({"lei": "SHORT"}, {"lei": "9845000EXAMPLE000049"}, {"country": "IRL"}, {"country": "UK"}, {"country": "EL"}, {"country": "XX"}, {"country": "ZZ"}):
         with pytest.raises(InputError):
             normalize({"vendors": [good_vendor(**bad)]})
 
@@ -356,6 +356,12 @@ def test_export_roi(tmp_path):
     out = tmp_path / "roi"
     out.mkdir()
     assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(out)]) == 0
+    before = (out / "README.txt").read_text()
+    (out / "b_06_01_functions.csv").write_text("mine")
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(out)]) == 2
+    assert (out / "b_06_01_functions.csv").read_text() == "mine"
+    assert (out / "README.txt").read_text() == before
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(out), "--force"]) == 0
     names = sorted(p.name for p in out.iterdir())
     assert names == ["README.txt", "b_02_02_links.csv", "b_05_01_providers.csv",
                      "b_06_01_functions.csv"]
@@ -363,7 +369,7 @@ def test_export_roi(tmp_path):
     assert prov[0].startswith("provider_id,lei,legal_name")
     assert any(line.startswith("example-cloud-wms,") for line in prov)
     assert "not legal advice" in (out / "README.txt").read_text()
-    assert "order-fulfilment,Order fulfilment,true,4" in (out / "b_06_01_functions.csv").read_text()
+    assert "order-fulfilment,Order fulfilment,Yes,4" in (out / "b_06_01_functions.csv").read_text()
 
 
 def test_export_roi_csv_injection_neutralized():
@@ -515,3 +521,68 @@ def test_drill_in_regmap_and_sarif(tmp_path, capsys):
     assert "RL009" in out and "not legal advice" in out
     main(["check", str(reg), "--drills", str(log), "--format", "sarif"])
     assert "RL009" in capsys.readouterr().out
+
+
+def test_country_assigned_codes_accepted():
+    for code in ("GB", "GR", "IE", "US"):
+        assert normalize({"vendors": [good_vendor(country=code)]})["vendors"][0]["country"] == code
+
+
+def test_examples_have_lei_and_country():
+    for f in ("examples/vendors.yaml", "examples/vendors.csv"):
+        v = {x["id"]: x for x in load(f)["vendors"]}["example-cloud-wms"]
+        assert v["lei"] == "9845000EXAMPLE000048" and v["country"] == "IE"
+
+
+def test_roi_critical_or_important_mapping():
+    from resilint.roi import export
+    procs = [{"id": "a", "criticality": "critical"}, {"id": "b", "criticality": "high"},
+             {"id": "c", "criticality": "medium"}, {"id": "d", "criticality": "low"}, {"id": "e"}]
+    out = export(normalize({"vendors": [good_vendor()], "processes": procs}))
+    rows = out["b_06_01_functions.csv"].splitlines()[1:]
+    got = {r.split(",")[0]: r.split(",")[2] for r in rows}
+    assert got == {"a": "Yes", "b": "Yes", "c": "No", "d": "No", "e": "Assessment not performed"}
+    assert "Contractual arrangements - specific information" in out["README.txt"]
+    assert "partial column set" in out["README.txt"]
+
+
+def test_output_root_empty_relative_missing(tmp_path, monkeypatch):
+    ws = tmp_path / "ws"
+    ws.mkdir()
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setenv("RESILINT_OUTPUT_ROOT", "")
+    assert main(["check", "/dev/null.yaml", "--output", "x"]) == 2  # bad input, not root
+    src = str(Path(__file__).resolve().parent.parent / "examples" / "vendors.yaml")
+    assert main(["check", src, "--output", str(tmp_path / "free.txt")]) == 1
+    monkeypatch.setenv("RESILINT_OUTPUT_ROOT", "ws")
+    assert main(["check", src, "--output", "ws/in.txt"]) == 1
+    assert main(["check", src, "--output", "out.txt"]) == 2
+    monkeypatch.setenv("RESILINT_OUTPUT_ROOT", str(tmp_path / "nope"))
+    assert main(["check", src, "--output", str(tmp_path / "nope" / "a.txt")]) == 2
+    assert main(["check", src, "--output", str(tmp_path / "b.txt")]) == 2
+    assert not (tmp_path / "out.txt").exists() and not (tmp_path / "b.txt").exists()
+
+
+def test_export_roi_trailing_slash_symlink_refused(tmp_path):
+    p = tmp_path / "p"
+    real = tmp_path / "real"
+    p.mkdir()
+    real.mkdir()
+    (p / "l").symlink_to(real)
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(p / "l") + "/"]) == 2
+    assert not list(real.iterdir())
+
+
+@pytest.mark.parametrize("val", [" =cmd|x!A0", " \t@x", "\r=1+1", "\n=1+1", "\uff1d1+1",
+                                 "-1", "+44 20", "|x", "%x", "\u3000=1"])
+def test_cell_formula_variants_neutralized(val):
+    from resilint.roi import _cell
+    out = _cell(val)
+    assert out.startswith("'")
+    assert "\r" not in out and "\n" not in out
+
+
+def test_cell_plain_values_untouched():
+    from resilint.roi import _cell
+    assert _cell("Example Co") == "Example Co"
+    assert _cell(4.0) == "4"
