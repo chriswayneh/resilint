@@ -1,6 +1,14 @@
 # Changelog
 
-## [Unreleased]
+## [0.4.0] - Unreleased
+### Added
+- `resilint drill record REGISTER --vendor ID --kind tabletop|test --result pass|partial|fail [--date] [--notes] [--log]`: appends a drill result to a drill log (default `drills.yaml` next to the register); the register is never rewritten.
+- `check --drills LOG`: the latest passed or partial drill updates a vendor's effective last-tested date; rule RL009 (medium) flags a vendor whose most recent drill failed, with a draft regulation reference (not legal advice). Action input `drills`.
+- README "See it in 60 seconds" section with generated sample output.
+### Security
+- Drill logs use the register's safe YAML loading, alias refusal, and 5 MB cap; notes are limited to 500 characters; writes use the no-follow, not-the-input, and `RESILINT_OUTPUT_ROOT` checks.
+
+## [0.3.0] - Unreleased
 ### Added
 - `--format regmap`: regulation mapping report grouping findings by DORA, NIS2, and PRA SS2/21 reference (draft mapping, not legal advice).
 - `regulation_refs` (structured per-framework references) on every finding in JSON output.

@@ -395,3 +395,123 @@ def test_export_roi_respects_output_root(tmp_path, monkeypatch):
     monkeypatch.setenv("RESILINT_OUTPUT_ROOT", str(ws))
     assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(other)]) == 2
     assert not list(other.iterdir())
+
+
+# --- v0.4: drill records ---
+
+def _reg(tmp_path, **kw):
+    import yaml
+    p = tmp_path / "reg.yaml"
+    p.write_text(yaml.safe_dump({"vendors": [good_vendor(last_tested="2024-01-01", **kw)],
+                                 "processes": [{"id": "p1", "rto_hours": 4}]}))
+    return p
+
+
+def _rec(reg, log, *extra):
+    return main(["drill", "record", str(reg), "--vendor", "v1", "--log", str(log), *extra])
+
+
+def test_drill_pass_updates_last_tested(tmp_path, capsys):
+    reg, log = _reg(tmp_path), tmp_path / "drills.yaml"
+    assert main(["check", str(reg), "--fail-on", "medium"]) == 1
+    assert _rec(reg, log, "--kind", "tabletop", "--result", "pass",
+                "--date", date.today().isoformat()) == 0
+    assert "last-tested date updated" in capsys.readouterr().out
+    assert main(["check", str(reg), "--drills", str(log), "--fail-on", "medium"]) == 0
+
+
+def test_drill_fail_raises_rl009_and_keeps_last_tested(tmp_path, capsys):
+    from resilint.drills import apply, load_log
+    reg, log = _reg(tmp_path), tmp_path / "drills.yaml"
+    assert _rec(reg, log, "--kind", "test", "--result", "pass", "--date", "2026-05-01") == 0
+    assert _rec(reg, log, "--kind", "test", "--result", "fail", "--date", "2026-09-01") == 0
+    r = load(reg)
+    apply(r, load_log(log))
+    assert r["vendors"][0]["last_tested"] == date(2026, 5, 1)
+    ids = [f.rule_id for f in check(r, today=TODAY)]
+    assert "RL009" in ids and "RL005" not in ids
+
+
+def test_drill_latest_wins_regardless_of_log_order(tmp_path):
+    from resilint.drills import apply, load_log
+    reg, log = _reg(tmp_path), tmp_path / "drills.yaml"
+    _rec(reg, log, "--kind", "test", "--result", "pass", "--date", "2026-09-01")
+    _rec(reg, log, "--kind", "test", "--result", "fail", "--date", "2026-01-01")
+    r = load(reg)
+    apply(r, load_log(log))
+    assert "RL009" not in [f.rule_id for f in check(r, today=TODAY)]
+
+
+def test_drill_register_untouched(tmp_path):
+    reg = _reg(tmp_path)
+    before = reg.read_bytes()
+    _rec(reg, tmp_path / "d.yaml", "--kind", "test", "--result", "pass")
+    assert reg.read_bytes() == before
+
+
+def test_drill_default_log_next_to_register(tmp_path):
+    reg = _reg(tmp_path)
+    assert main(["drill", "record", str(reg), "--vendor", "v1", "--kind", "test",
+                 "--result", "partial"]) == 0
+    assert (tmp_path / "drills.yaml").is_file()
+
+
+@pytest.mark.parametrize("extra", [
+    ["--vendor", "nope"], ["--date", "2026-13-01"], ["--notes", "x" * 501],
+])
+def test_drill_record_rejects_bad_input(tmp_path, extra):
+    reg = _reg(tmp_path)
+    args = ["drill", "record", str(reg), "--vendor", "v1", "--kind", "test", "--result", "pass",
+            "--log", str(tmp_path / "d.yaml")]
+    assert main(args + extra) == 2
+    assert not (tmp_path / "d.yaml").exists()
+
+
+def test_drill_log_refuses_symlink_and_register(tmp_path):
+    reg = _reg(tmp_path)
+    target = tmp_path / "victim.txt"
+    target.write_text("keep")
+    (tmp_path / "link.yaml").symlink_to(target)
+    assert _rec(reg, tmp_path / "link.yaml", "--kind", "test", "--result", "pass") == 2
+    assert target.read_text() == "keep"
+    assert _rec(reg, reg, "--kind", "test", "--result", "pass") == 2
+
+
+def test_drill_log_respects_output_root(tmp_path, monkeypatch):
+    reg = _reg(tmp_path)
+    root = tmp_path / "root"
+    root.mkdir()
+    monkeypatch.setenv("RESILINT_OUTPUT_ROOT", str(root))
+    assert _rec(reg, tmp_path / "d.yaml", "--kind", "test", "--result", "pass") == 2
+
+
+@pytest.mark.parametrize("text", [
+    "drills: &a [*a]",
+    "drills: [{vendor: v1, date: 2026-01-01, kind: test, result: maybe}]",
+    "drills: [{vendor: v1, date: 2026-01-01, kind: test, result: pass, notes: [1]}]",
+    "drills: [{vendor: ghost, date: 2026-01-01, kind: test, result: pass}]",
+    "- just a list",
+])
+def test_drill_log_invalid(tmp_path, text):
+    reg = _reg(tmp_path)
+    log = tmp_path / "d.yaml"
+    log.write_text(text)
+    assert main(["check", str(reg), "--drills", str(log)]) == 2
+
+
+def test_drill_log_size_cap(tmp_path):
+    reg = _reg(tmp_path)
+    log = tmp_path / "d.yaml"
+    log.write_bytes(b"#" * (5 * 1024 * 1024 + 1))
+    assert main(["check", str(reg), "--drills", str(log)]) == 2
+
+
+def test_drill_in_regmap_and_sarif(tmp_path, capsys):
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    _rec(reg, log, "--kind", "tabletop", "--result", "fail")
+    capsys.readouterr()
+    main(["check", str(reg), "--drills", str(log), "--format", "regmap"])
+    out = capsys.readouterr().out
+    assert "RL009" in out and "not legal advice" in out
+    main(["check", str(reg), "--drills", str(log), "--format", "sarif"])
+    assert "RL009" in capsys.readouterr().out

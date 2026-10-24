@@ -5,8 +5,10 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+from datetime import date
 
 from . import __version__
+from .drills import KINDS, RESULTS, _entry, apply, dump_log, load_log
 from .loader import InputError, load
 from .report import FORMATS
 from .roi import export
@@ -56,6 +58,27 @@ def _export(args) -> int:
     return 0
 
 
+def _drill(args) -> int:
+    log = args.log or os.path.join(os.path.dirname(args.file) or ".", "drills.yaml")
+    try:
+        register = load(args.file)
+        drills = load_log(log, missing_ok=True)
+        new = _entry({"vendor": args.vendor, "date": args.date, "kind": args.kind,
+                      "result": args.result, "notes": args.notes}, "drill",
+                     {v["id"] for v in register["vendors"]})
+    except InputError as e:
+        print(f"resilint: error: {e}", file=sys.stderr)
+        return 2
+    err = write_file(log, dump_log(drills + [new]), args.file)
+    if err:
+        print(f"resilint: error: {err}", file=sys.stderr)
+        return 2
+    note = " (last-tested date updated)" if new["result"] != "fail" else ""
+    print(f"recorded {new['kind']} {new['result']} for {new['vendor']} on "
+          f"{new['date'].isoformat()} in {log}{note}")
+    return 0
+
+
 class _Parser(argparse.ArgumentParser):
     def error(self, message):
         self.print_usage(sys.stderr)
@@ -80,7 +103,20 @@ def main(argv=None) -> int:
     e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
     e.add_argument("file")
     e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
+    c.add_argument("--drills", metavar="LOG", help="drill log to apply (from `drill record`)")
+    d = sub.add_parser("drill", help="drill records")
+    dsub = d.add_subparsers(dest="drill_cmd", required=True)
+    r = dsub.add_parser("record", help="record a tabletop or test result for a vendor")
+    r.add_argument("file", help="vendor register (used to validate the vendor id)")
+    r.add_argument("--vendor", required=True)
+    r.add_argument("--date", default=date.today().isoformat(), help="ISO date (default today)")
+    r.add_argument("--kind", choices=KINDS, required=True)
+    r.add_argument("--result", choices=RESULTS, required=True)
+    r.add_argument("--notes", default=None)
+    r.add_argument("--log", help="drill log file (default drills.yaml next to the register)")
     args = ap.parse_args(argv)
+    if args.cmd == "drill":
+        return _drill(args)
     if args.cmd == "export-roi":
         return _export(args)
     if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
@@ -88,6 +124,8 @@ def main(argv=None) -> int:
         return 2
     try:
         register = load(args.file)
+        if args.drills:
+            apply(register, load_log(args.drills))
     except InputError as e:
         print(f"resilint: error: {e}", file=sys.stderr)
         return 2

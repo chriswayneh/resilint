@@ -24,6 +24,8 @@ RULES = {
               "DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5"),
     "RL008": ("stale-or-missing-contact-verification", "medium",
               "DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6"),
+    "RL009": ("last-drill-failed", "medium",
+              "DORA Art. 30(3)(c), Art. 11(6); NIS2 Art. 21(2)(c), 21(2)(f); PRA SS2/21 ch. 10"),
 }
 
 
@@ -91,6 +93,11 @@ def check(register: dict, stale_days: int = 365, max_critical: int = 3,
         elif (today - lt).days > stale_days:
             out.append(_f("RL005", vid,
                           f"last resilience test {lt.isoformat()} is older than {stale_days} days"))
+        drills = v.get("drills") or []
+        if drills and drills[-1]["result"] == "fail":
+            d = drills[-1]
+            out.append(_f("RL009", vid,
+                          f"most recent {d['kind']} on {d['date'].isoformat()} failed"))
         cv = v["contacts_verified"]
         if v["contacts"] and cv is None:
             out.append(_f("RL008", vid, "no contact verification date recorded"))
