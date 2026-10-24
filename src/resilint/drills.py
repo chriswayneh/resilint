@@ -30,6 +30,8 @@ def _entry(raw: Any, ctx: str, vendor_ids: set[str] | None = None) -> dict:
     d = _date(raw.get("date"), ctx, "date")
     if d is None:
         raise InputError(f"{ctx}: date is required")
+    if d > date.today():
+        raise InputError(f"{ctx}: date {d.isoformat()} is in the future")
     kind = str(raw.get("kind") or "").strip().lower()
     if kind not in KINDS:
         raise InputError(f"{ctx}: kind must be one of {', '.join(KINDS)}")
@@ -45,7 +47,8 @@ def _entry(raw: Any, ctx: str, vendor_ids: set[str] | None = None) -> dict:
     return {"vendor": vendor, "date": d, "kind": kind, "result": result, "notes": notes}
 
 
-def load_log(path: str | Path, missing_ok: bool = False) -> list[dict]:
+def load_log(path: str | Path, missing_ok: bool = False,
+             vendor_ids: set[str] | None = None) -> list[dict]:
     p = Path(path)
     try:
         if not p.exists() and missing_ok:
@@ -71,7 +74,7 @@ def load_log(path: str | Path, missing_ok: bool = False) -> list[dict]:
         return []
     if not isinstance(data, dict) or not isinstance(data.get("drills", []), list):
         raise InputError(f"{p}: top level must be a mapping with a 'drills' list")
-    return [_entry(d, f"drills[{i}]") for i, d in enumerate(data.get("drills") or [])]
+    return [_entry(d, f"{p}: drills[{i}]", vendor_ids) for i, d in enumerate(data.get("drills") or [])]
 
 
 def dump_log(drills: list[dict]) -> str:

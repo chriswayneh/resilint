@@ -2,11 +2,11 @@
 
 ## [0.4.0] - Unreleased
 ### Added
-- `resilint drill record REGISTER --vendor ID --kind tabletop|test --result pass|partial|fail [--date] [--notes] [--log]`: appends a drill result to a drill log (default `drills.yaml` next to the register); the register is never rewritten.
+- `resilint drill record REGISTER --vendor ID --kind tabletop|test --result pass|partial|fail [--date] [--notes] [--log]`: adds a drill result to a drill log (default `drills.yaml` next to the register) and rewrites the log in normalized form (comments in the log are not kept); the register is never rewritten. Future dates and log entries for unknown vendors are refused.
 - `check --drills LOG`: the latest passed or partial drill updates a vendor's effective last-tested date; rule RL009 (medium) flags a vendor whose most recent drill failed, with a draft regulation reference (not legal advice). Action input `drills`.
 - README "See it in 60 seconds" section with generated sample output.
 ### Security
-- Drill logs use the register's safe YAML loading, alias refusal, and 5 MB cap; notes are limited to 500 characters; writes use the no-follow, not-the-input, and `RESILINT_OUTPUT_ROOT` checks.
+- Drill logs use the register's safe YAML loading, alias refusal, and 5 MB cap; notes are limited to 500 characters; writes use the not-the-input, no-symlink, and `RESILINT_OUTPUT_ROOT` checks, an exclusive lock on a `LOG.lock` sidecar, and an atomic temp-file replace.
 - `export-roi` uses NFKC normalization only to detect formula-injection characters and writes the original text (prefixed with `'` when unsafe).
 - `export-roi --force` validates every target file (symlink, output root, input file) before writing any of them.
 

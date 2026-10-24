@@ -624,3 +624,62 @@ def test_export_force_refuses_input_as_target_before_writing(tmp_path):
     reg.write_bytes(Path("examples/vendors.yaml").read_bytes())
     assert main(["export-roi", str(reg), "--out-dir", str(out), "--force"]) == 2
     assert all((out / n).read_text() == "old" for n in names[:-1])
+
+
+# --- v0.4 review fixes: drill locking, dates, log validation ---
+
+def test_drill_concurrent_records_lose_nothing(tmp_path):
+    import subprocess
+    import sys
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    cmd = [sys.executable, "-m", "resilint.cli", "drill", "record", str(reg), "--vendor", "v1",
+           "--kind", "test", "--result", "pass", "--date", "2026-01-01", "--log", str(log)]
+    procs = [subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
+             for _ in range(6)]
+    codes = [p.wait() for p in procs]
+    from resilint.drills import load_log
+    assert all(c in (0, 2) for c in codes)
+    assert len(load_log(log)) == codes.count(0) >= 1
+
+
+def test_drill_lock_held_fails_cleanly(tmp_path, capsys):
+    import fcntl
+    import os
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    fd = os.open(str(log) + ".lock", os.O_WRONLY | os.O_CREAT, 0o644)
+    fcntl.flock(fd, fcntl.LOCK_EX)
+    try:
+        assert _rec(reg, log, "--kind", "test", "--result", "pass") == 2
+        assert "locked" in capsys.readouterr().err
+        assert not log.exists()
+    finally:
+        os.close(fd)
+
+
+def test_drill_future_date_rejected(tmp_path):
+    from datetime import timedelta
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    future = (date.today() + timedelta(days=1)).isoformat()
+    assert _rec(reg, log, "--kind", "test", "--result", "pass", "--date", future) == 2
+    log.write_text(f"drills: [{{vendor: v1, date: '{future}', kind: test, result: pass}}]")
+    assert main(["check", str(reg), "--drills", str(log)]) == 2
+
+
+def test_drill_record_validates_existing_log(tmp_path):
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    log.write_text("drills: [{vendor: ghost, date: '2026-01-01', kind: test, result: pass}]")
+    before = log.read_text()
+    assert _rec(reg, log, "--kind", "test", "--result", "pass") == 2
+    assert log.read_text() == before
+
+
+def test_drill_log_same_as_input_names_log_option(tmp_path, capsys):
+    reg = _reg(tmp_path)
+    assert _rec(reg, reg, "--kind", "test", "--result", "pass") == 2
+    assert "--log must not be the input file" in capsys.readouterr().err
+
+
+def test_drill_no_temp_files_left(tmp_path):
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    assert _rec(reg, log, "--kind", "test", "--result", "pass") == 0
+    assert not list(tmp_path.glob(".drills-*"))
