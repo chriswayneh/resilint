@@ -7,9 +7,10 @@ import io
 import math
 import os
 import re
-from datetime import date
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 import yaml
 
@@ -55,6 +56,8 @@ def _num(value: Any, field: str, ctx: str) -> float | None:
 def _date(value: Any, ctx: str, field: str = "last_tested") -> date | None:
     if value is None or (isinstance(value, str) and not value.strip()):
         return None
+    if isinstance(value, datetime):
+        return value.date()
     if isinstance(value, date):
         return value
     try:
@@ -227,8 +230,11 @@ def load(path: str | Path) -> dict:
         raise InputError(f"{p}: input nested too deeply") from None
     ids = [v["id"] for v in reg["vendors"]]
     try:
-        reg["source"] = Path(os.path.relpath(p)).as_posix()
+        rel = Path(os.path.relpath(p)).as_posix()
     except ValueError:  # different drive on Windows
-        reg["source"] = p.as_posix()
+        rel = p.name
+    if rel == ".." or rel.startswith("../"):
+        rel = p.name
+    reg["source"] = quote(rel)
     reg["lines"] = csv_lines if csv_lines is not None else _yaml_lines(text, ids)
     return reg

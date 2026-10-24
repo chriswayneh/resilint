@@ -50,7 +50,12 @@ def main(argv=None) -> int:
             if os.path.exists(args.output) and os.path.samefile(args.output, args.file):
                 print("resilint: error: --output must not be the input file", file=sys.stderr)
                 return 2
-            with open(args.output, "w", encoding="utf-8") as fh:
+            if os.path.islink(args.output):
+                print("resilint: error: --output must not be a symlink", file=sys.stderr)
+                return 2
+            flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+            fd = os.open(args.output, flags, 0o644)
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
                 fh.write(report + "\n")
         except OSError as e:
             print(f"resilint: error: cannot write {args.output} ({e.strerror})", file=sys.stderr)

@@ -72,7 +72,7 @@ def sarif(findings, register) -> str:
                 "message": {"text": f"{f.vendor}: {f.message} "
                                     f"(maps to {f.regulation}; {REG_NOTE})"},
                 "locations": [{"physicalLocation": {
-                    "artifactLocation": {"uri": uri},
+                    "artifactLocation": {"uri": uri, "uriBaseId": "%SRCROOT%"},
                     "region": {"startLine": register.get("lines", {}).get(f.vendor, 1)}}}],
                 "partialFingerprints": {"resilint/v1": f"{f.rule_id}:{f.vendor}"},
                 "properties": {"severity": f.severity, "vendor": f.vendor}}

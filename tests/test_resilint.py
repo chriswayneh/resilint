@@ -250,3 +250,44 @@ def test_sarif_uri_relative_to_cwd(tmp_path, monkeypatch, capsys):
     main(["check", str(src), "--format", "sarif"])
     res = json.loads(capsys.readouterr().out)["runs"][0]["results"]
     assert res[0]["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] == "v.yaml"
+
+
+def test_output_refuses_symlinks(tmp_path):
+    target = _write(tmp_path, "keep.txt", "original")
+    link = tmp_path / "link.sarif"
+    link.symlink_to(target)
+    assert main(["check", "examples/vendors.yaml", "--output", str(link)]) == 2
+    assert target.read_text() == "original"
+    missing = tmp_path / "never.txt"
+    dangling = tmp_path / "dangling.sarif"
+    dangling.symlink_to(missing)
+    assert main(["check", "examples/vendors.yaml", "--output", str(dangling)]) == 2
+    assert not missing.exists()
+
+
+def test_sarif_uri_quoted_and_outside_cwd(tmp_path, monkeypatch, capsys):
+    import json
+    d = tmp_path / "in"
+    d.mkdir()
+    src = _write(d, "my reg%1.yaml", "vendors: [{id: a, criticality: high}]\n")
+    monkeypatch.chdir(tmp_path)
+    main(["check", str(src), "--format", "sarif"])
+    loc = json.loads(capsys.readouterr().out)["runs"][0]["results"][0]["locations"][0]
+    art = loc["physicalLocation"]["artifactLocation"]
+    assert art == {"uri": "in/my%20reg%251.yaml", "uriBaseId": "%SRCROOT%"}
+    other = tmp_path / "cwd"
+    other.mkdir()
+    monkeypatch.chdir(other)
+    main(["check", str(src), "--format", "sarif"])
+    out = json.loads(capsys.readouterr().out)["runs"][0]["results"][0]
+    assert out["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] == "my%20reg%251.yaml"
+
+
+def test_yaml_unquoted_datetimes(tmp_path):
+    body = ("vendors:\n  - id: v1\n    criticality: high\n"
+            "    last_tested: 2026-06-01T10:00:00Z\n"
+            "    contacts_verified: 2026-09-01 08:30:00\n")
+    v = load(_write(tmp_path, "dt.yaml", body))["vendors"][0]
+    assert v["last_tested"] == date(2026, 6, 1)
+    assert v["contacts_verified"] == date(2026, 9, 1)
+    assert type(v["last_tested"]) is date
