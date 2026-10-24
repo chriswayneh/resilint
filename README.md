@@ -63,7 +63,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
+Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses to overwrite the input register), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
 Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
 
 Example Markdown report (from the fictional `examples/` data):
@@ -80,8 +80,8 @@ Example Markdown report (from the fictional `examples/` data):
 |---|---|---|---|---|
 | high | example-cloud-wms | no documented exit plan | RL004 | DORA Art. 28(8), Art. 30(3)(f); ... |
 | high | example-cloud-wms | recovery time 8h exceeds order-fulfilment RTO 4h | RL006 | DORA Art. 30(2)(e), 30(3)(a); ... |
-| medium | example-cloud-wms | contacts last verified 2025-01-15, older than 180 days | RL008 | ... |
 | medium | example-cloud-wms | last resilience test 2024-11-12 is older than 365 days | RL005 | ... |
+| medium | example-cloud-wms | contacts last verified 2025-01-15, older than 180 days | RL008 | ... |
 ```
 
 ### GitHub Action

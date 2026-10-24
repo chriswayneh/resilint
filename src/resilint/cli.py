@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from . import __version__
@@ -46,6 +47,9 @@ def main(argv=None) -> int:
     report = FORMATS[args.format](findings, register)
     if args.output:
         try:
+            if os.path.exists(args.output) and os.path.samefile(args.output, args.file):
+                print("resilint: error: --output must not be the input file", file=sys.stderr)
+                return 2
             with open(args.output, "w", encoding="utf-8") as fh:
                 fh.write(report + "\n")
         except OSError as e:

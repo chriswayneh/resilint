@@ -235,3 +235,18 @@ def test_output_file(tmp_path, capsys):
 
 def test_negative_contact_days_rejected():
     assert main(["check", "examples/vendors.yaml", "--contact-days", "-1"]) == 2
+
+
+def test_output_refuses_input_file(tmp_path):
+    src = _write(tmp_path, "v.yaml", "vendors: [{id: a, criticality: low}]\n")
+    assert main(["check", str(src), "--output", str(src)]) == 2
+    assert "criticality: low" in src.read_text()
+
+
+def test_sarif_uri_relative_to_cwd(tmp_path, monkeypatch, capsys):
+    import json
+    src = _write(tmp_path, "v.yaml", "vendors: [{id: a, criticality: high}]\n")
+    monkeypatch.chdir(tmp_path)
+    main(["check", str(src), "--format", "sarif"])
+    res = json.loads(capsys.readouterr().out)["runs"][0]["results"]
+    assert res[0]["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] == "v.yaml"

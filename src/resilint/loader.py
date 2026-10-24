@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import io
 import math
+import os
 import re
 from datetime import date
 from pathlib import Path
@@ -168,7 +169,9 @@ def parse_csv(text: str) -> dict:
     reader = csv.DictReader(io.StringIO(text))
     if not reader.fieldnames or "id" not in [f.strip() for f in reader.fieldnames]:
         raise InputError("CSV must have a header row including 'id'")
-    vendors, processes, lines = [], [], {}
+    vendors: list[dict] = []
+    processes: list[dict] = []
+    lines: dict[str, int] = {}
     for row in reader:
         row = {(k or "").strip(): (v or "").strip() for k, v in row.items() if k}
         kind = row.get("record_type", "vendor").lower() or "vendor"
@@ -223,6 +226,9 @@ def load(path: str | Path) -> dict:
     except RecursionError:
         raise InputError(f"{p}: input nested too deeply") from None
     ids = [v["id"] for v in reg["vendors"]]
-    reg["source"] = p.as_posix()
+    try:
+        reg["source"] = Path(os.path.relpath(p)).as_posix()
+    except ValueError:  # different drive on Windows
+        reg["source"] = p.as_posix()
     reg["lines"] = csv_lines if csv_lines is not None else _yaml_lines(text, ids)
     return reg
