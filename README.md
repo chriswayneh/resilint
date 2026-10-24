@@ -63,7 +63,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md|sarif|regmap`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2; if `RESILINT_OUTPUT_ROOT` is set, paths resolving outside it are refused, and the Action sets it to `$GITHUB_WORKSPACE`), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
+Options: `--format text|json|md|sarif|regmap`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2; if `RESILINT_OUTPUT_ROOT` is set, paths resolving outside it are refused, and the Action sets it to `$GITHUB_WORKSPACE`. Empty or unset means no restriction; a relative value is resolved from the current directory; a root that does not exist makes every write fail with exit 2), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
 Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
 
 Example Markdown report (from the fictional `examples/` data):
@@ -93,7 +93,7 @@ mkdir roi && resilint export-roi examples/vendors.yaml --out-dir roi
 
 `--format regmap` lists every DORA, NIS2, and PRA SS2/21 reference the rules map to, with the rules, finding count, and affected vendors for each. JSON findings also carry a structured `regulation_refs` field. All references are a draft mapping, not legal advice.
 
-`export-roi` writes CSV files shaped toward the DORA register-of-information templates: `b_05_01_providers.csv` (B_05.01 ICT third-party service providers), `b_06_01_functions.csv` (B_06.01 functions), `b_02_02_links.csv` (provider-to-function links), plus a `README.txt`. They are not the official templates and leave many required fields out, so complete them and check them with an RoI validator before you submit anything. Cells starting with `= + - @` are prefixed with `'` to block spreadsheet formula injection. The output directory must already exist and must not be a symlink, and existing files in it are overwritten.
+`export-roi` writes CSV files shaped toward the DORA register-of-information templates: `b_05_01_providers.csv` (B_05.01 ICT third-party service providers), `b_06_01_functions.csv` (B_06.01 functions), `b_02_02_links.csv` (B_02.02 Contractual arrangements - specific information, partial column set: provider-to-function links only), plus a `README.txt`. In the functions file, `critical_or_important` is `Yes` for processes marked critical or high, `No` for medium or low, and `Assessment not performed` when a process has no criticality set. They are not the official templates and leave many required fields out, so complete them and check them with an RoI validator before you submit anything. Text is NFKC-normalized, and cells that start (after leading whitespace) with `= + - @ | %`, a tab, or a line break are prefixed with `'` to block spreadsheet formula injection. That includes numeric-looking strings such as `-1` or `+44 20 ...`, which then show a leading `'`. The output directory must already exist and must not be a symlink. Existing export files are never overwritten unless you pass `--force`.
 
 ### GitHub Action
 
@@ -152,7 +152,7 @@ vendors:
     last_tested: 2024-11-12     # ISO date
     contacts_verified: 2025-01-15  # ISO date the contacts were last confirmed working
     lei: 9845000EXAMPLE000048   # optional ISO 17442 LEI (checksum validated), used by export-roi
-    country: IE                 # optional ISO 3166-1 alpha-2, used by export-roi
+    country: IE                 # optional assigned ISO 3166-1 alpha-2 code (GB, GR; not UK, EL), used by export-roi
     supports_processes: [order-fulfilment]
 ```
 

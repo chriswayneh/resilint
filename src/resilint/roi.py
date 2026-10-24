@@ -8,10 +8,11 @@ from __future__ import annotations
 
 import csv
 import io
+import unicodedata
 
 from .rules import REG_NOTE
 
-_UNSAFE = ("=", "+", "-", "@", "\t", "\r")
+_UNSAFE = ("=", "+", "-", "@", "\t", "\r", "\n", "|", "%")
 
 
 def _cell(value) -> str:
@@ -22,8 +23,16 @@ def _cell(value) -> str:
         return "true" if value else "false"
     if isinstance(value, float):
         value = f"{value:g}"
-    s = str(value).replace("\r", " ").replace("\n", " ")
-    return "'" + s if s.startswith(_UNSAFE) else s
+    s = unicodedata.normalize("NFKC", str(value))
+    if s.lstrip(" \t\r\n\u3000").startswith(_UNSAFE) or s[:1] in ("\t", "\r", "\n"):
+        s = "'" + s
+    return s.replace("\r", " ").replace("\n", " ")
+
+
+def _crit_or_important(p: dict) -> str:
+    if not p.get("criticality_assessed", True):
+        return "Assessment not performed"
+    return "Yes" if p["criticality"] in ("critical", "high") else "No"
 
 
 def _csv(header, rows) -> str:
@@ -45,7 +54,7 @@ def export(register: dict) -> dict[str, str]:
           v["last_tested"].isoformat() if v["last_tested"] else None] for v in vendors])
     functions = _csv(
         ["function_id", "function_name", "critical_or_important", "rto_hours"],
-        [[p["id"], p["name"], p["criticality"] == "critical", p["rto_hours"]]
+        [[p["id"], p["name"], _crit_or_important(p), p["rto_hours"]]
          for p in procs.values()])
     links = _csv(
         ["provider_id", "function_id", "function_known"],
@@ -53,7 +62,10 @@ def export(register: dict) -> dict[str, str]:
     note = (f"resilint draft RoI export ({REG_NOTE}).\n"
             "b_05_01_providers.csv  -> toward template B_05.01 (ICT third-party service providers)\n"
             "b_06_01_functions.csv  -> toward template B_06.01 (functions identification)\n"
-            "b_02_02_links.csv      -> toward template B_02.02 (provider-to-function links)\n"
+            "b_02_02_links.csv      -> toward template B_02.02 (Contractual arrangements - specific information),\n"
+            "                          partial column set: provider-to-function links only\n"
+            "critical_or_important: critical/high -> Yes, medium/low -> No, "
+            "unset -> Assessment not performed\n"
             "Not official templates. Many required RoI fields are not captured; "
             "complete and validate with an RoI validator before submission.\n")
     return {"b_05_01_providers.csv": providers, "b_06_01_functions.csv": functions,

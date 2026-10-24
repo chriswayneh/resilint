@@ -18,7 +18,8 @@ def _within(path: str, root: str) -> bool:
     return os.path.commonpath([real, base]) == base
 
 
-def write_file(path: str, content: str, input_file: str | None = None) -> str | None:
+def write_file(path: str, content: str, input_file: str | None = None,
+               exclusive: bool = False) -> str | None:
     """Write without following symlinks. Returns an error message, or None on success."""
     root = os.environ.get("RESILINT_OUTPUT_ROOT")
     try:
@@ -29,6 +30,8 @@ def write_file(path: str, content: str, input_file: str | None = None) -> str | 
         if os.path.islink(path):
             return f"output path {path} must not be a symlink"
         flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+        if exclusive:
+            flags |= os.O_EXCL
         fd = os.open(path, flags, 0o644)
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
             fh.write(content)
@@ -43,16 +46,29 @@ def _export(args) -> int:
     except InputError as e:
         print(f"resilint: error: {e}", file=sys.stderr)
         return 2
-    if os.path.islink(args.out_dir) or not os.path.isdir(args.out_dir):
+    out = os.path.normpath(args.out_dir)
+    if os.path.islink(out) or not os.path.isdir(out):
         print("resilint: error: --out-dir must be an existing directory, not a symlink",
               file=sys.stderr)
         return 2
-    for name, content in export(register).items():
-        err = write_file(os.path.join(args.out_dir, name), content, args.file)
+    root = os.environ.get("RESILINT_OUTPUT_ROOT")
+    if root and not _within(out, root):
+        print(f"resilint: error: --out-dir resolves outside {root}", file=sys.stderr)
+        return 2
+    files = export(register)
+    if not args.force:
+        existing = [n for n in files if os.path.lexists(os.path.join(out, n))]
+        if existing:
+            print(f"resilint: error: {', '.join(existing)} already exist in {out}; "
+                  "use --force to overwrite", file=sys.stderr)
+            return 2
+    for name, content in files.items():
+        err = write_file(os.path.join(out, name), content, args.file,
+                         exclusive=not args.force)
         if err:
             print(f"resilint: error: {err}", file=sys.stderr)
             return 2
-    print(f"wrote draft RoI export to {args.out_dir} (draft mapping, not legal advice)")
+    print(f"wrote draft RoI export to {out} (draft mapping, not legal advice)")
     return 0
 
 
@@ -80,6 +96,7 @@ def main(argv=None) -> int:
     e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
     e.add_argument("file")
     e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
+    e.add_argument("--force", action="store_true", help="overwrite existing export files")
     args = ap.parse_args(argv)
     if args.cmd == "export-roi":
         return _export(args)
