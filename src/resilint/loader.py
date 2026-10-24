@@ -105,6 +105,26 @@ def _list(value: Any, ctx: str, field: str) -> list[str]:
     return [str(p).strip() for p in value if str(p).strip()]
 
 
+def _lei(value: Any, ctx: str) -> str | None:
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return None
+    s = str(value).strip().upper()
+    if not re.fullmatch(r"[0-9A-Z]{18}[0-9]{2}", s):
+        raise InputError(f"{ctx}: lei must be 20 characters (ISO 17442)")
+    if int("".join(str(int(c, 36)) for c in s)) % 97 != 1:
+        raise InputError(f"{ctx}: lei check digits are invalid")
+    return s
+
+
+def _country(value: Any, ctx: str) -> str | None:
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return None
+    s = str(value).strip().upper()
+    if not re.fullmatch(r"[A-Z]{2}", s):
+        raise InputError(f"{ctx}: country must be an ISO 3166-1 alpha-2 code")
+    return s
+
+
 def normalize(data: Any) -> dict:
     if not isinstance(data, dict):
         raise InputError("top level must be a mapping with 'vendors' (and optional 'processes')")
@@ -161,6 +181,8 @@ def normalize(data: Any) -> dict:
             "contacts": _contacts(v.get("contacts"), ctx),
             "exit_plan": _exit_plan(v.get("exit_plan")),
             "last_tested": _date(v.get("last_tested"), ctx),
+            "lei": _lei(v.get("lei"), ctx),
+            "country": _country(v.get("country"), ctx),
             "contacts_verified": _date(v.get("contacts_verified"), ctx, "contacts_verified"),
             "supports_processes": _list(v.get("supports_processes"), ctx, "supports_processes"),
         })

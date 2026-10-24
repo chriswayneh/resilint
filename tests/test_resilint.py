@@ -99,7 +99,7 @@ def test_exit_codes(tmp_path, capsys):
     assert main(["check", str(clean)]) == 0
 
 
-@pytest.mark.parametrize("fmt", ["text", "json", "md", "sarif"])
+@pytest.mark.parametrize("fmt", ["text", "json", "md", "sarif", "regmap"])
 def test_formats(capsys, fmt):
     main(["check", "examples/vendors.yaml", "--format", fmt])
     out = capsys.readouterr().out
@@ -306,3 +306,92 @@ def test_output_root_enforced(tmp_path, monkeypatch):
     inside = ws / "r.txt"
     assert main(["check", "examples/vendors.yaml", "--output", str(inside)]) == 1
     assert inside.read_text()
+
+
+# --- v0.3: regulation mapping report, draft RoI export ---
+
+def test_refs_split_and_prefix():
+    from resilint.rules import RULES, refs
+    r = refs(RULES["RL001"][2])
+    assert r["DORA"] == ["Art. 30(3)(b)", "Art. 30(2)(f)"]
+    assert r["NIS2"] == ["Art. 21(2)(d)"] and r["PRA SS2/21"] == ["ch. 6"]
+    for _n, _s, reg in RULES.values():
+        assert all(refs(reg)[fw] for fw in ("DORA", "NIS2", "PRA SS2/21"))
+
+
+def test_json_has_regulation_refs(capsys):
+    import json
+    main(["check", "examples/vendors.yaml", "--format", "json"])
+    f = json.loads(capsys.readouterr().out)["findings"][0]
+    assert set(f["regulation_refs"]) == {"DORA", "NIS2", "PRA SS2/21"}
+    assert f["regulation_note"] == "draft mapping, not legal advice"
+
+
+def test_regmap_report(capsys):
+    main(["check", "examples/vendors.yaml", "--format", "regmap"])
+    out = capsys.readouterr().out
+    assert "draft mapping, not legal advice" in out
+    for h in ("## DORA", "## NIS2", "## PRA SS2/21"):
+        assert h in out
+    assert "| Art. 28(8) | RL004 | 1 | example-cloud-wms |" in out
+
+
+def test_regmap_escapes_vendor():
+    from resilint.report import regmap
+    reg = normalize({"vendors": [good_vendor(id="<b>|x", exit_plan=False)]})
+    out = regmap(check(reg, today=TODAY), reg)
+    assert "<b>" not in out and "&lt;b&gt;&#124;x" in out
+
+
+def test_lei_and_country():
+    v = normalize({"vendors": [good_vendor(lei="9845000EXAMPLE000048", country="ie")]})
+    assert v["vendors"][0]["lei"] == "9845000EXAMPLE000048"
+    assert v["vendors"][0]["country"] == "IE"
+    for bad in ({"lei": "SHORT"}, {"lei": "9845000EXAMPLE000049"}, {"country": "IRL"}):
+        with pytest.raises(InputError):
+            normalize({"vendors": [good_vendor(**bad)]})
+
+
+def test_export_roi(tmp_path):
+    out = tmp_path / "roi"
+    out.mkdir()
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(out)]) == 0
+    names = sorted(p.name for p in out.iterdir())
+    assert names == ["README.txt", "b_02_02_links.csv", "b_05_01_providers.csv",
+                     "b_06_01_functions.csv"]
+    prov = (out / "b_05_01_providers.csv").read_text().splitlines()
+    assert prov[0].startswith("provider_id,lei,legal_name")
+    assert any(line.startswith("example-cloud-wms,") for line in prov)
+    assert "not legal advice" in (out / "README.txt").read_text()
+    assert "order-fulfilment,Order fulfilment,true,4" in (out / "b_06_01_functions.csv").read_text()
+
+
+def test_export_roi_csv_injection_neutralized():
+    from resilint.roi import export
+    reg = normalize({"vendors": [good_vendor(name="=HYPERLINK(1)", id="@v")]})
+    prov = export(reg)["b_05_01_providers.csv"]
+    assert "'=HYPERLINK(1)" in prov and "'@v" in prov
+    assert "\n=" not in prov and ",=" not in prov
+
+
+def test_export_roi_bad_out_dir(tmp_path):
+    assert main(["export-roi", "examples/vendors.yaml",
+                 "--out-dir", str(tmp_path / "missing")]) == 2
+    real = tmp_path / "real"
+    real.mkdir()
+    link = tmp_path / "link"
+    link.symlink_to(real)
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(link)]) == 2
+    assert not list(real.iterdir())
+    bad = _write(tmp_path, "bad.yaml", "vendors: notalist")
+    assert main(["export-roi", str(bad), "--out-dir", str(real)]) == 2
+
+
+def test_export_roi_respects_output_root(tmp_path, monkeypatch):
+    ws = tmp_path / "ws"
+    ws.mkdir()
+    other = tmp_path / "other"
+    other.mkdir()
+    monkeypatch.setenv("RESILINT_OUTPUT_ROOT", str(ws))
+    assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(other)]) == 2
+    assert not list(other.iterdir())

@@ -1,8 +1,14 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- `--format regmap`: regulation mapping report grouping findings by DORA, NIS2, and PRA SS2/21 reference (draft mapping, not legal advice).
+- `regulation_refs` (structured per-framework references) on every finding in JSON output.
+- `resilint export-roi FILE --out-dir DIR`: draft CSV export toward DORA register-of-information templates B_05.01, B_06.01, and B_02.02.
+- Optional vendor fields `lei` (ISO 17442 format and check digits) and `country` (ISO 3166-1 alpha-2).
 ### Security
 - `RESILINT_OUTPUT_ROOT`: when set, output paths whose real path is outside it are refused (exit 2). The GitHub Action sets it to `$GITHUB_WORKSPACE`.
+- `export-roi` neutralizes spreadsheet formula injection, refuses symlinked or missing output directories, and writes files with the same no-follow, output-root checks as `--output`.
 
 ## [0.2.0] - 2026-10-24
 ### Added

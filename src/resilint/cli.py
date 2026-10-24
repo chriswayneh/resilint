@@ -9,6 +9,7 @@ import sys
 from . import __version__
 from .loader import InputError, load
 from .report import FORMATS
+from .roi import export
 from .rules import SEVERITIES, at_or_above, check
 
 
@@ -36,6 +37,25 @@ def write_file(path: str, content: str, input_file: str | None = None) -> str | 
     return None
 
 
+def _export(args) -> int:
+    try:
+        register = load(args.file)
+    except InputError as e:
+        print(f"resilint: error: {e}", file=sys.stderr)
+        return 2
+    if os.path.islink(args.out_dir) or not os.path.isdir(args.out_dir):
+        print("resilint: error: --out-dir must be an existing directory, not a symlink",
+              file=sys.stderr)
+        return 2
+    for name, content in export(register).items():
+        err = write_file(os.path.join(args.out_dir, name), content, args.file)
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
+            return 2
+    print(f"wrote draft RoI export to {args.out_dir} (draft mapping, not legal advice)")
+    return 0
+
+
 class _Parser(argparse.ArgumentParser):
     def error(self, message):
         self.print_usage(sys.stderr)
@@ -57,7 +77,12 @@ def main(argv=None) -> int:
     c.add_argument("--contact-days", type=int, default=180,
                    help="max age in days of a vendor's contacts_verified date")
     c.add_argument("--output", metavar="FILE", help="write the report to FILE instead of stdout")
+    e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
+    e.add_argument("file")
+    e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
     args = ap.parse_args(argv)
+    if args.cmd == "export-roi":
+        return _export(args)
     if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
         print("resilint: error: thresholds must be non-negative", file=sys.stderr)
         return 2
