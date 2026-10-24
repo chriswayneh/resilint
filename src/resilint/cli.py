@@ -5,8 +5,12 @@ from __future__ import annotations
 import argparse
 import os
 import sys
+import tempfile
+import time
+from datetime import date
 
 from . import __version__
+from .drills import KINDS, RESULTS, _entry, apply, dump_log, load_log
 from .loader import InputError, load
 from .report import FORMATS
 from .roi import export
@@ -18,17 +22,29 @@ def _within(path: str, root: str) -> bool:
     return os.path.commonpath([real, base]) == base
 
 
-def write_file(path: str, content: str, input_file: str | None = None,
-               exclusive: bool = False) -> str | None:
-    """Write without following symlinks. Returns an error message, or None on success."""
+def check_target(path: str, input_file: str | None = None,
+                 option: str = "--output") -> str | None:
+    """Validate an output path (root, not the input, not a symlink). Error message or None."""
     root = os.environ.get("RESILINT_OUTPUT_ROOT")
     try:
         if root and not _within(path, root):
             return f"output path {path} resolves outside {root}"
         if input_file and os.path.exists(path) and os.path.samefile(path, input_file):
-            return "--output must not be the input file"
+            return f"{option} must not be the input file"
         if os.path.islink(path):
             return f"output path {path} must not be a symlink"
+    except (OSError, ValueError) as e:
+        return f"cannot write {path} ({getattr(e, 'strerror', None) or e})"
+    return None
+
+
+def write_file(path: str, content: str, input_file: str | None = None,
+               exclusive: bool = False) -> str | None:
+    """Write without following symlinks. Returns an error message, or None on success."""
+    err = check_target(path, input_file)
+    if err:
+        return err
+    try:
         flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
         if exclusive:
             flags |= os.O_EXCL
@@ -62,6 +78,11 @@ def _export(args) -> int:
             print(f"resilint: error: {', '.join(existing)} already exist in {out}; "
                   "use --force to overwrite", file=sys.stderr)
             return 2
+    for name in files:  # validate every target before writing any
+        err = check_target(os.path.join(out, name), args.file)
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
+            return 2
     for name, content in files.items():
         err = write_file(os.path.join(out, name), content, args.file,
                          exclusive=not args.force)
@@ -69,6 +90,81 @@ def _export(args) -> int:
             print(f"resilint: error: {err}", file=sys.stderr)
             return 2
     print(f"wrote draft RoI export to {out} (draft mapping, not legal advice)")
+    return 0
+
+
+def _lock(path: str):
+    """Exclusive non-blocking lock on a sidecar file; waits up to ~2 s. fd or error string."""
+    try:
+        import fcntl
+    except ImportError:  # pragma: no cover - non-POSIX
+        return None
+    flags = os.O_WRONLY | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        fd = os.open(path, flags, 0o644)
+    except OSError as e:
+        return f"cannot open lock {path} ({e.strerror})"
+    for _ in range(20):
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return fd
+        except BlockingIOError:
+            time.sleep(0.1)
+    os.close(fd)
+    return f"drill log is locked by another process ({path})"
+
+
+def _replace(path: str, content: str) -> str | None:
+    """Write to a temp file in the same directory, then atomically replace path."""
+    d = os.path.dirname(os.path.abspath(path))
+    tmp = None
+    try:
+        fd, tmp = tempfile.mkstemp(prefix=".drills-", suffix=".tmp", dir=d)
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
+            fh.write(content)
+        os.chmod(tmp, 0o644)
+        os.replace(tmp, path)
+        tmp = None
+    except OSError as e:
+        return f"cannot write {path} ({e.strerror})"
+    finally:
+        if tmp and os.path.exists(tmp):
+            os.unlink(tmp)
+    return None
+
+
+def _drill(args) -> int:
+    log = args.log or os.path.join(os.path.dirname(args.file) or ".", "drills.yaml")
+    lock_path = log + ".lock"
+    for path in (log, lock_path):
+        err = check_target(path, args.file, "--log")
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
+            return 2
+    lock = _lock(lock_path)
+    if isinstance(lock, str):
+        print(f"resilint: error: {lock}", file=sys.stderr)
+        return 2
+    try:
+        try:
+            register = load(args.file)
+            ids = {v["id"] for v in register["vendors"]}
+            drills = load_log(log, missing_ok=True, vendor_ids=ids)
+            new = _entry({"vendor": args.vendor, "date": args.date, "kind": args.kind,
+                          "result": args.result, "notes": args.notes}, "drill", ids)
+        except InputError as e:
+            print(f"resilint: error: {e}", file=sys.stderr)
+            return 2
+        err = check_target(log, args.file, "--log") or _replace(log, dump_log(drills + [new]))
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
+            return 2
+    finally:
+        if lock is not None:
+            os.close(lock)
+    note = " (last-tested date updated)" if new["result"] != "fail" else ""
+    print(f"recorded {new['kind']} {new['result']} for {new['vendor']} on "
+          f"{new['date'].isoformat()} in {log}{note}")
     return 0
 
 
@@ -96,8 +192,21 @@ def main(argv=None) -> int:
     e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
     e.add_argument("file")
     e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
+    c.add_argument("--drills", metavar="LOG", help="drill log to apply (from `drill record`)")
+    d = sub.add_parser("drill", help="drill records")
+    dsub = d.add_subparsers(dest="drill_cmd", required=True)
+    r = dsub.add_parser("record", help="record a tabletop or test result for a vendor")
+    r.add_argument("file", help="vendor register (used to validate the vendor id)")
+    r.add_argument("--vendor", required=True)
+    r.add_argument("--date", default=date.today().isoformat(), help="ISO date (default today)")
+    r.add_argument("--kind", choices=KINDS, required=True)
+    r.add_argument("--result", choices=RESULTS, required=True)
+    r.add_argument("--notes", default=None)
+    r.add_argument("--log", help="drill log file (default drills.yaml next to the register)")
     e.add_argument("--force", action="store_true", help="overwrite existing export files")
     args = ap.parse_args(argv)
+    if args.cmd == "drill":
+        return _drill(args)
     if args.cmd == "export-roi":
         return _export(args)
     if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
@@ -105,6 +214,8 @@ def main(argv=None) -> int:
         return 2
     try:
         register = load(args.file)
+        if args.drills:
+            apply(register, load_log(args.drills))
     except InputError as e:
         print(f"resilint: error: {e}", file=sys.stderr)
         return 2

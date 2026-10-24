@@ -13,6 +13,9 @@ inputs:
   output:
     description: Optional file to write the report to (e.g. resilint.sarif for code scanning upload)
     default: ""
+  drills:
+    description: Optional drill log (from `resilint drill record`) to apply before checking
+    default: ""
 runs:
   using: composite
   steps:
@@ -29,8 +32,10 @@ runs:
         RL_FAIL_ON: ${{ inputs.fail-on }}
         RL_FORMAT: ${{ inputs.format }}
         RL_OUTPUT: ${{ inputs.output }}
+        RL_DRILLS: ${{ inputs.drills }}
         RESILINT_OUTPUT_ROOT: ${{ github.workspace }}
       run: |
         args=(check "$RL_FILE" --fail-on "$RL_FAIL_ON" --format "$RL_FORMAT")
         if [ -n "$RL_OUTPUT" ]; then args+=(--output "$RL_OUTPUT"); fi
+        if [ -n "$RL_DRILLS" ]; then args+=(--drills "$RL_DRILLS"); fi
         resilint "${args[@]}"
