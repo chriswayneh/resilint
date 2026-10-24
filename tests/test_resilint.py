@@ -103,3 +103,50 @@ def test_formats(capsys, fmt):
     main(["check", "examples/vendors.yaml", "--format", fmt])
     out = capsys.readouterr().out
     assert "example-cloud-wms" in out and "not legal advice" in out
+
+
+# --- hardening (Red Team L1-L3, QE review) ---
+
+def _write(tmp_path, name, body):
+    p = tmp_path / name
+    p.write_text(body, encoding="utf-8")
+    return p
+
+
+def test_yaml_aliases_refused(tmp_path):
+    bomb = "a: &a [x, x]\nb: &b [*a, *a]\nvendors: [*b]\n"
+    with pytest.raises(InputError, match="invalid YAML"):
+        load(_write(tmp_path, "bomb.yaml", bomb))
+
+
+def test_non_scalar_list_items_rejected():
+    with pytest.raises(InputError, match="plain values"):
+        normalize({"vendors": [good_vendor(supports_processes=[["p1"]])], "processes": []})
+
+
+def test_deep_nesting_is_input_error(tmp_path):
+    deep = "vendors: " + "[" * 5000 + "]" * 5000 + "\n"
+    with pytest.raises(InputError):
+        load(_write(tmp_path, "deep.yaml", deep))
+
+
+@pytest.mark.parametrize("val", [".nan", ".inf", "-.inf"])
+def test_yaml_non_finite_rejected(tmp_path, val):
+    body = ("vendors:\n  - id: v1\n    criticality: critical\n"
+            f"    recovery_time_hours: {val}\n")
+    with pytest.raises(InputError, match="finite"):
+        load(_write(tmp_path, "nan.yaml", body))
+
+
+@pytest.mark.parametrize("val", ["nan", "inf"])
+def test_csv_non_finite_rejected(val):
+    with pytest.raises(InputError, match="finite"):
+        normalize({"vendors": [good_vendor(notification_sla_hours=val)], "processes": []})
+
+
+def test_md_escape_blocks_markup():
+    from resilint.report import _md_escape
+    out = _md_escape("<img src=x>[link](http://e)`c`*b*|&_")
+    for ch in "<>[]`*|_":
+        assert ch not in out
+    assert "&amp;" in out and "&lt;" in out

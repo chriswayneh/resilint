@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import csv
 import io
+import math
 from datetime import date
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,17 @@ class InputError(Exception):
     """Raised for unreadable or invalid input (exit code 2)."""
 
 
+class _NoAliasLoader(yaml.SafeLoader):
+    """SafeLoader that refuses YAML anchors/aliases (blocks alias bombs)."""
+
+    def compose_node(self, parent, index):
+        if self.check_event(yaml.AliasEvent):
+            event = self.peek_event()
+            raise yaml.composer.ComposerError(
+                None, None, "YAML aliases are not allowed", event.start_mark)
+        return super().compose_node(parent, index)
+
+
 def _num(value: Any, field: str, ctx: str) -> float | None:
     if value is None or (isinstance(value, str) and not value.strip()):
         return None
@@ -27,6 +39,8 @@ def _num(value: Any, field: str, ctx: str) -> float | None:
         n = float(value)
     except (TypeError, ValueError):
         raise InputError(f"{ctx}: {field} must be a number of hours, got {value!r}") from None
+    if not math.isfinite(n):
+        raise InputError(f"{ctx}: {field} must be a finite number of hours")
     if n < 0:
         raise InputError(f"{ctx}: {field} must not be negative")
     return n
@@ -77,6 +91,8 @@ def _list(value: Any, ctx: str, field: str) -> list[str]:
         return [p.strip() for p in value.split(";") if p.strip()]
     if not isinstance(value, list):
         raise InputError(f"{ctx}: {field} must be a list")
+    if any(isinstance(p, (list, dict)) for p in value):
+        raise InputError(f"{ctx}: {field} items must be plain values")
     return [str(p).strip() for p in value if str(p).strip()]
 
 
@@ -169,7 +185,12 @@ def load(path: str | Path) -> dict:
         data = parse_csv(text)
     else:
         try:
-            data = yaml.safe_load(text)
+            data = yaml.load(text, Loader=_NoAliasLoader)  # nosec B506 - SafeLoader subclass
         except yaml.YAMLError as e:
             raise InputError(f"{p}: invalid YAML ({e.__class__.__name__})") from None
-    return normalize(data)
+        except RecursionError:
+            raise InputError(f"{p}: YAML nested too deeply") from None
+    try:
+        return normalize(data)
+    except RecursionError:
+        raise InputError(f"{p}: input nested too deeply") from None

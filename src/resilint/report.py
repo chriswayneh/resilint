@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from collections import Counter
 
+from . import __version__
 from .rules import REG_NOTE, SEVERITIES
 
 
@@ -13,7 +14,11 @@ def _order(findings):
 
 
 def _md_escape(s: str) -> str:
-    return s.replace("\\", "\\\\").replace("|", "\\|").replace("\n", " ")
+    s = s.replace("\r", " ").replace("\n", " ")
+    s = s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
+    for ch in "\\|[]`*_":
+        s = s.replace(ch, "&#" + str(ord(ch)) + ";")
+    return s
 
 
 def text(findings, register) -> str:
@@ -26,7 +31,7 @@ def text(findings, register) -> str:
 
 
 def as_json(findings, register) -> str:
-    return json.dumps({"tool": "resilint", "version": "0.1.0",
+    return json.dumps({"tool": "resilint", "version": __version__,
                        "findings": [f.to_dict() for f in _order(findings)]}, indent=2)
 
 
@@ -48,7 +53,7 @@ def markdown(findings, register) -> str:
                        f"| {f.rule_id} | {f.regulation} |")
     else:
         out.append("No gaps found for critical or high vendors.")
-    out += ["", f"_Regulation references are a {REG_NOTE}. Generated offline by resilint 0.1.0._"]
+    out += ["", f"_Regulation references are a {REG_NOTE}. Generated offline by resilint {__version__}._"]
     return "\n".join(out)
 
 

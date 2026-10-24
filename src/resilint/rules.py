@@ -19,7 +19,7 @@ RULES = {
     "RL005": ("stale-or-missing-test", "medium",
               "DORA Art. 30(3)(c)-(d); NIS2 Art. 21(2)(f); PRA SS2/21 ch. 10"),
     "RL006": ("recovery-exceeds-rto", "high",
-              "DORA Art. 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10"),
+              "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10"),
     "RL007": ("concentration-risk", "medium",
               "DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5"),
 }

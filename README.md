@@ -59,7 +59,7 @@ Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen 
 pip install git+https://github.com/chriswayneh/resilint
 resilint check examples/vendors.yaml               # text
 resilint check examples/vendors.csv --format md    # one-page gap report for leadership
-resilint check vendors.yaml --format json --fail-on medium --stale-days 180
+resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
 Options: `--format text|json|md`, `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3).
