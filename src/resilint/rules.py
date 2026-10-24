@@ -22,6 +22,8 @@ RULES = {
               "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10"),
     "RL007": ("concentration-risk", "medium",
               "DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5"),
+    "RL008": ("stale-or-missing-contact-verification", "medium",
+              "DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6"),
 }
 
 
@@ -45,7 +47,7 @@ def _f(rule_id: str, vendor: str, message: str) -> Finding:
 
 
 def check(register: dict, stale_days: int = 365, max_critical: int = 3,
-          today: date | None = None) -> list[Finding]:
+          contact_days: int = 180, today: date | None = None) -> list[Finding]:
     today = today or date.today()
     procs = register["processes"]
     out: list[Finding] = []
@@ -67,6 +69,12 @@ def check(register: dict, stale_days: int = 365, max_critical: int = 3,
         elif (today - lt).days > stale_days:
             out.append(_f("RL005", vid,
                           f"last resilience test {lt.isoformat()} is older than {stale_days} days"))
+        cv = v["contacts_verified"]
+        if v["contacts"] and cv is None:
+            out.append(_f("RL008", vid, "no contact verification date recorded"))
+        elif v["contacts"] and (today - cv).days > contact_days:
+            out.append(_f("RL008", vid, f"contacts last verified {cv.isoformat()}, "
+                                        f"older than {contact_days} days"))
         rt = v["recovery_time_hours"]
         crit_count = 0
         for pid in v["supports_processes"]:

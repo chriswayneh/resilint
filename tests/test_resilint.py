@@ -1,4 +1,5 @@
 from datetime import date
+from pathlib import Path
 
 import pytest
 
@@ -12,7 +13,7 @@ TODAY = date(2026, 10, 1)
 def good_vendor(**kw):
     v = {"id": "v1", "criticality": "critical", "notification_sla_hours": 4,
          "recovery_time_hours": 2, "contacts": [{"email": "a@example.com"}],
-         "exit_plan": True, "last_tested": "2026-06-01", "supports_processes": ["p1"]}
+         "exit_plan": True, "last_tested": "2026-06-01", "contacts_verified": "2026-09-01", "supports_processes": ["p1"]}
     v.update(kw)
     return v
 
@@ -98,7 +99,7 @@ def test_exit_codes(tmp_path, capsys):
     assert main(["check", str(clean)]) == 0
 
 
-@pytest.mark.parametrize("fmt", ["text", "json", "md"])
+@pytest.mark.parametrize("fmt", ["text", "json", "md", "sarif"])
 def test_formats(capsys, fmt):
     main(["check", "examples/vendors.yaml", "--format", fmt])
     out = capsys.readouterr().out
@@ -157,3 +158,80 @@ def test_md_escape_blocks_markup():
     for ch in "<>[]`*|_":
         assert ch not in out
     assert "&amp;" in out and "&lt;" in out
+
+
+# --- v0.2: contact verification, schema version, SARIF ---
+
+def test_contact_verification_missing_and_stale():
+    assert "RL008" in run(good_vendor(contacts_verified=None))
+    assert "RL008" in run(good_vendor(contacts_verified="2025-01-01"))
+    assert "RL008" not in run(good_vendor(contacts_verified="2025-01-01"), contact_days=1000)
+
+
+def test_contact_verification_skipped_without_contacts():
+    ids = run(good_vendor(contacts=[], contacts_verified=None))
+    assert "RL003" in ids and "RL008" not in ids
+
+
+def test_contact_verification_bad_date():
+    with pytest.raises(InputError, match="contacts_verified must be an ISO date"):
+        normalize({"vendors": [good_vendor(contacts_verified="last week")]})
+
+
+@pytest.mark.parametrize("ver", [1, "1", None])
+def test_schema_version_supported(ver):
+    data = {"vendors": [good_vendor()]}
+    if ver is not None:
+        data["schema_version"] = ver
+    assert normalize(data)["schema_version"] == 1
+
+
+@pytest.mark.parametrize("ver", [2, 0, "two", True, 1.5])
+def test_schema_version_unsupported(tmp_path, ver):
+    with pytest.raises(InputError, match="schema_version"):
+        normalize({"schema_version": ver, "vendors": []})
+    p = _write(tmp_path, "v.yaml", f"schema_version: {ver}\nvendors: []\n")
+    assert main(["check", str(p)]) == 2
+
+
+def test_sarif_structure(capsys):
+    import json
+    main(["check", "examples/vendors.yaml", "--format", "sarif"])
+    doc = json.loads(capsys.readouterr().out)
+    assert doc["version"] == "2.1.0"
+    run_ = doc["runs"][0]
+    rule_ids = {r["id"] for r in run_["tool"]["driver"]["rules"]}
+    assert {"RL001", "RL008"} <= rule_ids
+    res = run_["results"]
+    assert res and all(r["ruleId"] in rule_ids for r in res)
+    loc = res[0]["locations"][0]["physicalLocation"]
+    assert loc["artifactLocation"]["uri"] == "examples/vendors.yaml"
+    wms = next(r for r in res if r["properties"]["vendor"] == "example-cloud-wms")
+    line = wms["locations"][0]["physicalLocation"]["region"]["startLine"]
+    assert "id: example-cloud-wms" in Path("examples/vendors.yaml").read_text().splitlines()[line - 1]
+    assert all("not legal advice" in r["message"]["text"] for r in res)
+    assert {r["level"] for r in res} <= {"error", "warning", "note"}
+
+
+def test_sarif_csv_line_numbers(capsys):
+    import json
+    main(["check", "examples/vendors.csv", "--format", "sarif"])
+    res = json.loads(capsys.readouterr().out)["runs"][0]["results"]
+    lines = Path("examples/vendors.csv").read_text().splitlines()
+    for r in res:
+        n = r["locations"][0]["physicalLocation"]["region"]["startLine"]
+        assert r["properties"]["vendor"] in lines[n - 1]
+
+
+def test_output_file(tmp_path, capsys):
+    out = tmp_path / "r.sarif"
+    assert main(["check", "examples/vendors.yaml", "--format", "sarif",
+                 "--output", str(out)]) == 1
+    assert capsys.readouterr().out == ""
+    assert '"2.1.0"' in out.read_text()
+    assert main(["check", "examples/vendors.yaml", "--output",
+                 str(tmp_path / "nope" / "r.txt")]) == 2
+
+
+def test_negative_contact_days_rejected():
+    assert main(["check", "examples/vendors.yaml", "--contact-days", "-1"]) == 2

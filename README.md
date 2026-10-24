@@ -3,13 +3,13 @@
 # resilint
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Status: v0.1 in review](https://img.shields.io/badge/status-v0.1%20in%20review-yellow.svg)](ROADMAP.md)
+[![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-blue.svg)](https://github.com/chriswayneh/resilint/releases/tag/v0.1.0)
 
 ### Vendor resilience checks that run every time your vendor list changes.
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Status:** v0.1 in review - not yet released. See the [roadmap](ROADMAP.md).
+**Status:** v0.1.0 released; v0.2 (SARIF, contact verification, versioned schema) on `main` after review. See the [roadmap](ROADMAP.md).
 
 </div>
 
@@ -39,10 +39,11 @@ Your team keeps critical vendors and the business processes that depend on them 
 **Consistency problems:**
 - A vendor's promised recovery time is slower than the recovery target of a business process that depends on it
 - Too many critical processes concentrated on a single vendor (threshold you set)
+- Vendor contacts that have never been verified, or not within a window you set (default 180 days)
 
 It is read-only, runs offline, and works only on your own data. It does not contact vendors, scrape websites, or send anything anywhere.
 
-## Evidence it produces (v0.1: text, JSON, Markdown; SARIF planned)
+## Evidence it produces (text, JSON, Markdown, SARIF)
 
 | Audience | What they get |
 |---|---|
@@ -62,7 +63,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md`, `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3).
+Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
 Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
 
 Example Markdown report (from the fictional `examples/` data):
@@ -73,12 +74,13 @@ Example Markdown report (from the fictional `examples/` data):
 - Vendors in register: **2**
 - Critical/high vendors checked: **2**
 - Vendors with gaps: **1**
-- Findings: **2** high, **1** medium
+- Findings: **2** high, **2** medium
 
 | Severity | Vendor | Gap | Rule | Maps to |
 |---|---|---|---|---|
 | high | example-cloud-wms | no documented exit plan | RL004 | DORA Art. 28(8), Art. 30(3)(f); ... |
 | high | example-cloud-wms | recovery time 8h exceeds order-fulfilment RTO 4h | RL006 | DORA Art. 30(2)(e), 30(3)(a); ... |
+| medium | example-cloud-wms | contacts last verified 2025-01-15, older than 180 days | RL008 | ... |
 | medium | example-cloud-wms | last resilience test 2024-11-12 is older than 365 days | RL005 | ... |
 ```
 
@@ -92,6 +94,27 @@ Example Markdown report (from the fictional `examples/` data):
     fail-on: high
 ```
 
+To get pull request annotations, write SARIF and upload it to code scanning (pin actions to full commit SHAs in your own workflow):
+
+```yaml
+permissions:
+  contents: read
+  security-events: write
+steps:
+  - uses: actions/checkout@v4
+  - uses: chriswayneh/resilint@main
+    continue-on-error: true      # still upload when findings fail the step
+    with:
+      file: vendors.yaml
+      format: sarif
+      output: resilint.sarif
+  - uses: github/codeql-action/upload-sarif@v3
+    with:
+      sarif_file: resilint.sarif
+```
+
+Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing.
+
 ## Input schema
 
 YAML anchors and aliases (`&name` / `*name`) are refused (exit 2) to block alias-expansion attacks.
@@ -99,6 +122,7 @@ YAML anchors and aliases (`&name` / `*name`) are refused (exit 2) to block alias
 YAML (`examples/vendors.yaml`):
 
 ```yaml
+schema_version: 1               # optional; defaults to 1, unknown versions exit 2
 processes:
   - id: order-fulfilment        # required
     name: Order fulfilment
@@ -115,6 +139,7 @@ vendors:
       - phone: "+1-555-0100"
     exit_plan: docs/exit/wms.md # true/false or a document reference
     last_tested: 2024-11-12     # ISO date
+    contacts_verified: 2025-01-15  # ISO date the contacts were last confirmed working
     supports_processes: [order-fulfilment]
 ```
 
@@ -124,7 +149,7 @@ CSV (`examples/vendors.csv`), one row per record, header row required:
 |---|---|
 | `record_type` | `vendor` (default) or `process` |
 | `id`, `name`, `criticality` | as in YAML |
-| `notification_sla_hours`, `recovery_time_hours`, `exit_plan`, `last_tested` | vendor rows |
+| `notification_sla_hours`, `recovery_time_hours`, `exit_plan`, `last_tested`, `contacts_verified` | vendor rows |
 | `contacts`, `supports_processes` | vendor rows; multiple values separated by `;` |
 | `rto_hours` | process rows |
 
@@ -141,6 +166,7 @@ Only vendors marked `critical` or `high` are checked. Files are read with safe Y
 | RL005 | medium | Last test missing or older than `--stale-days` |
 | RL006 | high | Vendor recovery time exceeds the RTO of a process it supports |
 | RL007 | medium | Vendor supports more than `--max-critical` critical processes |
+| RL008 | medium | Contacts present but `contacts_verified` missing or older than `--contact-days` |
 
 ## Regulatory mapping (draft)
 
@@ -155,6 +181,7 @@ Each finding carries a `regulation` field and the label "draft mapping, not lega
 | RL005 recent test | Art. 30(3)(c) contingency plan testing, 30(3)(d) TLPT participation | Art. 21(2)(f) effectiveness assessment | Ch. 10 business continuity and exit plans |
 | RL006 recovery vs. RTO | Art. 30(2)(e), 30(3)(a) | Art. 21(2)(c) | Ch. 10 business continuity and exit plans |
 | RL007 concentration | Art. 28(4)(c), Art. 29 concentration risk | Art. 21(2)(d) | Ch. 5 pre-outsourcing (materiality and risk assessment) |
+| RL008 contact verification | Art. 30(2) contract terms; Art. 28(3) register of information kept up to date | Art. 21(2)(d) | Ch. 6 outsourcing agreements |
 
 DORA Art. 30(3) applies to contracts supporting critical or important functions.
 
@@ -174,7 +201,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 
 ## Status
 
-**v0.1 in review.** Not yet released or tagged. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
+**v0.1.0 released** (2026-10-24); v0.2 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
 
 ## Security
 

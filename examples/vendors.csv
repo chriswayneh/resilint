@@ -1,5 +1,5 @@
-record_type,id,name,criticality,notification_sla_hours,recovery_time_hours,contacts,exit_plan,last_tested,supports_processes,rto_hours
-process,order-fulfilment,Order fulfilment (FICTIONAL),critical,,,,,,,4
-process,payroll,Payroll (FICTIONAL),critical,,,,,,,48
-vendor,example-cloud-wms,Example Cloud WMS Ltd (FICTIONAL),critical,24,8,incidents@example.com,false,2024-11-12,order-fulfilment,
-vendor,example-payroll-co,Example Payroll Co (FICTIONAL),high,4,24,+1-555-0100,docs/exit/example-payroll-co.md,2026-06-01,payroll,
+record_type,id,name,criticality,notification_sla_hours,recovery_time_hours,contacts,exit_plan,last_tested,contacts_verified,supports_processes,rto_hours
+process,order-fulfilment,Order fulfilment (FICTIONAL),critical,,,,,,,,4
+process,payroll,Payroll (FICTIONAL),critical,,,,,,,,48
+vendor,example-cloud-wms,Example Cloud WMS Ltd (FICTIONAL),critical,24,8,incidents@example.com,false,2024-11-12,2025-01-15,order-fulfilment,
+vendor,example-payroll-co,Example Payroll Co (FICTIONAL),high,4,24,+1-555-0100,docs/exit/example-payroll-co.md,2026-06-01,2026-09-01,payroll,

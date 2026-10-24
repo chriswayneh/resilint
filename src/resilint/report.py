@@ -6,7 +6,7 @@ import json
 from collections import Counter
 
 from . import __version__
-from .rules import REG_NOTE, SEVERITIES
+from .rules import REG_NOTE, RULES, SEVERITIES
 
 
 def _order(findings):
@@ -57,4 +57,32 @@ def markdown(findings, register) -> str:
     return "\n".join(out)
 
 
-FORMATS = {"text": text, "json": as_json, "md": markdown}
+_SARIF_LEVEL = {"critical": "error", "high": "error", "medium": "warning", "low": "note"}
+
+
+def sarif(findings, register) -> str:
+    """SARIF 2.1.0 for code-scanning / pull request annotations."""
+    uri = register.get("source", "")
+    rules = [{"id": rid, "name": name,
+              "shortDescription": {"text": name.replace("-", " ")},
+              "defaultConfiguration": {"level": _SARIF_LEVEL[sev]},
+              "properties": {"regulation": reg, "regulation_note": REG_NOTE}}
+             for rid, (name, sev, reg) in RULES.items()]
+    results = [{"ruleId": f.rule_id, "level": _SARIF_LEVEL[f.severity],
+                "message": {"text": f"{f.vendor}: {f.message} "
+                                    f"(maps to {f.regulation}; {REG_NOTE})"},
+                "locations": [{"physicalLocation": {
+                    "artifactLocation": {"uri": uri},
+                    "region": {"startLine": register.get("lines", {}).get(f.vendor, 1)}}}],
+                "partialFingerprints": {"resilint/v1": f"{f.rule_id}:{f.vendor}"},
+                "properties": {"severity": f.severity, "vendor": f.vendor}}
+               for f in _order(findings)]
+    return json.dumps({
+        "$schema": "https://json.schemastore.org/sarif-2.1.0.json", "version": "2.1.0",
+        "runs": [{"tool": {"driver": {"name": "resilint", "version": __version__,
+                                      "informationUri": "https://github.com/chriswayneh/resilint",
+                                      "rules": rules}},
+                  "results": results}]}, indent=2)
+
+
+FORMATS = {"text": text, "json": as_json, "md": markdown, "sarif": sarif}

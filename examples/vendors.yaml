@@ -1,4 +1,6 @@
 # FICTIONAL EXAMPLE DATA. Vendors and processes are made up for illustration.
+schema_version: 1
+
 processes:
   - id: order-fulfilment
     name: Order fulfilment
@@ -19,6 +21,7 @@ vendors:
       - email: incidents@example.com
     exit_plan: false
     last_tested: 2024-11-12
+    contacts_verified: 2025-01-15
     supports_processes: [order-fulfilment]
   - id: example-payroll-co
     name: Example Payroll Co
@@ -29,4 +32,5 @@ vendors:
       - phone: "+1-555-0100"
     exit_plan: docs/exit/example-payroll-co.md
     last_tested: 2026-06-01
+    contacts_verified: 2026-09-01
     supports_processes: [payroll]
