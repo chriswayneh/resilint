@@ -281,7 +281,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 
 ## Status
 
-**v0.2.0 released** (2026-10-24); v0.3 and v0.4 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
+**v0.3.0 released** (2026-10-24); v0.4 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
 
 ## Security
 

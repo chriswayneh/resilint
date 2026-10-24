@@ -10,7 +10,7 @@
 - `export-roi` uses NFKC normalization only to detect formula-injection characters and writes the original text (prefixed with `'` when unsafe).
 - `export-roi --force` validates every target file (symlink, output root, input file) before writing any of them.
 
-## [0.3.0] - unreleased (in review)
+## [0.3.0] - 2026-10-24
 ### Added
 - export-roi `critical_or_important`: critical/high -> Yes, medium/low -> No, unset -> Assessment not performed. B_02.02 output is a partial column set.
 - `--format regmap`: regulation mapping report grouping findings by DORA, NIS2, and PRA SS2/21 reference (draft mapping, not legal advice).
