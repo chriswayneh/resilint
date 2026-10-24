@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resilint"
-version = "0.1.0"
+version = "0.2.0"
 description = "Offline lint for critical-vendor resilience commitments (DORA, NIS2, PRA SS2/21 draft mapping)"
 readme = "README.md"
 license = {text = "MIT"}
@@ -12,7 +12,7 @@ requires-python = ">=3.10"
 dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.4"]
+dev = ["pytest>=7", "ruff>=0.4", "mypy>=1.8", "types-PyYAML"]
 
 [project.scripts]
 resilint = "resilint.cli:main"

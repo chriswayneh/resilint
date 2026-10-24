@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from . import __version__
@@ -29,8 +30,11 @@ def main(argv=None) -> int:
     c.add_argument("--stale-days", type=int, default=365)
     c.add_argument("--max-critical", type=int, default=3,
                    help="concentration threshold: critical processes per vendor")
+    c.add_argument("--contact-days", type=int, default=180,
+                   help="max age in days of a vendor's contacts_verified date")
+    c.add_argument("--output", metavar="FILE", help="write the report to FILE instead of stdout")
     args = ap.parse_args(argv)
-    if args.stale_days < 0 or args.max_critical < 0:
+    if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
         print("resilint: error: thresholds must be non-negative", file=sys.stderr)
         return 2
     try:
@@ -38,8 +42,26 @@ def main(argv=None) -> int:
     except InputError as e:
         print(f"resilint: error: {e}", file=sys.stderr)
         return 2
-    findings = check(register, stale_days=args.stale_days, max_critical=args.max_critical)
-    print(FORMATS[args.format](findings, register))
+    findings = check(register, stale_days=args.stale_days, max_critical=args.max_critical,
+                     contact_days=args.contact_days)
+    report = FORMATS[args.format](findings, register)
+    if args.output:
+        try:
+            if os.path.exists(args.output) and os.path.samefile(args.output, args.file):
+                print("resilint: error: --output must not be the input file", file=sys.stderr)
+                return 2
+            if os.path.islink(args.output):
+                print("resilint: error: --output must not be a symlink", file=sys.stderr)
+                return 2
+            flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+            fd = os.open(args.output, flags, 0o644)
+            with os.fdopen(fd, "w", encoding="utf-8") as fh:
+                fh.write(report + "\n")
+        except OSError as e:
+            print(f"resilint: error: cannot write {args.output} ({e.strerror})", file=sys.stderr)
+            return 2
+    else:
+        print(report)
     return 1 if at_or_above(findings, args.fail_on) else 0
 
 

@@ -1,6 +1,16 @@
 # Changelog
 
-## [0.1.0] - unreleased (in review)
+## [0.2.0] - unreleased (in review)
+### Added
+- SARIF 2.1.0 output (`--format sarif`) with per-vendor line locations for pull request annotations; `--output FILE`; Action `format: sarif` and `output` inputs.
+- `contacts_verified` vendor field (YAML and CSV) and rule RL008 (missing or stale contact verification, `--contact-days`, default 180), with a draft regulation reference (not legal advice).
+- Versioned input schema: optional top-level `schema_version` (currently `1`); unsupported versions exit 2.
+### Security
+- `--output` refuses the input file and symlink paths (exit 2) and opens with `O_NOFOLLOW` where available.
+- SARIF uri is percent-encoded, relative to `%SRCROOT%`, and reduced to the file name for inputs outside the working directory.
+- Unquoted YAML datetimes in `last_tested` and `contacts_verified` are converted to dates instead of breaking date checks.
+
+## [0.1.0] - 2026-10-24
 ### Added
 - `resilint check` for YAML and CSV vendor registers, with text, JSON, and Markdown output.
 - Rules RL001-RL007 with draft DORA / NIS2 / PRA SS2/21 references (not legal advice).
