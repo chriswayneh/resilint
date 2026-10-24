@@ -1,6 +1,10 @@
 # Changelog
 
-## [0.2.0] - unreleased (in review)
+## [Unreleased]
+### Security
+- `RESILINT_OUTPUT_ROOT`: when set, output paths whose real path is outside it are refused (exit 2). The GitHub Action sets it to `$GITHUB_WORKSPACE`.
+
+## [0.2.0] - 2026-10-24
 ### Added
 - SARIF 2.1.0 output (`--format sarif`) with per-vendor line locations for pull request annotations; `--output FILE`; Action `format: sarif` and `output` inputs.
 - `contacts_verified` vendor field (YAML and CSV) and rule RL008 (missing or stale contact verification, `--contact-days`, default 180), with a draft regulation reference (not legal advice).

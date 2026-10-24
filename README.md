@@ -3,13 +3,13 @@
 # resilint
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-blue.svg)](https://github.com/chriswayneh/resilint/releases/tag/v0.1.0)
+[![Release: v0.2.0](https://img.shields.io/badge/release-v0.2.0-blue.svg)](https://github.com/chriswayneh/resilint/releases/tag/v0.2.0)
 
 ### Vendor resilience checks that run every time your vendor list changes.
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Status:** v0.1.0 released; v0.2 (SARIF, contact verification, versioned schema) on `main` after review. See the [roadmap](ROADMAP.md).
+**Status:** v0.2.0 released (SARIF, contact verification, versioned schema). See the [roadmap](ROADMAP.md).
 
 </div>
 
@@ -63,7 +63,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
+Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2; if `RESILINT_OUTPUT_ROOT` is set, paths resolving outside it are refused, and the Action sets it to `$GITHUB_WORKSPACE`), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
 Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
 
 Example Markdown report (from the fictional `examples/` data):
@@ -201,7 +201,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 
 ## Status
 
-**v0.1.0 released** (2026-10-24); v0.2 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
+**v0.2.0 released** (2026-10-24). See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
 
 ## Security
 

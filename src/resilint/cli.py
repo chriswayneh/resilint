@@ -12,6 +12,30 @@ from .report import FORMATS
 from .rules import SEVERITIES, at_or_above, check
 
 
+def _within(path: str, root: str) -> bool:
+    real, base = os.path.realpath(path), os.path.realpath(root)
+    return os.path.commonpath([real, base]) == base
+
+
+def write_file(path: str, content: str, input_file: str | None = None) -> str | None:
+    """Write without following symlinks. Returns an error message, or None on success."""
+    root = os.environ.get("RESILINT_OUTPUT_ROOT")
+    try:
+        if root and not _within(path, root):
+            return f"output path {path} resolves outside {root}"
+        if input_file and os.path.exists(path) and os.path.samefile(path, input_file):
+            return "--output must not be the input file"
+        if os.path.islink(path):
+            return f"output path {path} must not be a symlink"
+        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags, 0o644)
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
+            fh.write(content)
+    except (OSError, ValueError) as e:
+        return f"cannot write {path} ({getattr(e, 'strerror', None) or e})"
+    return None
+
+
 class _Parser(argparse.ArgumentParser):
     def error(self, message):
         self.print_usage(sys.stderr)
@@ -46,19 +70,9 @@ def main(argv=None) -> int:
                      contact_days=args.contact_days)
     report = FORMATS[args.format](findings, register)
     if args.output:
-        try:
-            if os.path.exists(args.output) and os.path.samefile(args.output, args.file):
-                print("resilint: error: --output must not be the input file", file=sys.stderr)
-                return 2
-            if os.path.islink(args.output):
-                print("resilint: error: --output must not be a symlink", file=sys.stderr)
-                return 2
-            flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
-            fd = os.open(args.output, flags, 0o644)
-            with os.fdopen(fd, "w", encoding="utf-8") as fh:
-                fh.write(report + "\n")
-        except OSError as e:
-            print(f"resilint: error: cannot write {args.output} ({e.strerror})", file=sys.stderr)
+        err = write_file(args.output, report + "\n", args.file)
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
             return 2
     else:
         print(report)

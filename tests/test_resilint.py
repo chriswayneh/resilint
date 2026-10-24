@@ -291,3 +291,18 @@ def test_yaml_unquoted_datetimes(tmp_path):
     assert v["last_tested"] == date(2026, 6, 1)
     assert v["contacts_verified"] == date(2026, 9, 1)
     assert type(v["last_tested"]) is date
+
+
+def test_output_root_enforced(tmp_path, monkeypatch):
+    ws = tmp_path / "ws"
+    ws.mkdir()
+    monkeypatch.setenv("RESILINT_OUTPUT_ROOT", str(ws))
+    outside = tmp_path / "out.txt"
+    assert main(["check", "examples/vendors.yaml", "--output", str(outside)]) == 2
+    assert not outside.exists()
+    escape = ws / ".." / "esc.txt"
+    assert main(["check", "examples/vendors.yaml", "--output", str(escape)]) == 2
+    assert not (tmp_path / "esc.txt").exists()
+    inside = ws / "r.txt"
+    assert main(["check", "examples/vendors.yaml", "--output", str(inside)]) == 1
+    assert inside.read_text()

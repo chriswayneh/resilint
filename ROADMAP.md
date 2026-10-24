@@ -1,6 +1,6 @@
 # Roadmap
 
-Status: **v0.1.0 released (2026-10-24); v0.2 in review.** Milestones and scope may change.
+Status: **v0.2.0 released (2026-10-24).** Milestones and scope may change.
 
 ## v0.1 - Core checks (released 2026-10-24)
 - YAML schema for vendors and business processes, plus CSV import from spreadsheet exports
@@ -10,7 +10,7 @@ Status: **v0.1.0 released (2026-10-24); v0.2 in review.** Milestones and scope m
 - Text, JSON, and Markdown output; exit codes `0`/`1`/`2`
 - Minimal composite GitHub Action
 
-## v0.2 - CI polish (in review)
+## v0.2 - CI polish (released 2026-10-24)
 - SARIF 2.1.0 output (`--format sarif`, `--output FILE`) for pull request annotations via code scanning
 - `contacts_verified` dates with rule RL008 and `--contact-days`; versioned schema (`schema_version: 1`, unknown versions rejected)
 
