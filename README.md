@@ -63,7 +63,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses to overwrite the input register), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
+Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
 Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
 
 Example Markdown report (from the fictional `examples/` data):
@@ -113,7 +113,7 @@ steps:
       sarif_file: resilint.sarif
 ```
 
-Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing.
+Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing. The file path is relative to the working directory (with `uriBaseId: %SRCROOT%`); when the register is outside the working directory, the SARIF uri is just the file name.
 
 ## Input schema
 
