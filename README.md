@@ -3,13 +3,13 @@
 # resilint
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Release: v0.1.0](https://img.shields.io/badge/release-v0.1.0-blue.svg)](https://github.com/chriswayneh/resilint/releases/tag/v0.1.0)
+[![Release: v0.2.0](https://img.shields.io/badge/release-v0.2.0-blue.svg)](https://github.com/chriswayneh/resilint/releases/tag/v0.2.0)
 
 ### Vendor resilience checks that run every time your vendor list changes.
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Status:** v0.1.0 released; v0.2 (SARIF, contact verification, versioned schema) on `main` after review. See the [roadmap](ROADMAP.md).
+**Status:** v0.2.0 released (SARIF, contact verification, versioned schema). See the [roadmap](ROADMAP.md).
 
 </div>
 
@@ -43,7 +43,7 @@ Your team keeps critical vendors and the business processes that depend on them 
 
 It is read-only, runs offline, and works only on your own data. It does not contact vendors, scrape websites, or send anything anywhere.
 
-## Evidence it produces (text, JSON, Markdown, SARIF)
+## Evidence it produces (text, JSON, Markdown, SARIF, regulation mapping, draft RoI export)
 
 | Audience | What they get |
 |---|---|
@@ -63,7 +63,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md|sarif`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
+Options: `--format text|json|md|sarif|regmap`, `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2; if `RESILINT_OUTPUT_ROOT` is set, paths resolving outside it are refused, and the Action sets it to `$GITHUB_WORKSPACE`. Empty or unset means no restriction; a relative value is resolved from the current directory; a root that does not exist makes every write fail with exit 2), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
 Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
 
 Example Markdown report (from the fictional `examples/` data):
@@ -83,6 +83,17 @@ Example Markdown report (from the fictional `examples/` data):
 | medium | example-cloud-wms | last resilience test 2024-11-12 is older than 365 days | RL005 | ... |
 | medium | example-cloud-wms | contacts last verified 2025-01-15, older than 180 days | RL008 | ... |
 ```
+
+### Regulation mapping report and draft RoI export
+
+```bash
+resilint check examples/vendors.yaml --format regmap        # findings grouped by DORA / NIS2 / PRA reference
+mkdir roi && resilint export-roi examples/vendors.yaml --out-dir roi
+```
+
+`--format regmap` lists every DORA, NIS2, and PRA SS2/21 reference the rules map to, with the rules, finding count, and affected vendors for each. JSON findings also carry a structured `regulation_refs` field. All references are a draft mapping, not legal advice.
+
+`export-roi` writes CSV files shaped toward the DORA register-of-information templates: `b_05_01_providers.csv` (B_05.01 ICT third-party service providers), `b_06_01_functions.csv` (B_06.01 functions), `b_02_02_links.csv` (B_02.02 Contractual arrangements - specific information, partial column set: provider-to-function links only), plus a `README.txt`. In the functions file, `critical_or_important` is `Yes` for processes marked critical or high, `No` for medium or low, and `Assessment not performed` when a process has no criticality set. They are not the official templates and leave many required fields out, so complete them and check them with an RoI validator before you submit anything. Text is NFKC-normalized, and cells that start (after leading whitespace) with `= + - @ | %`, a tab, or a line break are prefixed with `'` to block spreadsheet formula injection. That includes numeric-looking strings such as `-1` or `+44 20 ...`, which then show a leading `'`. The output directory must already exist and must not be a symlink. Existing export files are never overwritten unless you pass `--force`.
 
 ### GitHub Action
 
@@ -140,6 +151,8 @@ vendors:
     exit_plan: docs/exit/wms.md # true/false or a document reference
     last_tested: 2024-11-12     # ISO date
     contacts_verified: 2025-01-15  # ISO date the contacts were last confirmed working
+    lei: 9845000EXAMPLE000048   # optional ISO 17442 LEI (checksum validated), used by export-roi
+    country: IE                 # optional assigned ISO 3166-1 alpha-2 code (GB, GR; not UK, EL), used by export-roi
     supports_processes: [order-fulfilment]
 ```
 
@@ -149,7 +162,7 @@ CSV (`examples/vendors.csv`), one row per record, header row required:
 |---|---|
 | `record_type` | `vendor` (default) or `process` |
 | `id`, `name`, `criticality` | as in YAML |
-| `notification_sla_hours`, `recovery_time_hours`, `exit_plan`, `last_tested`, `contacts_verified` | vendor rows |
+| `notification_sla_hours`, `recovery_time_hours`, `exit_plan`, `last_tested`, `contacts_verified`, `lei`, `country` | vendor rows |
 | `contacts`, `supports_processes` | vendor rows; multiple values separated by `;` |
 | `rto_hours` | process rows |
 
@@ -201,7 +214,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 
 ## Status
 
-**v0.1.0 released** (2026-10-24); v0.2 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
+**v0.2.0 released** (2026-10-24); v0.3 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
 
 ## Security
 

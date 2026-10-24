@@ -9,7 +9,67 @@ import sys
 from . import __version__
 from .loader import InputError, load
 from .report import FORMATS
+from .roi import export
 from .rules import SEVERITIES, at_or_above, check
+
+
+def _within(path: str, root: str) -> bool:
+    real, base = os.path.realpath(path), os.path.realpath(root)
+    return os.path.commonpath([real, base]) == base
+
+
+def write_file(path: str, content: str, input_file: str | None = None,
+               exclusive: bool = False) -> str | None:
+    """Write without following symlinks. Returns an error message, or None on success."""
+    root = os.environ.get("RESILINT_OUTPUT_ROOT")
+    try:
+        if root and not _within(path, root):
+            return f"output path {path} resolves outside {root}"
+        if input_file and os.path.exists(path) and os.path.samefile(path, input_file):
+            return "--output must not be the input file"
+        if os.path.islink(path):
+            return f"output path {path} must not be a symlink"
+        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
+        if exclusive:
+            flags |= os.O_EXCL
+        fd = os.open(path, flags, 0o644)
+        with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
+            fh.write(content)
+    except (OSError, ValueError) as e:
+        return f"cannot write {path} ({getattr(e, 'strerror', None) or e})"
+    return None
+
+
+def _export(args) -> int:
+    try:
+        register = load(args.file)
+    except InputError as e:
+        print(f"resilint: error: {e}", file=sys.stderr)
+        return 2
+    out = os.path.normpath(args.out_dir)
+    if os.path.islink(out) or not os.path.isdir(out):
+        print("resilint: error: --out-dir must be an existing directory, not a symlink",
+              file=sys.stderr)
+        return 2
+    root = os.environ.get("RESILINT_OUTPUT_ROOT")
+    if root and not _within(out, root):
+        print(f"resilint: error: --out-dir resolves outside {root}", file=sys.stderr)
+        return 2
+    files = export(register)
+    if not args.force:
+        existing = [n for n in files if os.path.lexists(os.path.join(out, n))]
+        if existing:
+            print(f"resilint: error: {', '.join(existing)} already exist in {out}; "
+                  "use --force to overwrite", file=sys.stderr)
+            return 2
+    for name, content in files.items():
+        err = write_file(os.path.join(out, name), content, args.file,
+                         exclusive=not args.force)
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
+            return 2
+    print(f"wrote draft RoI export to {out} (draft mapping, not legal advice)")
+    return 0
 
 
 class _Parser(argparse.ArgumentParser):
@@ -33,7 +93,13 @@ def main(argv=None) -> int:
     c.add_argument("--contact-days", type=int, default=180,
                    help="max age in days of a vendor's contacts_verified date")
     c.add_argument("--output", metavar="FILE", help="write the report to FILE instead of stdout")
+    e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
+    e.add_argument("file")
+    e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
+    e.add_argument("--force", action="store_true", help="overwrite existing export files")
     args = ap.parse_args(argv)
+    if args.cmd == "export-roi":
+        return _export(args)
     if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
         print("resilint: error: thresholds must be non-negative", file=sys.stderr)
         return 2
@@ -46,19 +112,9 @@ def main(argv=None) -> int:
                      contact_days=args.contact_days)
     report = FORMATS[args.format](findings, register)
     if args.output:
-        try:
-            if os.path.exists(args.output) and os.path.samefile(args.output, args.file):
-                print("resilint: error: --output must not be the input file", file=sys.stderr)
-                return 2
-            if os.path.islink(args.output):
-                print("resilint: error: --output must not be a symlink", file=sys.stderr)
-                return 2
-            flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
-            fd = os.open(args.output, flags, 0o644)
-            with os.fdopen(fd, "w", encoding="utf-8") as fh:
-                fh.write(report + "\n")
-        except OSError as e:
-            print(f"resilint: error: cannot write {args.output} ({e.strerror})", file=sys.stderr)
+        err = write_file(args.output, report + "\n", args.file)
+        if err:
+            print(f"resilint: error: {err}", file=sys.stderr)
             return 2
     else:
         print(report)
