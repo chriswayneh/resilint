@@ -19,14 +19,17 @@ class InputError(Exception):
     """Raised for unreadable or invalid input (exit code 2)."""
 
 
+class _AliasRefused(yaml.YAMLError):
+    """A YAML anchor/alias was found; aliases are refused."""
+
+
 class _NoAliasLoader(yaml.SafeLoader):
     """SafeLoader that refuses YAML anchors/aliases (blocks alias bombs)."""
 
     def compose_node(self, parent, index):
         if self.check_event(yaml.AliasEvent):
-            event = self.peek_event()
-            raise yaml.composer.ComposerError(
-                None, None, "YAML aliases are not allowed", event.start_mark)
+            line = self.peek_event().start_mark.line + 1
+            raise _AliasRefused(f"YAML anchors/aliases are not allowed (line {line})")
         return super().compose_node(parent, index)
 
 
@@ -186,6 +189,8 @@ def load(path: str | Path) -> dict:
     else:
         try:
             data = yaml.load(text, Loader=_NoAliasLoader)  # nosec B506 - SafeLoader subclass
+        except _AliasRefused as e:
+            raise InputError(f"{p}: {e}") from None
         except yaml.YAMLError as e:
             raise InputError(f"{p}: invalid YAML ({e.__class__.__name__})") from None
         except RecursionError:

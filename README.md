@@ -94,6 +94,8 @@ Example Markdown report (from the fictional `examples/` data):
 
 ## Input schema
 
+YAML anchors and aliases (`&name` / `*name`) are refused (exit 2) to block alias-expansion attacks.
+
 YAML (`examples/vendors.yaml`):
 
 ```yaml

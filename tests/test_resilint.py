@@ -115,8 +115,15 @@ def _write(tmp_path, name, body):
 
 def test_yaml_aliases_refused(tmp_path):
     bomb = "a: &a [x, x]\nb: &b [*a, *a]\nvendors: [*b]\n"
-    with pytest.raises(InputError, match="invalid YAML"):
+    with pytest.raises(InputError, match="anchors/aliases are not allowed"):
         load(_write(tmp_path, "bomb.yaml", bomb))
+
+
+def test_alias_message_reaches_user(tmp_path, capsys):
+    p = _write(tmp_path, "alias.yaml", "a: &x 1\nvendors: [*x]\n")
+    assert main(["check", str(p)]) == 2
+    err = capsys.readouterr().err
+    assert "YAML anchors/aliases are not allowed (line 2)" in err
 
 
 def test_non_scalar_list_items_rejected():

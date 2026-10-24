@@ -8,6 +8,6 @@
 - Composite GitHub Action, CI (pytest + ruff), fictional examples.
 - Dependabot for github-actions and pip; hash-pinned PyYAML (`requirements-lock.txt`).
 ### Security
-- Actions pinned to full commit SHAs; YAML aliases refused; deep nesting and non-finite hours (NaN/inf) rejected with exit 2; Markdown report escapes HTML/Markdown characters.
+- Actions pinned to full commit SHAs; YAML aliases refused with a clear error message; deep nesting and non-finite hours (NaN/inf) rejected with exit 2; Markdown report escapes HTML/Markdown characters.
 ### Fixed
 - RL006 regulation reference matches README; report version comes from `__version__`; Quick start points at `examples/vendors.yaml`.
