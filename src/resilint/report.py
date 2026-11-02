@@ -6,7 +6,7 @@ import json
 from collections import Counter
 
 from . import __version__
-from .rules import FRAMEWORKS, REG_NOTE, RULES, SEVERITIES, refs
+from .rules import DISCLAIMER, FRAMEWORKS, REG_NOTE, RULES, SEVERITIES, refs
 
 
 def _order(findings):
@@ -53,7 +53,8 @@ def markdown(findings, register) -> str:
                        f"| {f.rule_id} | {f.regulation} |")
     else:
         out.append("No gaps found for critical or high vendors.")
-    out += ["", f"_Regulation references are a {REG_NOTE}. Generated offline by resilint {__version__}._"]
+    out += ["", (f"_{DISCLAIMER}. References use a draft mapping. "
+                 f"Generated offline by resilint {__version__}._")]
     return "\n".join(out)
 
 
@@ -102,7 +103,7 @@ def regmap(findings, register) -> str:
             vendors = ", ".join(sorted({_md_escape(f.vendor) for f in fs})) or "-"
             out.append(f"| {_md_escape(ref)} | {', '.join(sorted(set(rids)))} | {len(fs)} | {vendors} |")
         out.append("")
-    out.append(f"_Generated offline by resilint {__version__}._")
+    out.append(f"_{DISCLAIMER}. Generated offline by resilint {__version__}._")
     return "\n".join(out)
 
 

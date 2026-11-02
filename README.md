@@ -70,7 +70,7 @@ MEDIUM   RL005 example-payments-cloud: last resilience test 2025-03-01 is older 
 | Art. 21(2)(f) | RL005, RL009 | 1 | example-payments-cloud |
 ```
 
-All references are a draft mapping, not legal advice.
+**Draft, not legal advice.** All references are a draft mapping.
 
 ## The problem, in business terms
 

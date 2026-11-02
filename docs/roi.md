@@ -1,6 +1,6 @@
 # Draft register-of-information export
 
-Draft mapping, not legal advice. These CSVs are partial working tables, not official regulatory templates or a submission-ready filing. Complete missing fields and validate against the applicable official requirements before use.
+Draft, not legal advice. These CSVs are partial working tables, not official regulatory templates or a submission-ready filing. Complete missing fields and validate against the applicable official requirements before use.
 
 ```bash
 mkdir roi-output

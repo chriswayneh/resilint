@@ -2,7 +2,7 @@
 
 All rules evaluate critical/high vendors. Thresholds and suppressions are described in [configuration](config.md); drill evidence is described in [drills](drills.md). Use `resilint explain RL004` for the same offline guidance. Examples illustrate evidence to record after a real change or verification.
 
-Regulation references are a draft mapping, not legal advice. They do not establish compliance.
+Draft, not legal advice. Regulation references are a draft mapping and do not establish compliance.
 
 ## RL001: missing-notification-sla
 
