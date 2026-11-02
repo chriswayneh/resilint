@@ -36,6 +36,8 @@ CI runs the same lint, type and coverage gates on Linux, Windows and macOS with 
 
 The separate `Action self-test` workflow invokes `uses: ./` on GitHub's runner. It verifies a failing example produces SARIF and matching outputs, an empty register passes with zero findings, and an invalid format fails with exit 2 and no report. Its token is read-only and it does not upload SARIF or publish artifacts.
 
+The CI packaging job runs `python -m build` and `python -m twine check dist/*`, then installs the wheel into a fresh venv outside the checkout. It checks `--version`, creates the packaged starter and verifies its expected findings. Local `build/` and `dist/` artifacts are ignored by Git. To reproduce packaging checks, install `build` and `twine` into your development environment first.
+
 The CI coverage command is explicit; plain `pytest -q` and targeted test runs retain their existing behavior. Coverage data files are ignored by Git.
 
 ## Loader property tests
