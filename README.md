@@ -297,13 +297,13 @@ Because the register lives in Git, every change has an author, a review, and a h
 | --- | --- | --- |
 | **v0.1–v0.4** | Core checks and evidence ✅ | YAML/CSV registers, resilience rules, SARIF, regulation mapping, draft RoI export and drill records |
 | **v0.4.1** | Maintenance | Windows locking ✅ · dependency updates ✅ · version/docs checks ✅ · Action input checks ✅ |
-| **v0.5** | Real-world data | Test organization, coverage, fuzzing and performance ✅ · CSV robustness, schemas, configuration and baselines planned |
+| **v0.5** | Real-world data | Test organization, coverage, fuzzing, performance and CSV robustness ✅ · Schemas, configuration and baselines planned |
 | **v0.6** | CI integration | Action outputs and self-tests, SARIF examples, pre-commit, `init` and `explain` |
 | **v0.9** | Documentation and API freeze | Usage guides, output schemas, snapshots and a stability policy |
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 4/10 complete.** Next is `H-5`, CSV robustness.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 5/10 complete.** Next is `H-6`, the published register JSON Schema.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 
