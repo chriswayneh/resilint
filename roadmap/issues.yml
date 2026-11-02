@@ -226,7 +226,9 @@ issues:
   - id: C-1
     title: Action outputs
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 32
     why: Downstream steps need counts
     files: '`action.yml`'
     acceptance: Outputs `findings`, `highest-severity`, `exit-code`; documented
