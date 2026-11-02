@@ -34,6 +34,8 @@ Each CI matrix job requires at least 90% total statement coverage across all Pyt
 
 CI runs the same lint, type and coverage gates on Linux, Windows and macOS with Python 3.10, 3.12 and 3.13 (nine combinations). Matrix jobs finish independently so a failure on one platform does not hide results from the others. Concurrent drill-write test failures include child exit codes and stderr to diagnose platform-specific errors.
 
+The separate `Action self-test` workflow invokes `uses: ./` on GitHub's runner. It verifies a failing example produces SARIF and matching outputs, an empty register passes with zero findings, and an invalid format fails with exit 2 and no report. Its token is read-only and it does not upload SARIF or publish artifacts.
+
 The CI coverage command is explicit; plain `pytest -q` and targeted test runs retain their existing behavior. Coverage data files are ignored by Git.
 
 ## Loader property tests

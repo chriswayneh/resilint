@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- A hosted Action self-test checks SARIF creation, threshold failure, zero findings and invalid-input outputs using the local composite Action.
 - A complete SHA-pinned SARIF upload workflow example scopes upload permissions to its job and preserves threshold/input failure status after upload.
 - The GitHub Action exposes `findings`, `highest-severity` and `exit-code` from its report-producing check, preserving threshold failures and distinguishing errors from empty reports.
 - Baseline snapshots and filtering with stable rule/vendor/field fingerprints, including distinct process identities for recovery-time findings; JSON findings now include their field identifier.

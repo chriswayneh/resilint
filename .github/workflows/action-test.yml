@@ -1,0 +1,73 @@
+name: Action self-test
+on: [push, pull_request]
+permissions:
+  contents: read
+
+jobs:
+  action:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check example and write SARIF
+        id: findings
+        uses: ./
+        continue-on-error: true
+        with:
+          file: examples/vendors.yaml
+          format: sarif
+          output: self-test.sarif
+      - name: Verify failing threshold and outputs
+        if: always()
+        env:
+          RL_CODE: ${{ steps.findings.outputs.exit-code }}
+          RL_COUNT: ${{ steps.findings.outputs.findings }}
+          RL_SEVERITY: ${{ steps.findings.outputs.highest-severity }}
+          RL_OUTCOME: ${{ steps.findings.outcome }}
+        run: |
+          python -I - <<'PY'
+          import json, os
+          from pathlib import Path
+          assert os.environ['RL_CODE'] == '1', os.environ['RL_CODE']
+          assert os.environ['RL_OUTCOME'] == 'failure'
+          assert os.environ['RL_SEVERITY'] == 'high'
+          report = json.loads(Path('self-test.sarif').read_text())
+          assert report['version'] == '2.1.0'
+          assert len(report['runs'][0]['results']) == int(os.environ['RL_COUNT']) > 0
+          PY
+      - name: Create empty register
+        run: |
+          printf 'vendors: []\nprocesses: []\n' > "$RUNNER_TEMP/empty-register.yaml"
+      - name: Check empty register
+        id: empty
+        uses: ./
+        with:
+          file: ${{ runner.temp }}/empty-register.yaml
+      - name: Reject invalid format
+        id: invalid
+        uses: ./
+        continue-on-error: true
+        with:
+          file: examples/vendors.yaml
+          format: invalid
+          output: invalid-report.txt
+      - name: Verify pass and error outputs
+        if: always()
+        env:
+          EMPTY_CODE: ${{ steps.empty.outputs.exit-code }}
+          EMPTY_COUNT: ${{ steps.empty.outputs.findings }}
+          EMPTY_SEVERITY: ${{ steps.empty.outputs.highest-severity }}
+          INVALID_CODE: ${{ steps.invalid.outputs.exit-code }}
+          INVALID_COUNT: ${{ steps.invalid.outputs.findings }}
+          INVALID_SEVERITY: ${{ steps.invalid.outputs.highest-severity }}
+          INVALID_OUTCOME: ${{ steps.invalid.outcome }}
+        run: |
+          test "$EMPTY_CODE" = 0
+          test "$EMPTY_COUNT" = 0
+          test "$EMPTY_SEVERITY" = none
+          test "$INVALID_CODE" = 2
+          test -z "$INVALID_COUNT"
+          test -z "$INVALID_SEVERITY"
+          test "$INVALID_OUTCOME" = failure
+          test ! -e invalid-report.txt
