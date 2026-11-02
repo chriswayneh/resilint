@@ -1,0 +1,225 @@
+{
+  "tool": "resilint",
+  "version": "0.0.0",
+  "findings": [
+    {
+      "rule_id": "RL006",
+      "rule": "recovery-exceeds-rto",
+      "severity": "high",
+      "vendor": "example-vendor-b",
+      "message": "recovery time 8h exceeds process-a RTO 4h",
+      "regulation": "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(2)(e)",
+          "Art. 30(3)(a)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(c)"
+        ],
+        "PRA SS2/21": [
+          "ch. 10"
+        ]
+      },
+      "field": "supports_processes:process-a"
+    },
+    {
+      "rule_id": "RL006",
+      "rule": "recovery-exceeds-rto",
+      "severity": "high",
+      "vendor": "example-vendor-b",
+      "message": "recovery time 8h exceeds process-b RTO 4h",
+      "regulation": "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(2)(e)",
+          "Art. 30(3)(a)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(c)"
+        ],
+        "PRA SS2/21": [
+          "ch. 10"
+        ]
+      },
+      "field": "supports_processes:process-b"
+    },
+    {
+      "rule_id": "RL001",
+      "rule": "missing-notification-sla",
+      "severity": "high",
+      "vendor": "example<vendor>|a",
+      "message": "no incident notification SLA recorded",
+      "regulation": "DORA Art. 30(3)(b), 30(2)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(3)(b)",
+          "Art. 30(2)(f)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(d)"
+        ],
+        "PRA SS2/21": [
+          "ch. 6"
+        ]
+      },
+      "field": "notification_sla_hours"
+    },
+    {
+      "rule_id": "RL002",
+      "rule": "missing-recovery-time",
+      "severity": "high",
+      "vendor": "example<vendor>|a",
+      "message": "no recovery time commitment recorded",
+      "regulation": "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 6",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(2)(e)",
+          "Art. 30(3)(a)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(c)"
+        ],
+        "PRA SS2/21": [
+          "ch. 6"
+        ]
+      },
+      "field": "recovery_time_hours"
+    },
+    {
+      "rule_id": "RL003",
+      "rule": "no-contact",
+      "severity": "high",
+      "vendor": "example<vendor>|a",
+      "message": "no email or phone contact recorded",
+      "regulation": "DORA Art. 30(2); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(2)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(d)"
+        ],
+        "PRA SS2/21": [
+          "ch. 6"
+        ]
+      },
+      "field": "contacts"
+    },
+    {
+      "rule_id": "RL004",
+      "rule": "no-exit-plan",
+      "severity": "high",
+      "vendor": "example<vendor>|a",
+      "message": "no documented exit plan",
+      "regulation": "DORA Art. 28(8), Art. 30(3)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 10",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 28(8)",
+          "Art. 30(3)(f)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(d)"
+        ],
+        "PRA SS2/21": [
+          "ch. 10"
+        ]
+      },
+      "field": "exit_plan"
+    },
+    {
+      "rule_id": "RL008",
+      "rule": "stale-or-missing-contact-verification",
+      "severity": "medium",
+      "vendor": "example-vendor-b",
+      "message": "no contact verification date recorded",
+      "regulation": "DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(2)",
+          "Art. 28(3)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(d)"
+        ],
+        "PRA SS2/21": [
+          "ch. 6"
+        ]
+      },
+      "field": "contacts_verified"
+    },
+    {
+      "rule_id": "RL009",
+      "rule": "last-drill-failed",
+      "severity": "medium",
+      "vendor": "example-vendor-b",
+      "message": "most recent test on 2026-10-01 failed",
+      "regulation": "DORA Art. 30(3)(c), Art. 11(6); NIS2 Art. 21(2)(c), 21(2)(f); PRA SS2/21 ch. 10",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(3)(c)",
+          "Art. 11(6)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(c)",
+          "Art. 21(2)(f)"
+        ],
+        "PRA SS2/21": [
+          "ch. 10"
+        ]
+      },
+      "field": "drills"
+    },
+    {
+      "rule_id": "RL005",
+      "rule": "stale-or-missing-test",
+      "severity": "medium",
+      "vendor": "example<vendor>|a",
+      "message": "no resilience test date recorded",
+      "regulation": "DORA Art. 30(3)(c)-(d); NIS2 Art. 21(2)(f); PRA SS2/21 ch. 10",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 30(3)(c)-(d)"
+        ],
+        "NIS2": [
+          "Art. 21(2)(f)"
+        ],
+        "PRA SS2/21": [
+          "ch. 10"
+        ]
+      },
+      "field": "last_tested"
+    },
+    {
+      "rule_id": "RL007",
+      "rule": "concentration-risk",
+      "severity": "medium",
+      "vendor": "example<vendor>|a",
+      "message": "supports 4 critical processes (threshold 3)",
+      "regulation": "DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5",
+      "regulation_note": "draft mapping, not legal advice",
+      "regulation_refs": {
+        "DORA": [
+          "Art. 28(4)(c)",
+          "Art. 29"
+        ],
+        "NIS2": [
+          "Art. 21(2)(d)"
+        ],
+        "PRA SS2/21": [
+          "ch. 5"
+        ]
+      },
+      "field": "supports_processes"
+    }
+  ]
+}

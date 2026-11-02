@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- A JSON report schema and five deterministic report snapshots cover all rule IDs, repeated process findings, escaping and the stable output contract.
 - A v1 stability and deprecation policy defines the supported CLI, report, schema, baseline and integration interfaces and their compatibility limits.
 - Dedicated installation, usage, rule, drill, export and FAQ guides document every CLI option; CI checks relative Markdown links and headings without fetching external URLs.
 - `resilint explain RL001` through `RL009` provides offline rule descriptions, illustrative fixes and draft references; unknown IDs return a controlled error.

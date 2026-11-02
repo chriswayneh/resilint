@@ -1,0 +1,24 @@
+schema_version: 1
+processes:
+  - {id: process-a, criticality: critical, rto_hours: 4}
+  - {id: process-b, criticality: critical, rto_hours: 4}
+  - {id: process-c, criticality: critical, rto_hours: 4}
+  - {id: process-d, criticality: critical, rto_hours: 4}
+vendors:
+  - id: example<vendor>|a
+    criticality: critical
+    notification_sla_hours: null
+    recovery_time_hours: null
+    contacts: []
+    exit_plan: false
+    last_tested: null
+    supports_processes: [process-a, process-b, process-c, process-d]
+  - id: example-vendor-b
+    criticality: high
+    notification_sla_hours: 24
+    recovery_time_hours: 8
+    contacts: [{email: incidents@example.test}]
+    exit_plan: docs/example-exit.md
+    last_tested: 2026-01-15
+    contacts_verified: null
+    supports_processes: [process-a, process-b]
