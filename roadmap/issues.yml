@@ -101,13 +101,15 @@ issues:
   - id: H-2
     title: Coverage gate
     milestone: M1
-    status: planned
+    status: complete
     why: Measurable quality
     files: '`pyproject` dev deps (`pytest-cov`), `ci.yml`'
     acceptance: CI fails if coverage is <90% for `src/resilint`
     size: S
     depends_on:
       - H-1
+    completed_in:
+      - 18
 
   - id: H-3
     title: Property/fuzz tests for loader
