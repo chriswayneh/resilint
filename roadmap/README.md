@@ -3,6 +3,7 @@
 The [roadmap overview](../ROADMAP.md) is the readable summary. [Task definitions](issues.yml) retain the acceptance criteria, files, effort estimates and dependencies for all 38 tasks.
 
 - [Contributor rules](#contributor-rules)
+- [Coverage gate](#coverage-gate)
 - [Release checklist](#release-checklist)
 - [Released versions](#released-versions)
 - [Historical baseline](#historical-baseline)
@@ -19,6 +20,18 @@ When a task merges, update its status and completion PRs in `issues.yml`, then u
 6. The PR body includes the task id, what changed, the acceptance results, and a CHANGELOG `[Unreleased]` entry for any user-visible change.
 7. Keep these non-goals: no network calls, no vendor contact or scraping, no SaaS, no telemetry. Use fictional data only in examples and tests.
 8. Update docs in the same PR when behavior, flags, or schema change.
+
+## Coverage gate
+
+Install development dependencies with `pip install -e ".[dev]"`, then run this from the repository root:
+
+```bash
+pytest -q --cov=src/resilint --cov-report=term-missing --cov-fail-under=90
+```
+
+Each CI matrix job requires at least 90% total statement coverage across all Python modules in `src/resilint`, including modules the tests never import. This is an aggregate statement-coverage threshold, not a per-file or branch-coverage threshold. Missing lines are listed in the terminal report. No additional coverage exclusions are configured.
+
+The CI coverage command is explicit; plain `pytest -q` and targeted test runs retain their existing behavior. Coverage data files are ignored by Git.
 
 ## Release checklist
 
