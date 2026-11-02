@@ -20,14 +20,14 @@ Where resilint is going, and what is ready to work on.
 | Milestone | Theme | Status | Tasks |
 | --- | --- | --- | :---: |
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
-| [v0.4.1](#v041-maintenance) | Maintenance | In progress (3/4 merged) | 4 |
+| [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
 | [v0.5](#v05-real-world-data) | Real-world data | Planned | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | Planned | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 3 complete, 35 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 4 complete, 34 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -37,14 +37,14 @@ Full task details, including acceptance criteria and dependencies, are in [`road
 
 Finish the maintenance work before the next release.
 
-**Status: in progress (3/4 merged).** Windows locking, dependency updates and metadata checks are on `main`. **Next: `M0-4`**, the Action format description and input validation.
+**Status: complete (4/4 merged).** Windows locking, dependency updates, metadata checks and Action input self-tests are on `main`. v0.4.1 remains unreleased. **Next: `H-1`**, splitting the tests by module.
 
 | ID | Task | Status |
 | --- | --- | --- |
 | `M0-1` | Windows locking and release documentation | ✅ Complete — [#9](https://github.com/chriswayneh/resilint/pull/9) |
 | `M0-2` | Dependency updates | ✅ Complete — [#2](https://github.com/chriswayneh/resilint/pull/2), [#3](https://github.com/chriswayneh/resilint/pull/3), [#4](https://github.com/chriswayneh/resilint/pull/4) |
 | `M0-3` | Version and documentation sync checks | ✅ Complete — [#12](https://github.com/chriswayneh/resilint/pull/12) |
-| `M0-4` | Action format description and input validation | **Next** |
+| `M0-4` | Action format description and input validation | ✅ Complete — [#14](https://github.com/chriswayneh/resilint/pull/14) |
 
 ---
 

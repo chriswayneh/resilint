@@ -74,7 +74,7 @@ issues:
   - id: M0-4
     title: Action `format` input lists `regmap`; validate inputs
     milestone: M0
-    status: planned
+    status: complete
     why: Docs mismatch
     files: '`action.yml`, README'
     acceptance: The description matches CLI choices; an invalid format exits 2 in an action self-test
@@ -82,6 +82,8 @@ issues:
     size: S
     depends_on:
       - M0-1
+    completed_in:
+      - 14
 
   - id: H-1
     title: Split tests by module
