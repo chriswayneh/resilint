@@ -145,8 +145,9 @@ def test_drill_concurrent_records_lose_nothing(tmp_path):
                 p.communicate()
     codes = [p.returncode for p in procs]
     from resilint.drills import load_log
-    assert all(c in (0, 2) for c in codes)
-    assert all(b"locked" in err for code, err in zip(codes, errors) if code == 2)
+    results = list(zip(codes, errors))
+    assert all(c in (0, 2) for c in codes), results
+    assert all(b"locked" in err for code, err in results if code == 2), results
     records = load_log(log)
     expected = {str(i) for i, code in enumerate(codes) if code == 0}
     assert len(records) == len(expected) >= 1
