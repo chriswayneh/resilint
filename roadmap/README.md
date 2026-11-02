@@ -4,6 +4,7 @@ The [roadmap overview](../ROADMAP.md) is the readable summary. [Task definitions
 
 - [Contributor rules](#contributor-rules)
 - [Coverage gate](#coverage-gate)
+- [Loader property tests](#loader-property-tests)
 - [Release checklist](#release-checklist)
 - [Released versions](#released-versions)
 - [Historical baseline](#historical-baseline)
@@ -32,6 +33,12 @@ pytest -q --cov=src/resilint --cov-report=term-missing --cov-fail-under=90
 Each CI matrix job requires at least 90% total statement coverage across all Python modules in `src/resilint`, including modules the tests never import. This is an aggregate statement-coverage threshold, not a per-file or branch-coverage threshold. Missing lines are listed in the terminal report. No additional coverage exclusions are configured.
 
 The CI coverage command is explicit; plain `pytest -q` and targeted test runs retain their existing behavior. Coverage data files are ignored by Git.
+
+## Loader property tests
+
+After installing `.[dev]`, run `pytest -q tests/test_loader_fuzz.py` from the repository root. Hypothesis uses reproducible generation with up to 750 bounded generated examples per run, plus explicit regression seeds. Each example checks the loader and JSON CLI: either a usable register/report, or `InputError` and exit 2 with a diagnostic. Inputs remain unchanged.
+
+Raw inputs are capped at 512 bytes or 1,024 characters; structured values use at most 15 leaves. Explicit seeds also cover invalid dates, oversized numbers and CSV field limits. Valid generated registers ensure the loader still accepts ordinary data. These finite checks do not prove every possible input safe. Hypothesis deadlines are disabled for filesystem/CI variability; input sizes and example counts are bounded. Its local cache is ignored by Git.
 
 ## Release checklist
 
