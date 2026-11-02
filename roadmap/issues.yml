@@ -512,3 +512,14 @@ issues:
     size: S
     depends_on:
       - R-4
+
+# Governance work is outside the original 38-task v1 product denominator.
+governance_tasks:
+  - id: ADOPT-01
+    title: Adopt the documented AI-DLC workflow
+    status: planned
+    why: Make design, stage decisions and security evidence reviewable
+    files: AGENTS.md, README.md, ROADMAP.md, roadmap guidance, aidlc-docs public records
+    acceptance: Preserve product scope and existing work; document inception before implementation, actual approval attribution, one task per PR, comprehensive tests and security review; validate links and existing gates; exclude private data; user owns GitHub approval, merges, tags, releases and settings
+    size: S
+    depends_on: []

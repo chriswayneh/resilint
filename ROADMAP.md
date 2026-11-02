@@ -11,6 +11,7 @@ Where resilint is going, and what is ready to work on.
 - [v0.9: Documentation and API freeze](#v09-documentation-and-api-freeze)
 - [Packaging and release automation](#packaging-and-release-automation)
 - [v1.0: Stable release](#v10-stable-release)
+- [Governance adoption](#governance-adoption)
 - [Principles](#principles)
 
 ---
@@ -130,6 +131,18 @@ Prove the release candidate works from a fresh install, then complete the final 
 | `R-5` | Tag `v1.0.0` + release (maintainer only) |
 
 **Maintainer only:** tags and releases are created by the maintainer (`R-5`), after the [release checklist](roadmap/README.md#release-checklist) is complete.
+
+---
+
+## Governance adoption
+
+This governance task is tracked separately from the original 38 v1 product tasks; it does not expand the product release scope.
+
+| ID | Task | Status |
+| --- | --- | --- |
+| `ADOPT-01` | Adopt the documented AI-DLC workflow and truthful stage audit | Planned — local construction; user merge pending |
+
+See the [design](aidlc-docs/inception/adopt-01-design.md), [execution plan](aidlc-docs/inception/adopt-01-plan.md) and [audit](aidlc-docs/audit.md).
 
 ---
 

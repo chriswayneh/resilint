@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Documented an adapted AI-DLC workflow with inception plans, truthful stage audits, existing test/security gates, user-owned publication actions and consolidated notification guidance.
 - A v1 stability and deprecation policy defines the supported CLI, report, schema, baseline and integration interfaces and their compatibility limits.
 - Dedicated installation, usage, rule, drill, export and FAQ guides document every CLI option; CI checks relative Markdown links and headings without fetching external URLs.
 - `resilint explain RL001` through `RL009` provides offline rule descriptions, illustrative fixes and draft references; unknown IDs return a controlled error.
