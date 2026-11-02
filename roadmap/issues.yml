@@ -347,13 +347,15 @@ issues:
   - id: D-3
     title: JSON output schema + snapshot tests
     milestone: M3
-    status: planned
+    status: complete
     why: Auditors depend on the format
     files: '`schema/report.v1.json`, golden-file tests'
     acceptance: JSON output validates against the schema; golden snapshots for text/md/json/sarif/regmap
     size: M
     depends_on:
       - H-1
+    completed_in:
+      - 42
 
   - id: D-4
     title: Legal disclaimer consistency
