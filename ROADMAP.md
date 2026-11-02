@@ -22,12 +22,12 @@ Where resilint is going, and what is ready to work on.
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
 | [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; unreleased) | 10 |
-| [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | In progress (6/7 merged) | 7 |
+| [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 20 complete, 18 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 21 complete, 17 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -52,7 +52,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `C-7`**, offline rule explanations.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `D-1`**, documentation guides.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -81,7 +81,7 @@ Make the CLI easier to use in everyday development and CI workflows.
 | `C-4` | pre-commit hook ✅ — [#35](https://github.com/chriswayneh/resilint/pull/35) |
 | `C-5` | GitLab CI / generic CI recipe ✅ — [#36](https://github.com/chriswayneh/resilint/pull/36) |
 | `C-6` | `resilint init` ✅ — [#37](https://github.com/chriswayneh/resilint/pull/37) |
-| `C-7` | `resilint explain RLxxx` |
+| `C-7` | `resilint explain RLxxx` ✅ — [#38](https://github.com/chriswayneh/resilint/pull/38) |
 
 ---
 
