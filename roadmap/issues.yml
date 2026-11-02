@@ -358,7 +358,7 @@ issues:
   - id: D-4
     title: Legal disclaimer consistency
     milestone: M3
-    status: planned
+    status: complete
     why: Regulatory mappings are drafts
     files: README, docs, report footers
     acceptance: '"Draft, not legal advice" appears in README, regmap, md, and RoI outputs; a test asserts
@@ -366,6 +366,8 @@ issues:
     size: S
     depends_on:
       - D-1
+    completed_in:
+      - 41
 
   - id: D-5
     title: Deprecate/remove anything not in the freeze
