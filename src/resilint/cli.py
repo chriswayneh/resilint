@@ -11,6 +11,7 @@ import time
 from datetime import date
 
 from . import __version__
+from .baseline import dump_baseline, load_baseline, new_findings
 from .config import apply_ignores, load_config
 from .drills import KINDS, RESULTS, _entry, apply, dump_log, load_log
 from .loader import InputError, load
@@ -206,6 +207,9 @@ def main(argv=None) -> int:
                    help="max age in days of a vendor's contacts_verified date")
     c.add_argument("--output", metavar="FILE", help="write the report to FILE instead of stdout")
     c.add_argument("--config", metavar="FILE", help="rule settings (default: cwd/.resilint.yaml)")
+    baseline = c.add_mutually_exclusive_group()
+    baseline.add_argument("--baseline", metavar="FILE", help="report only findings absent from FILE")
+    baseline.add_argument("--write-baseline", metavar="FILE", help="save current finding identities")
     e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
     e.add_argument("file")
     e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
@@ -229,6 +233,8 @@ def main(argv=None) -> int:
         return _drill(args)
     if args.cmd == "export-roi":
         return _export(args)
+    if args.baseline == "" or args.write_baseline == "":
+        return _error("baseline path must not be empty")
     try:
         settings = load_config(args.config)
     except InputError as error:
@@ -247,18 +253,44 @@ def main(argv=None) -> int:
     findings = check(register, stale_days=args.stale_days, max_critical=args.max_critical,
                      contact_days=args.contact_days)
     findings = apply_ignores(findings, settings)
+    if args.baseline:
+        try:
+            findings = new_findings(findings, load_baseline(args.baseline))
+        except InputError as error:
+            return _error(error)
     report = FORMATS[args.format](findings, register)
-    if args.output:
-        if settings.source:
-            err = check_target(args.output, settings.source)
+    inputs = [p for p in (args.file, settings.source, args.drills, args.baseline) if p]
+    outputs = [p for p in (args.output, args.write_baseline) if p]
+    for output in outputs:
+        for source in inputs:
+            err = check_target(output, source)
             if err:
-                return _error(err, args.output)
+                return _error(err, output)
+    if args.output and args.write_baseline:
+        try:
+            same = (os.path.normcase(os.path.realpath(args.output)) ==
+                    os.path.normcase(os.path.realpath(args.write_baseline)))
+            if os.path.exists(args.output) and os.path.exists(args.write_baseline):
+                same = same or os.path.samefile(args.output, args.write_baseline)
+        except (OSError, ValueError) as error:
+            return _error(f"cannot compare output paths ({error.__class__.__name__})", args.output)
+        if same:
+            return _error("report and baseline destinations must differ", args.output)
+    if args.write_baseline:
+        try:
+            snapshot = dump_baseline(findings)
+        except InputError as error:
+            return _error(error, args.write_baseline)
+        err = write_file(args.write_baseline, snapshot, args.file)
+        if err:
+            return _error(err, args.write_baseline)
+    if args.output:
         err = write_file(args.output, report + "\n", args.file)
         if err:
             return _error(err, args.output)
     else:
         print(report)
-    return 1 if at_or_above(findings, args.fail_on) else 0
+    return 0 if args.write_baseline else (1 if at_or_above(findings, args.fail_on) else 0)
 
 
 if __name__ == "__main__":

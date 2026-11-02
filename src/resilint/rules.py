@@ -31,6 +31,12 @@ RULES = {
 
 FRAMEWORKS = ("DORA", "NIS2", "PRA SS2/21")
 
+FINDING_FIELDS = {
+    "RL001": "notification_sla_hours", "RL002": "recovery_time_hours", "RL003": "contacts",
+    "RL004": "exit_plan", "RL005": "last_tested", "RL006": "supports_processes",
+    "RL007": "supports_processes", "RL008": "contacts_verified", "RL009": "drills",
+}
+
 
 def refs(regulation: str) -> dict[str, list[str]]:
     """Split a rule's reference string into {framework: [references]}."""
@@ -56,6 +62,7 @@ class Finding:
     regulation: str
     regulation_note: str = REG_NOTE
     regulation_refs: dict = field(default_factory=dict)
+    field: str = ""
 
     def __post_init__(self):
         if not self.regulation_refs:
@@ -65,9 +72,10 @@ class Finding:
         return asdict(self)
 
 
-def _f(rule_id: str, vendor: str, message: str) -> Finding:
+def _f(rule_id: str, vendor: str, message: str, field: str = "") -> Finding:
     name, sev, reg = RULES[rule_id]
-    return Finding(rule_id, name, sev, vendor, message, reg)
+    return Finding(rule_id, name, sev, vendor, message, reg,
+                   field=field or FINDING_FIELDS[rule_id])
 
 
 def check(register: dict, stale_days: int = 365, max_critical: int = 3,
@@ -114,7 +122,8 @@ def check(register: dict, stale_days: int = 365, max_critical: int = 3,
                 crit_count += 1
             if rt is not None and p["rto_hours"] is not None and rt > p["rto_hours"]:
                 out.append(_f("RL006", vid,
-                              f"recovery time {rt:g}h exceeds {pid} RTO {p['rto_hours']:g}h"))
+                              f"recovery time {rt:g}h exceeds {pid} RTO {p['rto_hours']:g}h",
+                              field=f"supports_processes:{pid}"))
         if crit_count > max_critical:
             out.append(_f("RL007", vid,
                           f"supports {crit_count} critical processes (threshold {max_critical})"))
