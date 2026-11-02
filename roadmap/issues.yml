@@ -239,7 +239,9 @@ issues:
   - id: C-2
     title: SARIF upload example workflow
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 33
     why: The most common real use
     files: '`examples/workflows/resilint-sarif.yml`, README'
     acceptance: 'Uses `github/codeql-action/upload-sarif` pinned by SHA, with `security-events: write`
