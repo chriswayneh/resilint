@@ -24,11 +24,11 @@ Where resilint is going, and what is ready to work on.
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
 | [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; unreleased) | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
-| [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | In progress (4/6 merged) | 6 |
+| [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | In progress (5/6 merged) | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 25 complete, 13 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 26 complete, 12 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -53,7 +53,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `D-5`**, v1 interface freeze audit.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `D-6`**, contributor guidance and templates.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -96,7 +96,7 @@ Document the supported interfaces and settle the compatibility contract.
 | `D-2` | Stability policy ✅ — [#40](https://github.com/chriswayneh/resilint/pull/40) |
 | `D-3` | JSON output schema + snapshot tests ✅ — [#42](https://github.com/chriswayneh/resilint/pull/42) |
 | `D-4` | Legal disclaimer consistency ✅ — [#41](https://github.com/chriswayneh/resilint/pull/41) |
-| `D-5` | Deprecate/remove anything not in the freeze |
+| `D-5` | Deprecate/remove anything not in the freeze ✅ — [#44](https://github.com/chriswayneh/resilint/pull/44) |
 | `D-6` | CONTRIBUTING + issue/PR templates |
 
 ---
