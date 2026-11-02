@@ -245,6 +245,8 @@ CI checks a fictional CSV register with 10,000 critical vendors linked to 2,000 
 
 ## Rules
 
+To adopt checks gradually, use `--write-baseline FILE` to snapshot existing finding identities and `--baseline FILE` to report only new findings. Successful snapshot creation returns 0 even when findings exist. See [baseline behavior and refresh guidance](docs/baseline.md).
+
 Per-project thresholds and expiring suppressions can be stored in `.resilint.yaml`; explicit CLI flags take precedence. See the [rule configuration guide](docs/config.md).
 
 CLI failures use `resilint: error: <file>:<line>: <message>` on stderr with exit 2. A known physical input line is one-based; `0` means no reliable line is available, and `<cli>` identifies argument errors. Output errors name the destination, and drill-log errors name the log. Control characters are escaped to keep each diagnostic on one line. Exit 0 means success without findings at the selected threshold; exit 1 means findings reached that threshold. Argument parsing may also print usage.
