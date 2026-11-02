@@ -1,6 +1,6 @@
 # Roadmap
 
-Status: **v0.3.0 released (2026-10-24); v0.4 in review.** Milestones and scope may change.
+Status: **[v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) (2026-10-24).** Milestones and scope may change.
 
 ## v0.1 - Core checks (released 2026-10-24)
 - YAML schema for vendors and business processes, plus CSV import from spreadsheet exports
@@ -18,9 +18,15 @@ Status: **v0.3.0 released (2026-10-24); v0.4 in review.** Milestones and scope m
 - Regulation mapping report (`--format regmap`) and structured `regulation_refs` per finding (DORA, NIS2, UK PRA SS2/21)
 - `export-roi`: draft CSV export toward DORA register-of-information templates (B_05.01, B_06.01, B_02.02), to be completed and checked with an existing RoI validator; optional `lei` and `country` vendor fields
 
-## v0.4 - Drill records (in review)
+## v0.4 - Drill records (released 2026-10-24)
 - `drill record` command to attach tabletop or test results to a vendor and update its last-tested date
 - `check --drills LOG` applies the log; rule RL009 flags a vendor whose most recent drill failed
+
+## v0.4.1 - Cross-platform reliability (in development)
+- Serialize concurrent `drill record` writes on Windows as well as Linux/macOS
+- Return a clean input error when the operating system cannot acquire a drill-log lock
+- Run lint, type checks, and the full test suite on Linux and Windows with Python 3.10 and 3.12
+- Verify lock contention, release after success or invalid input, and preservation of concurrent records
 
 ## Non-goals
 - No vendor questionnaires
