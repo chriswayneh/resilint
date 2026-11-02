@@ -88,13 +88,15 @@ issues:
   - id: H-1
     title: Split tests by module
     milestone: M1
-    status: planned
+    status: complete
     why: A 685-line single file is hard to review
     files: '`tests/test_{loader,rules,report,roi,drills,cli}.py`, `conftest.py`'
     acceptance: Same test count or more; `pytest -q` green; no behavior change
     size: M
     depends_on:
       - M0-1
+    completed_in:
+      - 16
 
   - id: H-2
     title: Coverage gate
