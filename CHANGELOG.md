@@ -5,6 +5,7 @@
 - `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
 ### Changed
+- The composite Action and CI use SHA-pinned `actions/setup-python` v7.1.0. The development Action requires a Node 24-capable Actions Runner (v2.327.1 or later); update self-hosted runners before upgrading.
 - CI runs lint, type checks, and tests on both Linux and Windows with Python 3.10 and 3.12. Symlink tests require symlink privileges in CI; local Windows runs skip those tests only when that privilege is unavailable.
 
 ## [0.4.0] - 2026-10-24
