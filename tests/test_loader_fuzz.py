@@ -14,6 +14,9 @@ from resilint.cli import main
 from resilint.loader import InputError, load
 
 TEXT = st.text(st.characters(exclude_categories=("Cs",)), max_size=48)
+# Python 3.10's csv.writer cannot serialize NUL; raw/text properties cover it.
+CSV_TEXT = st.text(st.characters(exclude_categories=("Cs",), exclude_characters="\x00"),
+                   max_size=48)
 SCALAR = st.one_of(st.none(), st.booleans(),
                    st.integers(min_value=-(10**100), max_value=10**100), st.floats(), TEXT)
 VALUES = st.recursive(
@@ -93,6 +96,7 @@ def test_yaml_structures_have_controlled_outcome(fuzz_dir, data):
 
 @settings(max_examples=100, derandomize=True, deadline=None)
 @example(text="id\nv1\rv2")
+@example(text="id\n\x00")
 @example(text="id\n" + "x" * (csv.field_size_limit() + 1))
 @example(text="id," + "x" * (csv.field_size_limit() + 1) + "\nv1,a")
 @given(text=st.text(st.characters(exclude_categories=("Cs",)), max_size=1024))
@@ -101,7 +105,7 @@ def test_csv_text_has_controlled_outcome(fuzz_dir, text):
 
 
 @settings(max_examples=100, derandomize=True, deadline=None)
-@given(rows=st.lists(st.lists(TEXT, min_size=1, max_size=6), max_size=6))
+@given(rows=st.lists(st.lists(CSV_TEXT, min_size=1, max_size=6), max_size=6))
 def test_csv_rows_have_controlled_outcome(fuzz_dir, rows):
     out = io.StringIO(newline="")
     writer = csv.writer(out)
