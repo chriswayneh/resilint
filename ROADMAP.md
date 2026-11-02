@@ -26,9 +26,11 @@ Status: **v0.4.0 released (2026-10-24). Next: v0.4.1 maintenance, then the path 
 
 ## Path to v1.0.0
 
-Baseline (2026-11-02): `main` @ 7e1a9f9. Released tags v0.1.0–v0.4.0 (all 2026-10-24). `pyproject.toml` and `__init__.py` are 0.4.0. ~1,000 LOC across `src/resilint/{cli,loader,rules,report,roi,drills}.py`, with 68 tests in one file (`tests/test_resilint.py`). CI runs ruff, mypy, and pytest on ubuntu with Python 3.10 and 3.12. The composite `action.yml` uses SHA-pinned actions.
-Open PRs: #9 (Windows drill locks + Windows CI, which also folds in #8), #8 (docs reconcile v0.4.0), and Dependabot #2/#3/#4 (checkout 7.0.1, setup-python 7.1.0, pyyaml 6.0.3). There are no open issues.
-Known drift: CHANGELOG says `[0.4.0] - Unreleased`, even though v0.4.0 was tagged and released. The README badge and status still say v0.2.0. The Action `format` input description omits `regmap`. There is no PyPI package or release workflow, and the install is `pip install git+...`.
+Baseline snapshot (2026-11-02, before M0-1): `main` @ 7e1a9f9. Released tags v0.1.0–v0.4.0 (all 2026-10-24). `pyproject.toml` and `__init__.py` are 0.4.0. ~1,000 LOC across `src/resilint/{cli,loader,rules,report,roi,drills}.py`, with 68 tests in one file (`tests/test_resilint.py`). CI runs ruff, mypy, and pytest on ubuntu with Python 3.10 and 3.12. The composite `action.yml` uses SHA-pinned actions.
+At baseline, open PRs: #9 (Windows drill locks + Windows CI, which also folds in #8), #8 (docs reconcile v0.4.0), and Dependabot #2/#3/#4 (checkout 7.0.1, setup-python 7.1.0, pyyaml 6.0.3). There were no open issues.
+At baseline, known drift: CHANGELOG says `[0.4.0] - Unreleased`, even though v0.4.0 was tagged and released. The README badge and status still say v0.2.0. The Action `format` input description omits `regmap`. There is no PyPI package or release workflow, and the install is `pip install git+...`.
+
+Progress (2026-11-02): **M0-1 complete.** [PR #9](https://github.com/chriswayneh/resilint/pull/9) merged at `90ddefe` after maintainer approval of reviewed head `e23e460`; PR #8 closed as included. Exact-head CI passed on Ubuntu/Windows × Python 3.10/3.12 (113 tests each), and the security diff review completed with no findings. Windows drill locking and release documentation corrections are on `main`; v0.4.1 remains unreleased. Next: M0-2 dependency triage.
 
 ### Contributor rules
 1. One task = one branch `<type>/<task-id>-<slug>` = one small PR against `main`. Don't bundle tasks.
@@ -43,7 +45,7 @@ Known drift: CHANGELOG says `[0.4.0] - Unreleased`, even though v0.4.0 was tagge
 ### Milestone 0 — Land open work and reconcile (v0.4.1)
 | ID | Title | Why | Files | Acceptance | Size | Deps |
 |---|---|---|---|---|---|---|
-| M0-1 | Review/land PR #9 (supersedes #8) | Windows lock data loss; release docs drift | `drills.py`, `ci.yml`, docs | CI green on ubuntu+windows × 3.10/3.12; review passes; close #8 as included | M | — |
+| M0-1 | **Complete** — Review/land PR #9 (supersedes #8) | Windows lock data loss; release docs drift | `drills.py`, `ci.yml`, docs | CI green on ubuntu+windows × 3.10/3.12; review passes; close #8 as included | M | — |
 | M0-2 | Triage Dependabot #2, #3, #4 | Stale pins; checkout/setup-python are major jumps | `ci.yml`, `action.yml`, `requirements-lock.txt` | Each PR is CI green; pins stay full SHAs; the lock keeps `--require-hashes`; pyyaml 6.0.3 hash verified | S | M0-1 |
 | M0-3 | Version/docs sync check | Stop recurring drift | new `tests/test_meta.py` | Test asserts `pyproject` version == `__version__` == the top released CHANGELOG heading or `[Unreleased]`; the README has no hard-coded old version | S | M0-1 |
 | M0-4 | Action `format` input lists `regmap`; validate inputs | Docs mismatch | `action.yml`, README | The description matches CLI choices; an invalid format exits 2 in an action self-test (M2-3) | S | M0-1 |
