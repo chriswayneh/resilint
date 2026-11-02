@@ -21,13 +21,13 @@ Where resilint is going, and what is ready to work on.
 | --- | --- | --- | :---: |
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
-| [v0.5](#v05-real-world-data) | Real-world data | Planned | 10 |
+| [v0.5](#v05-real-world-data) | Real-world data | In progress (1/10 merged) | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | Planned | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 4 complete, 34 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 5 complete, 33 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -37,7 +37,7 @@ Full task details, including acceptance criteria and dependencies, are in [`road
 
 Finish the maintenance work before the next release.
 
-**Status: complete (4/4 merged).** Windows locking, dependency updates, metadata checks and Action input self-tests are on `main`. v0.4.1 remains unreleased. **Next: `H-1`**, splitting the tests by module.
+**Status: complete (4/4 merged).** Windows locking, dependency updates, metadata checks and Action input self-tests are on `main`. v0.4.1 remains unreleased.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -52,18 +52,20 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-| ID | Task |
-| --- | --- |
-| `H-1` | Split tests by module |
-| `H-2` | Coverage gate |
-| `H-3` | Property/fuzz tests for loader |
-| `H-4` | Large-register performance |
-| `H-5` | CSV robustness |
-| `H-6` | Published JSON Schema for the register |
-| `H-7` | Stable error messages and codes |
-| `H-8` | Rule config file |
-| `H-9` | Baseline mode |
-| `H-10` | Windows/macOS CLI parity |
+**Status: in progress (1/10 merged).** Tests are grouped by module. **Next: `H-2`**, the coverage gate.
+
+| ID | Task | Status |
+| --- | --- | --- |
+| `H-1` | Split tests by module | ✅ Complete — [#16](https://github.com/chriswayneh/resilint/pull/16) |
+| `H-2` | Coverage gate | **Next** |
+| `H-3` | Property/fuzz tests for loader | Planned |
+| `H-4` | Large-register performance | Planned |
+| `H-5` | CSV robustness | Planned |
+| `H-6` | Published JSON Schema for the register | Planned |
+| `H-7` | Stable error messages and codes | Planned |
+| `H-8` | Rule config file | Planned |
+| `H-9` | Baseline mode | Planned |
+| `H-10` | Windows/macOS CLI parity | Planned |
 
 ---
 
