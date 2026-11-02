@@ -253,7 +253,9 @@ issues:
   - id: C-3
     title: Action self-test workflow
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 34
     why: Prevent a broken Action release
     files: '`.github/workflows/action-test.yml`'
     acceptance: 'Runs `uses: ./` on examples; asserts exit code 1 and the SARIF file exists'
