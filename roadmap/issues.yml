@@ -199,7 +199,9 @@ issues:
   - id: H-9
     title: Baseline mode
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 30
     why: Adopting on an existing register without failing CI day one
     files: '`cli.py`, `baseline.py`'
     acceptance: '`--baseline FILE` reports only new findings, and `--write-baseline` creates the file.
