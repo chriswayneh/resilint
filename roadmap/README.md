@@ -9,7 +9,7 @@ The [roadmap overview](../ROADMAP.md) is the readable summary. [Task definitions
 - [Released versions](#released-versions)
 - [Historical baseline](#historical-baseline)
 
-When a task merges, update its status and completion PRs in `issues.yml`, then update the overview. Mark a version released only after the maintainer publishes it.
+Include final task status, completion PRs in `issues.yml`, and overview updates in the feature PR so they reach `main` together at merge. Mark a version released only after publication by the maintainer or authorized delegate.
 
 ## Contributor rules
 

@@ -170,7 +170,9 @@ issues:
   - id: H-7
     title: Stable error messages and codes
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 28
     why: Usable in CI logs
     files: '`loader.py`, `cli.py`'
     acceptance: 'Every exit-2 path prints `resilint: error: <file>:<line>: <msg>` to stderr; tests cover
@@ -182,7 +184,9 @@ issues:
   - id: H-8
     title: Rule config file
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 29
     why: Teams need per-repo thresholds and suppressions
     files: '`config.py` (new), `cli.py`, docs'
     acceptance: '`.resilint.yaml` supports `fail_on`, `stale_days`, `contact_days`, `max_critical`, and

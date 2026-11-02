@@ -21,13 +21,13 @@ Where resilint is going, and what is ready to work on.
 | --- | --- | --- | :---: |
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
-| [v0.5](#v05-real-world-data) | Real-world data | In progress (6/10 merged) | 10 |
+| [v0.5](#v05-real-world-data) | Real-world data | In progress (8/10 merged) | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | Planned | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 10 complete, 28 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 12 complete, 26 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -52,7 +52,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: in progress (6/10 merged).** Test hardening, CSV robustness and the register JSON Schema are in place. **Next: `H-7`**, stable error messages and codes.
+**Status: in progress (8/10 merged).** Test hardening, CSV/schema support, stable diagnostics and rule configuration are in place. **Next: `H-9`**, baseline mode.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -62,9 +62,9 @@ Make large, messy vendor registers easier to validate and adopt.
 | `H-4` | Large-register performance | ✅ Complete — [#22](https://github.com/chriswayneh/resilint/pull/22) |
 | `H-5` | CSV robustness | ✅ Complete — [#24](https://github.com/chriswayneh/resilint/pull/24) |
 | `H-6` | Published JSON Schema for the register | ✅ Complete — [#26](https://github.com/chriswayneh/resilint/pull/26) |
-| `H-7` | Stable error messages and codes | **Next** |
-| `H-8` | Rule config file | Planned |
-| `H-9` | Baseline mode | Planned |
+| `H-7` | Stable error messages and codes | ✅ Complete — [#28](https://github.com/chriswayneh/resilint/pull/28) |
+| `H-8` | Rule config file | ✅ Complete — [#29](https://github.com/chriswayneh/resilint/pull/29) |
+| `H-9` | Baseline mode | **Next** |
 | `H-10` | Windows/macOS CLI parity | Planned |
 
 ---
