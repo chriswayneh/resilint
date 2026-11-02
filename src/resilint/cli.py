@@ -9,6 +9,7 @@ import sys
 import tempfile
 import time
 from datetime import date
+from importlib.resources import files
 
 from . import __version__
 from .baseline import dump_baseline, load_baseline, new_findings
@@ -196,6 +197,8 @@ def main(argv=None, *, _summary: dict[str, str] | None = None) -> int:
     ap = _Parser(prog="resilint", description="Offline vendor resilience checks.")
     ap.add_argument("--version", action="version", version=f"resilint {__version__}")
     sub = ap.add_subparsers(dest="cmd", required=True)
+    starter = sub.add_parser("init", help="write a fictional starter register without overwriting")
+    starter.add_argument("file", nargs="?", default="vendors.yaml", help="destination YAML file")
     c = sub.add_parser("check", help="check a vendor register (YAML or CSV)")
     c.add_argument("file")
     c.add_argument("--format", choices=sorted(FORMATS), default="text")
@@ -229,6 +232,17 @@ def main(argv=None, *, _summary: dict[str, str] | None = None) -> int:
         parser.add_argument("--csv-delimiter", choices=(",", ";"), default=",",
                             help="CSV field separator (default: comma; ignored for YAML)")
     args = ap.parse_args(argv)
+    if args.cmd == "init":
+        try:
+            template = files("resilint").joinpath("templates/vendors.yaml").read_text(
+                encoding="utf-8")
+        except (OSError, UnicodeError):
+            return _error("cannot read packaged starter template")
+        err = write_file(args.file, template, exclusive=True)
+        if err:
+            return _error(err, args.file)
+        print(f"created {_diagnostic_text(args.file)}; replace the fictional example data")
+        return 0
     if args.cmd == "drill":
         return _drill(args)
     if args.cmd == "export-roi":

@@ -1,0 +1,23 @@
+# FICTIONAL STARTER DATA. Replace this example with your recorded commitments.
+# This register records evidence; it does not establish regulatory compliance.
+schema_version: 1
+
+processes:
+  - id: example-process
+    name: Example business process
+    criticality: critical
+    rto_hours: 4 # Your process's required recovery time.
+
+vendors:
+  - id: example-vendor
+    name: Example Vendor
+    criticality: critical
+    notification_sla_hours: 24 # Recorded contractual commitment, in hours.
+    recovery_time_hours: 4
+    contacts:
+      - email: incidents@example.test
+    supports_processes: [example-process]
+    # These unknown/incomplete fields intentionally produce RL004/RL005/RL008.
+    exit_plan: false # Replace with a documented plan path/reference when available.
+    last_tested: null # YYYY-MM-DD once a resilience test is recorded.
+    contacts_verified: null # YYYY-MM-DD once these contacts have been verified.

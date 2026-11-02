@@ -21,5 +21,8 @@ resilint = "resilint.cli:main"
 [tool.setuptools.packages.find]
 where = ["src"]
 
+[tool.setuptools.package-data]
+resilint = ["templates/*.yaml"]
+
 [tool.ruff]
 line-length = 100
