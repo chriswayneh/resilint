@@ -26,3 +26,11 @@
 - Validation: Ruff passes; mypy passes for 11 source files; pytest reports 284 passed and six local Windows symlink-privilege skips. Relative links in 21 tracked Markdown files pass; whitespace checks pass. YAML comparison confirms all original 38 task definitions and milestones are unchanged, with one separate planned governance task.
 - Security review: the complete staged documentation diff preserves offline behavior and all validation gates. No new execution, credentials, dependencies or permissions are introduced. Public workflow records exclude private machine paths and internal coordination IDs. SQL injection is inapplicable to this documentation-only diff; future SQL review remains required.
 - Decision: local construction is ready to present for implementation-stage review. Save the reviewed scope as a local commit; no push, PR publication, merge, tag, release or settings action. Hosted checks on this adoption change remain pending publication.
+
+## ADOPT-01 — publication approval
+
+- Recorded: 2026-11-02T23:49:53.814330+00:00.
+- Actual user decision: “Approved. Apply and push,” following presentation of local implementation commit e4be1bd541cd281e3e5b8cd9886887751d2cc53d.
+- Additional actual reviewer: dot, acting under delegated routine-review authority, approved the repository-specific plan for construction and publication of one documentation-only draft PR. This delegated decision is not attributed to the user.
+- Scope and conditions: ADOPT-01 only; preserve D-3 and release drafts, original product task counts and local artifacts. No cleanup, access/settings changes, merge, tag, release, force push, rebase or unrelated v1 implementation. Public files remain sanitized; consolidated notification guidance is included.
+- Next permitted action: review the final documentation diff, push the separate adoption branch, open one draft PR and verify its remote head and CI state. Adoption remains planned until user merge.
