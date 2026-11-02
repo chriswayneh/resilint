@@ -34,3 +34,14 @@
 - Additional actual reviewer: dot, acting under delegated routine-review authority, approved the repository-specific plan for construction and publication of one documentation-only draft PR. This delegated decision is not attributed to the user.
 - Scope and conditions: ADOPT-01 only; preserve D-3 and release drafts, original product task counts and local artifacts. No cleanup, access/settings changes, merge, tag, release, force push, rebase or unrelated v1 implementation. Public files remain sanitized; consolidated notification guidance is included.
 - Next permitted action: review the final documentation diff, push the separate adoption branch, open one draft PR and verify its remote head and CI state. Adoption remains planned until user merge.
+
+## v1 — temporary user authorization for merges and releases
+
+- Recorded: 2026-11-02T23:53:56.851288+00:00.
+- Actual approver: user. The user approved releases until midnight, then explicitly confirmed that this also authorizes merging reviewed, passing PRs needed for v1.
+- Expiration: November 3, 2026 at 00:00 America/Chicago (06:00 UTC). Do not initiate merges or release publication at or after this deadline without renewed authorization.
+- Scope: existing v1 roadmap and its reviewed adoption guidance only; v2/v3 remain deferred. This is a temporary explicit exception to the standing user-owned merge/release boundary, not a permanent policy change or a dot approval.
+- Conditions: retain exact-head review, applicable tests, hosted CI and security gates. No force-push, rebase, settings/access changes or cleanup is authorized. Other publication prerequisites remain required.
+- Decision by Codex: proceed with the already-reviewed D-3 PR after verifying all 20 checks on its exact head; retain all remaining gates for subsequent PRs.
+
+- ADOPT-01 completion metadata in PR #43 is prospective and becomes effective only when this reviewed, passing PR is merged under the temporary authorization. Original product task definitions and counts are unaffected.

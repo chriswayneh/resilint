@@ -1,0 +1,415 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "resilint",
+          "version": "0.0.0",
+          "informationUri": "https://github.com/chriswayneh/resilint",
+          "rules": [
+            {
+              "id": "RL001",
+              "name": "missing-notification-sla",
+              "shortDescription": {
+                "text": "missing notification sla"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(3)(b), 30(2)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL002",
+              "name": "missing-recovery-time",
+              "shortDescription": {
+                "text": "missing recovery time"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 6",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL003",
+              "name": "no-contact",
+              "shortDescription": {
+                "text": "no contact"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(2); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL004",
+              "name": "no-exit-plan",
+              "shortDescription": {
+                "text": "no exit plan"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "regulation": "DORA Art. 28(8), Art. 30(3)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 10",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL005",
+              "name": "stale-or-missing-test",
+              "shortDescription": {
+                "text": "stale or missing test"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(3)(c)-(d); NIS2 Art. 21(2)(f); PRA SS2/21 ch. 10",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL006",
+              "name": "recovery-exceeds-rto",
+              "shortDescription": {
+                "text": "recovery exceeds rto"
+              },
+              "defaultConfiguration": {
+                "level": "error"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL007",
+              "name": "concentration-risk",
+              "shortDescription": {
+                "text": "concentration risk"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "regulation": "DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL008",
+              "name": "stale-or-missing-contact-verification",
+              "shortDescription": {
+                "text": "stale or missing contact verification"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            },
+            {
+              "id": "RL009",
+              "name": "last-drill-failed",
+              "shortDescription": {
+                "text": "last drill failed"
+              },
+              "defaultConfiguration": {
+                "level": "warning"
+              },
+              "properties": {
+                "regulation": "DORA Art. 30(3)(c), Art. 11(6); NIS2 Art. 21(2)(c), 21(2)(f); PRA SS2/21 ch. 10",
+                "regulation_note": "draft mapping, not legal advice"
+              }
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "RL006",
+          "level": "error",
+          "message": {
+            "text": "example-vendor-b: recovery time 8h exceeds process-a RTO 4h (maps to DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 16
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL006:example-vendor-b"
+          },
+          "properties": {
+            "severity": "high",
+            "vendor": "example-vendor-b"
+          }
+        },
+        {
+          "ruleId": "RL006",
+          "level": "error",
+          "message": {
+            "text": "example-vendor-b: recovery time 8h exceeds process-b RTO 4h (maps to DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 16
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL006:example-vendor-b"
+          },
+          "properties": {
+            "severity": "high",
+            "vendor": "example-vendor-b"
+          }
+        },
+        {
+          "ruleId": "RL001",
+          "level": "error",
+          "message": {
+            "text": "example<vendor>|a: no incident notification SLA recorded (maps to DORA Art. 30(3)(b), 30(2)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL001:example<vendor>|a"
+          },
+          "properties": {
+            "severity": "high",
+            "vendor": "example<vendor>|a"
+          }
+        },
+        {
+          "ruleId": "RL002",
+          "level": "error",
+          "message": {
+            "text": "example<vendor>|a: no recovery time commitment recorded (maps to DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 6; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL002:example<vendor>|a"
+          },
+          "properties": {
+            "severity": "high",
+            "vendor": "example<vendor>|a"
+          }
+        },
+        {
+          "ruleId": "RL003",
+          "level": "error",
+          "message": {
+            "text": "example<vendor>|a: no email or phone contact recorded (maps to DORA Art. 30(2); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL003:example<vendor>|a"
+          },
+          "properties": {
+            "severity": "high",
+            "vendor": "example<vendor>|a"
+          }
+        },
+        {
+          "ruleId": "RL004",
+          "level": "error",
+          "message": {
+            "text": "example<vendor>|a: no documented exit plan (maps to DORA Art. 28(8), Art. 30(3)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 10; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL004:example<vendor>|a"
+          },
+          "properties": {
+            "severity": "high",
+            "vendor": "example<vendor>|a"
+          }
+        },
+        {
+          "ruleId": "RL008",
+          "level": "warning",
+          "message": {
+            "text": "example-vendor-b: no contact verification date recorded (maps to DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 16
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL008:example-vendor-b"
+          },
+          "properties": {
+            "severity": "medium",
+            "vendor": "example-vendor-b"
+          }
+        },
+        {
+          "ruleId": "RL009",
+          "level": "warning",
+          "message": {
+            "text": "example-vendor-b: most recent test on 2026-10-01 failed (maps to DORA Art. 30(3)(c), Art. 11(6); NIS2 Art. 21(2)(c), 21(2)(f); PRA SS2/21 ch. 10; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 16
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL009:example-vendor-b"
+          },
+          "properties": {
+            "severity": "medium",
+            "vendor": "example-vendor-b"
+          }
+        },
+        {
+          "ruleId": "RL005",
+          "level": "warning",
+          "message": {
+            "text": "example<vendor>|a: no resilience test date recorded (maps to DORA Art. 30(3)(c)-(d); NIS2 Art. 21(2)(f); PRA SS2/21 ch. 10; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL005:example<vendor>|a"
+          },
+          "properties": {
+            "severity": "medium",
+            "vendor": "example<vendor>|a"
+          }
+        },
+        {
+          "ruleId": "RL007",
+          "level": "warning",
+          "message": {
+            "text": "example<vendor>|a: supports 4 critical processes (threshold 3) (maps to DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5; draft mapping, not legal advice)"
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "fixtures/report-register.yaml",
+                  "uriBaseId": "%SRCROOT%"
+                },
+                "region": {
+                  "startLine": 8
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "resilint/v1": "RL007:example<vendor>|a"
+          },
+          "properties": {
+            "severity": "medium",
+            "vendor": "example<vendor>|a"
+          }
+        }
+      ]
+    }
+  ]
+}

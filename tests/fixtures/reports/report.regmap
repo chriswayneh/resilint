@@ -1,0 +1,39 @@
+# Regulation mapping report
+
+_Every reference below is a draft mapping, not legal advice._
+
+## DORA
+
+| Reference | Rules | Findings | Vendors |
+|---|---|---|---|
+| Art. 30(3)(b) | RL001 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 30(2)(f) | RL001 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 30(2)(e) | RL002, RL006 | 3 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| Art. 30(3)(a) | RL002, RL006 | 3 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| Art. 30(2) | RL003, RL008 | 2 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| Art. 28(8) | RL004 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 30(3)(f) | RL004 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 30(3)(c)-(d) | RL005 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 28(4)(c) | RL007 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 29 | RL007 | 1 | example&lt;vendor&gt;&#124;a |
+| Art. 28(3) | RL008 | 1 | example-vendor-b |
+| Art. 30(3)(c) | RL009 | 1 | example-vendor-b |
+| Art. 11(6) | RL009 | 1 | example-vendor-b |
+
+## NIS2
+
+| Reference | Rules | Findings | Vendors |
+|---|---|---|---|
+| Art. 21(2)(d) | RL001, RL003, RL004, RL007, RL008 | 5 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| Art. 21(2)(c) | RL002, RL006, RL009 | 4 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| Art. 21(2)(f) | RL005, RL009 | 2 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+
+## PRA SS2/21
+
+| Reference | Rules | Findings | Vendors |
+|---|---|---|---|
+| ch. 6 | RL001, RL002, RL003, RL008 | 4 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| ch. 10 | RL004, RL005, RL006, RL009 | 5 | example&lt;vendor&gt;&#124;a, example-vendor-b |
+| ch. 5 | RL007 | 1 | example&lt;vendor&gt;&#124;a |
+
+_Draft, not legal advice. Generated offline by resilint 0.0.0._

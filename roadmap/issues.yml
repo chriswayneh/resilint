@@ -347,13 +347,15 @@ issues:
   - id: D-3
     title: JSON output schema + snapshot tests
     milestone: M3
-    status: planned
+    status: complete
     why: Auditors depend on the format
     files: '`schema/report.v1.json`, golden-file tests'
     acceptance: JSON output validates against the schema; golden snapshots for text/md/json/sarif/regmap
     size: M
     depends_on:
       - H-1
+    completed_in:
+      - 42
 
   - id: D-4
     title: Legal disclaimer consistency
@@ -517,9 +519,11 @@ issues:
 governance_tasks:
   - id: ADOPT-01
     title: Adopt the documented AI-DLC workflow
-    status: planned
+    status: complete
     why: Make design, stage decisions and security evidence reviewable
     files: AGENTS.md, README.md, ROADMAP.md, roadmap guidance, aidlc-docs public records
     acceptance: Preserve product scope and existing work; document inception before implementation, actual approval attribution, one task per PR, comprehensive tests and security review; validate links and existing gates; exclude private data; user owns GitHub approval, merges, tags, releases and settings
     size: S
     depends_on: []
+    completed_in:
+      - 43
