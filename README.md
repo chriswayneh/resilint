@@ -237,7 +237,9 @@ CSV (`examples/vendors.csv`), one row per record, header row required:
 | `contacts`, `supports_processes` | vendor rows; multiple values separated by `;` |
 | `rto_hours` | process rows |
 
-Only vendors marked `critical` or `high` are checked. Files are read with safe YAML loading, limited to 5 MB, and never sent anywhere.
+Only vendors marked `critical` or `high` are checked. Files are read with safe YAML loading, limited to 5 MiB (5,242,880 bytes), and never sent anywhere. YAML and CSV registers above that size are rejected before parsing with exit 2 and a `file larger than 5 MB` diagnostic.
+
+CI checks a fictional CSV register with 10,000 critical vendors linked to 2,000 critical processes in under 5 seconds. The timed interval includes file loading, normalization, rule checks and JSON reporting of 10,000 recovery-time findings; fixture creation, Python startup and verification are excluded. This is a regression budget for that workload, not a timing guarantee for every register or machine. Run `pytest -q tests/test_perf.py --durations=3` to check it locally.
 
 ## Rules
 
