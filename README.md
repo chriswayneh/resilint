@@ -109,6 +109,21 @@ Checks run offline on your own data and leave the register unchanged. Report and
 
 Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen severity, `2` bad input.
 
+## Documentation
+
+| Guide | Contents |
+| --- | --- |
+| [Install](docs/install.md) | Supported Python/platforms, released and development installs |
+| [Use the CLI](docs/usage.md) | Every check flag, starter registers, diagnostics and exit codes |
+| [Rules](docs/rules.md) | All nine rules with illustrative fixes and draft references |
+| [Register schema](docs/schema.md) | Fields, examples and editor validation |
+| [CI](docs/ci.md) | GitHub, GitLab, Azure and generic pipelines |
+| [Drills](docs/drills.md) | Record and apply tabletop/test evidence |
+| [Draft RoI export](docs/roi.md) | Export flags, output tables and limitations |
+| [FAQ](docs/faq.md) | Common behavior and troubleshooting |
+
+Project policy is covered in [configuration](docs/config.md) and [baselines](docs/baseline.md). These guides include development features planned for v1; the published v0.4.0 release is identified below.
+
 ## Quick start
 
 ```bash
@@ -120,8 +135,7 @@ resilint check examples/vendors.csv --format md    # one-page gap report for lea
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
 ```
 
-Options: `--format text|json|md|sarif|regmap`, `--drills LOG` (apply a drill log), `--output FILE` (write the report to a file; overwrites an existing file, but refuses the input register or a symlink path with exit 2; if `RESILINT_OUTPUT_ROOT` is set, paths resolving outside it are refused, and the Action sets it to `$GITHUB_WORKSPACE`. Empty or unset means no restriction; a relative value is resolved from the current directory; a root that does not exist makes every write fail with exit 2), `--fail-on low|medium|high|critical` (default `high`), `--stale-days N` (default 365), `--max-critical N` (concentration threshold, default 3), `--contact-days N` (max age of `contacts_verified`, default 180).
-Exit codes: `0` no findings at or above `--fail-on`, `1` findings at or above it, `2` bad input.
+The [CLI guide](docs/usage.md) lists every option, defaults and output-path protections. Exit codes are `0` for a passing check, `1` for threshold findings and `2` for input/output errors.
 
 Example Markdown report (from the fictional `examples/` data):
 
@@ -150,7 +164,7 @@ mkdir roi && resilint export-roi examples/vendors.yaml --out-dir roi
 
 `--format regmap` lists every DORA, NIS2, and PRA SS2/21 reference the rules map to, with the rules, finding count, and affected vendors for each. JSON findings also carry a structured `regulation_refs` field. All references are a draft mapping, not legal advice.
 
-`export-roi` writes CSV files shaped toward the DORA register-of-information templates: `b_05_01_providers.csv` (B_05.01 ICT third-party service providers), `b_06_01_functions.csv` (B_06.01 functions), `b_02_02_links.csv` (B_02.02 Contractual arrangements - specific information, partial column set: provider-to-function links only), plus a `README.txt`. In the functions file, `critical_or_important` is `Yes` for processes marked critical or high, `No` for medium or low, and `Assessment not performed` when a process has no criticality set. They are not the official templates and leave many required fields out, so complete them and check them with an RoI validator before you submit anything. Text is NFKC-normalized, and cells that start (after leading whitespace) with `= + - @ | %`, a tab, or a line break are prefixed with `'` to block spreadsheet formula injection. That includes numeric-looking strings such as `-1` or `+44 20 ...`, which then show a leading `'`. The output directory must already exist and must not be a symlink. Existing export files are never overwritten unless you pass `--force`.
+`export-roi` writes three partial CSV tables and a README for working toward a register-of-information export. They are draft mapping, not legal advice, and require completion and validation before submission. The [export guide](docs/roi.md) covers table contents, formula neutralization, output guards and `--force`.
 
 ### Drill records
 
@@ -160,7 +174,7 @@ resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
   --kind tabletop --result pass --date 2026-10-20 --notes "failover in 3h" --log /tmp/drills.yaml
 ```
 
-`drill record` adds a tabletop or test result (`--result pass|partial|fail`, `--date` defaults to today, `--notes` up to 500 characters) to a drill log, by default `drills.yaml` next to the register (`--log FILE` to change it). The vendor id, and every entry already in the log, must match a vendor in the register, and dates in the future are refused (exit 2). The log is rewritten in a normalized form, so comments in it are not kept; the register itself is never rewritten. Concurrent records are serialized with an exclusive lock on a `LOG.lock` sidecar file (waits about 2 seconds, then exits 2; uses a native byte-range lock on Windows and `flock` on Linux/macOS), and the new log is written to a temp file in the same directory and atomically moved into place. `check --drills LOG` applies the log: the latest `pass` or `partial` drill becomes the vendor's effective last-tested date (for RL005), and if the latest drill failed, RL009 is raised. The log is read with the same safe YAML loading, alias refusal, and 5 MB cap as the register, and written with the same not-the-input, no-symlink, `RESILINT_OUTPUT_ROOT` checks as `--output` (applied to the log and its lock file). The Action takes an optional `drills` input.
+`drill record` stores tabletop/test evidence in a separate log while preserving the register. `check --drills LOG` applies recorded outcomes and can report a failed latest drill. The [drill guide](docs/drills.md) covers every flag, date handling, locking and recovery behavior. The Action accepts an optional `drills` input.
 
 ### GitHub Action
 
@@ -329,7 +343,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `D-1`, documentation guides.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `D-2`, stability policy.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 

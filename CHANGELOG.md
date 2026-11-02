@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Dedicated installation, usage, rule, drill, export and FAQ guides document every CLI option; CI checks relative Markdown links and headings without fetching external URLs.
 - `resilint explain RL001` through `RL009` provides offline rule descriptions, illustrative fixes and draft references; unknown IDs return a controlled error.
 - `resilint init [FILE]` creates a packaged, commented fictional starter register without overwriting existing files; its three intentional findings guide the first edit.
 - GitLab CI, Azure Pipelines and generic CI recipes preserve check exit status and document report handling.

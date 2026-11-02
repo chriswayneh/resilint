@@ -318,7 +318,7 @@ issues:
   - id: D-1
     title: '`docs/` site content'
     milestone: M3
-    status: planned
+    status: complete
     why: README is overloaded
     files: '`docs/{install,usage,rules,schema,ci,drills,roi,faq}.md`'
     acceptance: Every CLI flag and rule is documented; links check passes (`lychee` or a script in CI,
@@ -327,6 +327,8 @@ issues:
     depends_on:
       - H-8
       - C-7
+    completed_in:
+      - 39
 
   - id: D-2
     title: Stability policy
