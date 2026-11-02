@@ -7,6 +7,7 @@ from datetime import date
 
 SEVERITIES = ("low", "medium", "high", "critical")
 REG_NOTE = "draft mapping, not legal advice"
+DISCLAIMER = "Draft, not legal advice"
 
 RULES = {
     "RL001": ("missing-notification-sla", "high",

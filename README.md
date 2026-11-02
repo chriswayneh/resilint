@@ -70,7 +70,7 @@ MEDIUM   RL005 example-payments-cloud: last resilience test 2025-03-01 is older 
 | Art. 21(2)(f) | RL005, RL009 | 1 | example-payments-cloud |
 ```
 
-All references are a draft mapping, not legal advice.
+**Draft, not legal advice.** All references are a draft mapping.
 
 ## The problem, in business terms
 
@@ -345,7 +345,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `D-4`, consistent report disclaimers.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `D-3`, report schema and snapshots.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 

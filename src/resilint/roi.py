@@ -10,7 +10,7 @@ import csv
 import io
 import unicodedata
 
-from .rules import REG_NOTE
+from .rules import DISCLAIMER, REG_NOTE
 
 _UNSAFE = ("=", "+", "-", "@", "\t", "\r", "\n", "|", "%")
 
@@ -61,6 +61,7 @@ def export(register: dict) -> dict[str, str]:
         ["provider_id", "function_id", "function_known"],
         [[v["id"], pid, pid in procs] for v in vendors for pid in v["supports_processes"]])
     note = (f"resilint draft RoI export ({REG_NOTE}).\n"
+            f"{DISCLAIMER}.\n"
             "b_05_01_providers.csv  -> toward template B_05.01 (ICT third-party service providers)\n"
             "b_06_01_functions.csv  -> toward template B_06.01 (functions identification)\n"
             "b_02_02_links.csv      -> toward template B_02.02 (Contractual arrangements - specific information),\n"
