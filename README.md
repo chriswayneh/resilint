@@ -283,9 +283,23 @@ resilint **complements, and does not replace,** third-party risk management (TPR
 
 Because the register lives in Git, every change has an author, a review, and a history auditors can follow.
 
-## Status
+## Roadmap
 
-**[v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0)** (2026-10-24). See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
+**[v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0)** (2026-10-24). See the [changelog](CHANGELOG.md) for release notes.
+
+| Version | Theme | Highlights |
+| --- | --- | --- |
+| **v0.1–v0.4** | Core checks and evidence ✅ | YAML/CSV registers, resilience rules, SARIF, regulation mapping, draft RoI export and drill records |
+| **v0.4.1** | Maintenance | Windows locking ✅ · dependency updates ✅ · version/docs checks ✅ · Action input polish next |
+| **v0.5** | Real-world data | CSV robustness, schemas, configuration, baselines, coverage and performance |
+| **v0.6** | CI integration | Action outputs and self-tests, SARIF examples, pre-commit, `init` and `explain` |
+| **v0.9** | Documentation and API freeze | Usage guides, output schemas, snapshots and a stability policy |
+| **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
+| **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
+
+**Maintenance work is 3/4 complete.** Those tasks are merged; v0.4.1 is not released yet. Next is `M0-4`, the Action format description and input validation.
+
+The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 
 ## Security
 

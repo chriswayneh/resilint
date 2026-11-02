@@ -1,0 +1,472 @@
+# Roadmap task definitions. ROADMAP.md is the readable summary.
+# Preserve task IDs, acceptance criteria and dependencies when updating the plan.
+# complete means merged; a milestone is not released until its release is published.
+
+milestones:
+
+  - id: M0
+    title: 'v0.4.1: Maintenance'
+    description: Finish the maintenance work before the next release.
+
+  - id: M1
+    title: 'v0.5: Real-world data'
+    description: Make large, messy vendor registers easier to validate and adopt.
+
+  - id: M2
+    title: 'v0.6: CI integration and developer experience'
+    description: Make the CLI easier to use in everyday development and CI workflows.
+
+  - id: M3
+    title: 'v0.9: Documentation and API freeze'
+    description: Document the supported interfaces and settle the compatibility contract.
+
+  - id: M4
+    title: Packaging and release automation
+    description: Build, verify and publish reproducible release artifacts before v1.0.
+
+  - id: M5
+    title: 'v1.0: Stable release'
+    description: Prove the release candidate works from a fresh install, then complete the final reviews.
+issues:
+
+  - id: M0-1
+    title: 'Review/land PR #9 (supersedes #8)'
+    milestone: M0
+    status: complete
+    why: Windows lock data loss; release docs drift
+    files: '`drills.py`, `ci.yml`, docs'
+    acceptance: 'CI green on ubuntu+windows × 3.10/3.12; review passes; close #8 as included'
+    size: M
+    depends_on: []
+    completed_in:
+      - 9
+
+  - id: M0-2
+    title: 'Triage Dependabot #2, #3, #4'
+    milestone: M0
+    status: complete
+    why: Stale pins; checkout/setup-python are major jumps
+    files: '`ci.yml`, `action.yml`, `requirements-lock.txt`'
+    acceptance: Each PR is CI green; pins stay full SHAs; the lock keeps `--require-hashes`; pyyaml 6.0.3
+      hash verified
+    size: S
+    depends_on:
+      - M0-1
+    completed_in:
+      - 2
+      - 3
+      - 4
+
+  - id: M0-3
+    title: Version/docs sync check
+    milestone: M0
+    status: complete
+    why: Stop recurring drift
+    files: new `tests/test_meta.py`
+    acceptance: Test asserts `pyproject` version == `__version__` == the top released CHANGELOG heading
+      or `[Unreleased]`; the README has no hard-coded old version
+    size: S
+    depends_on:
+      - M0-1
+    completed_in:
+      - 12
+
+  - id: M0-4
+    title: Action `format` input lists `regmap`; validate inputs
+    milestone: M0
+    status: planned
+    why: Docs mismatch
+    files: '`action.yml`, README'
+    acceptance: The description matches CLI choices; an invalid format exits 2 in an action self-test
+      (M2-3)
+    size: S
+    depends_on:
+      - M0-1
+
+  - id: H-1
+    title: Split tests by module
+    milestone: M1
+    status: planned
+    why: A 685-line single file is hard to review
+    files: '`tests/test_{loader,rules,report,roi,drills,cli}.py`, `conftest.py`'
+    acceptance: Same test count or more; `pytest -q` green; no behavior change
+    size: M
+    depends_on:
+      - M0-1
+
+  - id: H-2
+    title: Coverage gate
+    milestone: M1
+    status: planned
+    why: Measurable quality
+    files: '`pyproject` dev deps (`pytest-cov`), `ci.yml`'
+    acceptance: CI fails if coverage is <90% for `src/resilint`
+    size: S
+    depends_on:
+      - H-1
+
+  - id: H-3
+    title: Property/fuzz tests for loader
+    milestone: M1
+    status: planned
+    why: Untrusted YAML/CSV from teams
+    files: '`tests/test_loader_fuzz.py` (hypothesis)'
+    acceptance: Random YAML/CSV never raises an uncaught exception. Outcomes are only a clean result or
+      exit 2 with a message
+    size: M
+    depends_on:
+      - H-1
+
+  - id: H-4
+    title: Large-register performance
+    milestone: M1
+    status: planned
+    why: Real registers have 1k–10k vendors
+    files: '`tests/test_perf.py`, `loader.py`/`rules.py` if needed'
+    acceptance: 10,000 vendors + 2,000 processes checks in <5s on CI; the 5 MB cap is documented, with
+      a clear error past it
+    size: M
+    depends_on:
+      - H-1
+
+  - id: H-5
+    title: CSV robustness
+    milestone: M1
+    status: planned
+    why: Spreadsheet exports vary
+    files: '`loader.py`, tests, README'
+    acceptance: Handles UTF-8 BOM, `;` delimiter (`--csv-delimiter`), CRLF, and header case/whitespace.
+      A bad row gives an error with the row number and exits 2
+    size: M
+    depends_on:
+      - H-1
+
+  - id: H-6
+    title: Published JSON Schema for the register
+    milestone: M1
+    status: planned
+    why: Lets teams validate in editors/CI
+    files: '`schema/register.v1.json`, `docs/schema.md`, test'
+    acceptance: Examples validate against the schema (test with `jsonschema` as a dev dep); every field
+      is documented with type and example
+    size: M
+    depends_on:
+      - H-1
+
+  - id: H-7
+    title: Stable error messages and codes
+    milestone: M1
+    status: planned
+    why: Usable in CI logs
+    files: '`loader.py`, `cli.py`'
+    acceptance: 'Every exit-2 path prints `resilint: error: <file>:<line>: <msg>` to stderr; tests cover
+      each path'
+    size: M
+    depends_on:
+      - H-1
+
+  - id: H-8
+    title: Rule config file
+    milestone: M1
+    status: planned
+    why: Teams need per-repo thresholds and suppressions
+    files: '`config.py` (new), `cli.py`, docs'
+    acceptance: '`.resilint.yaml` supports `fail_on`, `stale_days`, `contact_days`, `max_critical`, and
+      `ignore: [{rule, vendor, reason, expires}]`. An expired ignore re-fires the finding. CLI flags override
+      the file. Tests cover precedence'
+    size: L
+    depends_on:
+      - H-7
+
+  - id: H-9
+    title: Baseline mode
+    milestone: M1
+    status: planned
+    why: Adopting on an existing register without failing CI day one
+    files: '`cli.py`, `baseline.py`'
+    acceptance: '`--baseline FILE` reports only new findings, and `--write-baseline` creates the file.
+      Stable finding fingerprints (rule+vendor+field) are tested'
+    size: M
+    depends_on:
+      - H-8
+
+  - id: H-10
+    title: Windows/macOS CLI parity
+    milestone: M1
+    status: planned
+    why: Users run locally
+    files: '`ci.yml`'
+    acceptance: Matrix ubuntu/windows/macos × 3.10/3.12/3.13 is green
+    size: S
+    depends_on:
+      - M0-1
+
+  - id: C-1
+    title: Action outputs
+    milestone: M2
+    status: planned
+    why: Downstream steps need counts
+    files: '`action.yml`'
+    acceptance: Outputs `findings`, `highest-severity`, `exit-code`; documented
+    size: S
+    depends_on:
+      - M0-4
+
+  - id: C-2
+    title: SARIF upload example workflow
+    milestone: M2
+    status: planned
+    why: The most common real use
+    files: '`examples/workflows/resilint-sarif.yml`, README'
+    acceptance: 'Uses `github/codeql-action/upload-sarif` pinned by SHA, with `security-events: write`
+      only on that job'
+    size: S
+    depends_on:
+      - C-1
+
+  - id: C-3
+    title: Action self-test workflow
+    milestone: M2
+    status: planned
+    why: Prevent a broken Action release
+    files: '`.github/workflows/action-test.yml`'
+    acceptance: 'Runs `uses: ./` on examples; asserts exit code 1 and the SARIF file exists'
+    size: S
+    depends_on:
+      - C-1
+
+  - id: C-4
+    title: pre-commit hook
+    milestone: M2
+    status: planned
+    why: Catch gaps before the PR
+    files: '`.pre-commit-hooks.yaml`, README'
+    acceptance: '`pre-commit try-repo . resilint --files examples/vendors.yaml` runs'
+    size: S
+    depends_on:
+      - M0-1
+
+  - id: C-5
+    title: GitLab CI / generic CI recipe
+    milestone: M2
+    status: planned
+    why: Not all teams use GitHub
+    files: '`docs/ci.md`'
+    acceptance: Copy-paste GitLab and Azure Pipelines snippets, tested by hand with the documented commands
+    size: S
+    depends_on: []
+
+  - id: C-6
+    title: '`resilint init`'
+    milestone: M2
+    status: planned
+    why: Faster onboarding
+    files: '`cli.py`, template'
+    acceptance: Writes a commented starter `vendors.yaml` and refuses to overwrite; the output passes
+      `check` with only expected findings
+    size: S
+    depends_on:
+      - H-6
+
+  - id: C-7
+    title: '`resilint explain RLxxx`'
+    milestone: M2
+    status: planned
+    why: Self-serve fix guidance
+    files: '`rules.py`, `cli.py`'
+    acceptance: Prints rule description, fix example, and draft reg refs for all RL001–RL009; unknown
+      id exits 2
+    size: S
+    depends_on: []
+
+  - id: D-1
+    title: '`docs/` site content'
+    milestone: M3
+    status: planned
+    why: README is overloaded
+    files: '`docs/{install,usage,rules,schema,ci,drills,roi,faq}.md`'
+    acceptance: Every CLI flag and rule is documented; links check passes (`lychee` or a script in CI,
+      offline-only for relative links)
+    size: M
+    depends_on:
+      - H-8
+      - C-7
+
+  - id: D-2
+    title: Stability policy
+    milestone: M3
+    status: planned
+    why: v1 needs a contract
+    files: '`docs/stability.md`'
+    acceptance: Defines the semver surface (CLI flags, exit codes, JSON/SARIF fields, schema v1, rule
+      IDs) and the deprecation policy
+    size: S
+    depends_on:
+      - D-1
+
+  - id: D-3
+    title: JSON output schema + snapshot tests
+    milestone: M3
+    status: planned
+    why: Auditors depend on the format
+    files: '`schema/report.v1.json`, golden-file tests'
+    acceptance: JSON output validates against the schema; golden snapshots for text/md/json/sarif/regmap
+    size: M
+    depends_on:
+      - H-1
+
+  - id: D-4
+    title: Legal disclaimer consistency
+    milestone: M3
+    status: planned
+    why: Regulatory mappings are drafts
+    files: README, docs, report footers
+    acceptance: '"Draft, not legal advice" appears in README, regmap, md, and RoI outputs; a test asserts
+      it'
+    size: S
+    depends_on:
+      - D-1
+
+  - id: D-5
+    title: Deprecate/remove anything not in the freeze
+    milestone: M3
+    status: planned
+    why: Clean v1 surface
+    files: '`cli.py`, CHANGELOG'
+    acceptance: Lists removed/deprecated items; warnings tested
+    size: S
+    depends_on:
+      - D-2
+
+  - id: D-6
+    title: CONTRIBUTING + issue/PR templates
+    milestone: M3
+    status: planned
+    why: Outside users
+    files: '`CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/*`, `PULL_REQUEST_TEMPLATE.md`'
+    acceptance: Templates include the gate commands and the "fictional data only" rule
+    size: S
+    depends_on: []
+
+  - id: P-1
+    title: Build sdist/wheel in CI
+    milestone: M4
+    status: planned
+    why: Verify packaging
+    files: '`ci.yml`'
+    acceptance: '`python -m build` + `twine check dist/*` pass; wheel install in a fresh venv runs `resilint
+      --version`'
+    size: S
+    depends_on:
+      - M0-1
+
+  - id: P-2
+    title: Release workflow (PyPI Trusted Publishing)
+    milestone: M4
+    status: planned
+    why: '`pip install resilint`'
+    files: '`.github/workflows/release.yml`'
+    acceptance: Triggered on `v*` tag only; OIDC trusted publisher (no API token secret); environment
+      `pypi` with manual approval; uploads to TestPyPI first. **Maintainer configures PyPI and the environment**
+    size: M
+    depends_on:
+      - P-1
+
+  - id: P-3
+    title: Provenance + SBOM
+    milestone: M4
+    status: planned
+    why: Supply-chain trust for a security tool
+    files: '`release.yml`'
+    acceptance: '`actions/attest-build-provenance` (SHA-pinned) and a CycloneDX SBOM attached to the GitHub
+      release'
+    size: M
+    depends_on:
+      - P-2
+
+  - id: P-4
+    title: Security scanning in CI
+    milestone: M4
+    status: planned
+    why: Gate secrets/vulns
+    files: '`.github/workflows/security.yml`'
+    acceptance: gitleaks (or `trufflehog --only-verified`) on PRs, `pip-audit -r requirements-lock.txt`,
+      CodeQL python; all pinned by SHA, least-privilege permissions
+    size: S
+    depends_on: []
+
+  - id: P-5
+    title: Action version tags policy
+    milestone: M4
+    status: planned
+    why: Users pin `@v1`
+    files: '`docs/stability.md`, README'
+    acceptance: Documents `@v1` moving tag + `@v1.0.0` + SHA pinning advice
+    size: S
+    depends_on:
+      - D-2
+
+  - id: P-6
+    title: Install docs switch to PyPI
+    milestone: M4
+    status: planned
+    why: Real-world install
+    files: README, docs
+    acceptance: '`pip install resilint==X` and `pipx install resilint` are documented; the git install
+      is kept as an alternative'
+    size: S
+    depends_on:
+      - P-2
+
+  - id: R-1
+    title: v1.0.0-rc1 PR (version bump + CHANGELOG)
+    milestone: M5
+    status: planned
+    why: Freeze
+    acceptance: Versions synced (M0-3 test green), CHANGELOG `[1.0.0-rc1]`, ROADMAP marks v1
+    size: S
+    depends_on:
+      - all M1–M4
+
+  - id: R-2
+    title: Dogfood on a realistic synthetic register
+    milestone: M5
+    status: planned
+    why: Real-world proof
+    acceptance: '`examples/large/` (fictional, 500 vendors) runs every format plus baseline/config/drills/export-roi
+      in CI'
+    size: M
+    depends_on:
+      - R-1
+
+  - id: R-3
+    title: Fresh-machine install test
+    milestone: M5
+    status: planned
+    why: Catch packaging misses
+    acceptance: TestPyPI install on ubuntu/windows/macos runs the quick start verbatim
+    size: S
+    depends_on:
+      - R-1
+      - P-2
+
+  - id: R-4
+    title: Final review and security review of the full diff since v0.4.0
+    milestone: M5
+    status: planned
+    why: Security tool
+    acceptance: Review and security review passed on the RC head SHA
+    size: M
+    depends_on:
+      - R-2
+      - R-3
+
+  - id: R-5
+    title: Tag `v1.0.0` + release (maintainer only)
+    milestone: M5
+    status: planned
+    why: Ship
+    acceptance: Release checklist below completed
+    size: S
+    depends_on:
+      - R-4
