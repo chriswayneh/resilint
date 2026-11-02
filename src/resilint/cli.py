@@ -59,7 +59,7 @@ def write_file(path: str, content: str, input_file: str | None = None,
 
 def _export(args) -> int:
     try:
-        register = load(args.file)
+        register = load(args.file, csv_delimiter=args.csv_delimiter)
     except InputError as e:
         print(f"resilint: error: {e}", file=sys.stderr)
         return 2
@@ -158,7 +158,7 @@ def _drill(args) -> int:
         return 2
     try:
         try:
-            register = load(args.file)
+            register = load(args.file, csv_delimiter=args.csv_delimiter)
             ids = {v["id"] for v in register["vendors"]}
             drills = load_log(log, missing_ok=True, vendor_ids=ids)
             new = _entry({"vendor": args.vendor, "date": args.date, "kind": args.kind,
@@ -214,6 +214,9 @@ def main(argv=None) -> int:
     r.add_argument("--notes", default=None)
     r.add_argument("--log", help="drill log file (default drills.yaml next to the register)")
     e.add_argument("--force", action="store_true", help="overwrite existing export files")
+    for parser in (c, e, r):
+        parser.add_argument("--csv-delimiter", choices=(",", ";"), default=",",
+                            help="CSV field separator (default: comma; ignored for YAML)")
     args = ap.parse_args(argv)
     if args.cmd == "drill":
         return _drill(args)
@@ -223,7 +226,7 @@ def main(argv=None) -> int:
         print("resilint: error: thresholds must be non-negative", file=sys.stderr)
         return 2
     try:
-        register = load(args.file)
+        register = load(args.file, csv_delimiter=args.csv_delimiter)
         if args.drills:
             apply(register, load_log(args.drills))
     except InputError as e:

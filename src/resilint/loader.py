@@ -135,7 +135,7 @@ def _country(value: Any, ctx: str) -> str | None:
     return s
 
 
-def normalize(data: Any) -> dict:
+def normalize(data: Any, *, csv_rows: tuple[list[int], list[int]] | None = None) -> dict:
     if not isinstance(data, dict):
         raise InputError("top level must be a mapping with 'vendors' (and optional 'processes')")
     version = data.get("schema_version", 1)
@@ -156,7 +156,7 @@ def normalize(data: Any) -> dict:
 
     processes = {}
     for i, p in enumerate(raw_procs):
-        ctx = f"processes[{i}]"
+        ctx = f"CSV row {csv_rows[1][i]}" if csv_rows is not None else f"processes[{i}]"
         if not isinstance(p, dict) or not p.get("id"):
             raise InputError(f"{ctx}: each process needs an 'id'")
         pid = str(p["id"]).strip()
@@ -174,14 +174,14 @@ def normalize(data: Any) -> dict:
     vendors = []
     seen = set()
     for i, v in enumerate(raw_vendors):
-        ctx = f"vendors[{i}]"
+        ctx = f"CSV row {csv_rows[0][i]}" if csv_rows is not None else f"vendors[{i}]"
         if not isinstance(v, dict) or not v.get("id"):
             raise InputError(f"{ctx}: each vendor needs an 'id'")
         vid = str(v["id"]).strip()
         if vid in seen:
             raise InputError(f"{ctx}: duplicate vendor id {vid!r}")
         seen.add(vid)
-        ctx = f"vendor {vid}"
+        ctx = f"{ctx}: vendor {vid}" if csv_rows is not None else f"vendor {vid}"
         crit = str(v.get("criticality") or "").strip().lower()
         if crit not in CRITICALITIES:
             raise InputError(f"{ctx}: criticality must be one of {', '.join(CRITICALITIES)}")
@@ -203,28 +203,43 @@ def normalize(data: Any) -> dict:
     return {"schema_version": version, "vendors": vendors, "processes": processes}
 
 
-def parse_csv(text: str) -> dict:
+def parse_csv(text: str, delimiter: str = ",") -> dict:
     """CSV: one row per vendor. Processes use rows with record_type=process."""
-    reader = csv.DictReader(io.StringIO(text))
+    if delimiter not in (",", ";"):
+        raise InputError("CSV delimiter must be ',' or ';'")
+    reader = csv.DictReader(io.StringIO(text.lstrip("\ufeff"), newline=""),
+                            delimiter=delimiter, strict=True)
     vendors: list[dict] = []
     processes: list[dict] = []
     lines: dict[str, int] = {}
+    vendor_rows: list[int] = []
+    process_rows: list[int] = []
     try:
-        if not reader.fieldnames or "id" not in [f.strip() for f in reader.fieldnames]:
-            raise InputError("CSV must have a header row including 'id'")
+        headers = [f.strip().lower() for f in (reader.fieldnames or [])]
+        if not headers or "id" not in headers:
+            raise InputError("CSV row 1: header must include 'id'")
+        if any(not f for f in headers) or len(set(headers)) != len(headers):
+            raise InputError("CSV row 1: header names must be nonempty and unique")
+        reader.fieldnames = headers
         for row in reader:
-            row = {(k or "").strip(): (v or "").strip() for k, v in row.items() if k}
+            if None in row or any(v is None for v in row.values()):
+                raise InputError(f"CSV row {reader.line_num}: field count does not match header")
+            row = {k: v.strip() for k, v in row.items()}
             kind = row.get("record_type", "vendor").lower() or "vendor"
             if kind == "process":
                 processes.append(row)
+                process_rows.append(reader.line_num)
             elif kind == "vendor":
                 vendors.append(row)
+                vendor_rows.append(reader.line_num)
                 lines.setdefault(row.get("id", ""), reader.line_num)
             else:
-                raise InputError(f"CSV row {row.get('id')!r}: record_type must be vendor or process")
+                raise InputError(f"CSV row {reader.line_num}: record_type must be vendor or process")
     except csv.Error as e:
-        raise InputError(f"CSV row {reader.line_num}: invalid CSV ({e})") from None
-    return {"vendors": vendors, "processes": processes, "_lines": lines}
+        line = max(1, reader.reader.line_num)
+        raise InputError(f"CSV row {line}: invalid CSV ({e})") from None
+    return {"vendors": vendors, "processes": processes, "_lines": lines,
+            "_rows": (vendor_rows, process_rows)}
 
 
 def _yaml_lines(text: str, ids) -> dict:
@@ -238,7 +253,7 @@ def _yaml_lines(text: str, ids) -> dict:
     return out
 
 
-def load(path: str | Path) -> dict:
+def load(path: str | Path, *, csv_delimiter: str = ",") -> dict:
     p = Path(path)
     try:
         if not p.is_file():
@@ -251,9 +266,11 @@ def load(path: str | Path) -> dict:
     except UnicodeDecodeError:
         raise InputError(f"{p}: file is not UTF-8 text") from None
     csv_lines = None
+    csv_rows = None
     if p.suffix.lower() == ".csv":
-        data = parse_csv(text)
+        data = parse_csv(text, delimiter=csv_delimiter)
         csv_lines = data.pop("_lines")
+        csv_rows = data.pop("_rows")
     else:
         try:
             data = yaml.load(text, Loader=_NoAliasLoader)  # nosec B506 - SafeLoader subclass
@@ -264,7 +281,7 @@ def load(path: str | Path) -> dict:
         except RecursionError:
             raise InputError(f"{p}: YAML nested too deeply") from None
     try:
-        reg = normalize(data)
+        reg = normalize(data, csv_rows=csv_rows)
     except RecursionError:
         raise InputError(f"{p}: input nested too deeply") from None
     except (ValueError, OverflowError) as e:

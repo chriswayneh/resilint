@@ -227,7 +227,9 @@ vendors:
     supports_processes: [order-fulfilment]
 ```
 
-CSV (`examples/vendors.csv`), one row per record, header row required:
+CSV (`examples/vendors.csv`), one row per record, header row required. UTF-8 BOM and CRLF line endings are supported; header names are trimmed and case-insensitive. Headers must be nonempty and unique, and each data row must match the header's field count. Invalid rows return exit 2 with a physical CSV line number (the ending line for multiline quoted records).
+
+Comma is the default separator. For semicolon-delimited spreadsheet exports, use `resilint check register.csv --csv-delimiter ';'`. The same option works with `export-roi` and `drill record`; YAML input ignores it. Semicolons still separate list values such as contacts and supported processes, so quote those cells when semicolon is also the field separator. Quoted separators and embedded newlines follow CSV quoting rules.
 
 | Column | Notes |
 |---|---|

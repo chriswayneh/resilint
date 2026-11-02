@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- CSV register commands accept `--csv-delimiter ';'`; BOM/CRLF files and case-insensitive, whitespace-trimmed headers are supported. Malformed rows and invalid vendor/process values report their CSV row number with exit 2.
 - A CI performance regression checks 10,000 vendors and 2,000 processes from CSV, including JSON reporting, within five seconds; CLI tests verify clear errors above the documented 5 MiB input cap.
 - Reproducible Hypothesis tests exercise bounded YAML/CSV bytes, text, structured fields and valid registers through both the loader and CLI.
 - Repository metadata checks keep package/runtime versions, the latest released changelog entry, and README release references synchronized.
