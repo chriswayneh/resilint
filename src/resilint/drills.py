@@ -47,7 +47,7 @@ def _entry(raw: Any, ctx: str, vendor_ids: set[str] | None = None) -> dict:
     return {"vendor": vendor, "date": d, "kind": kind, "result": result, "notes": notes}
 
 
-def load_log(path: str | Path, missing_ok: bool = False,
+def _load_log(path: str | Path, missing_ok: bool = False,
              vendor_ids: set[str] | None = None) -> list[dict]:
     p = Path(path)
     try:
@@ -65,9 +65,11 @@ def load_log(path: str | Path, missing_ok: bool = False,
     try:
         data = yaml.load(text, Loader=_NoAliasLoader)  # nosec B506 - SafeLoader subclass
     except _AliasRefused as e:
-        raise InputError(f"{p}: {e}") from None
+        raise InputError(f"{p}: {e}", line=e.line) from None
     except yaml.YAMLError as e:
-        raise InputError(f"{p}: invalid YAML ({e.__class__.__name__})") from None
+        mark = getattr(e, "problem_mark", None)
+        raise InputError(f"{p}: invalid YAML ({e.__class__.__name__})",
+                         line=mark.line + 1 if mark is not None else 0) from None
     except RecursionError:
         raise InputError(f"{p}: YAML nested too deeply") from None
     if data is None:
@@ -75,6 +77,15 @@ def load_log(path: str | Path, missing_ok: bool = False,
     if not isinstance(data, dict) or not isinstance(data.get("drills", []), list):
         raise InputError(f"{p}: top level must be a mapping with a 'drills' list")
     return [_entry(d, f"{p}: drills[{i}]", vendor_ids) for i, d in enumerate(data.get("drills") or [])]
+
+
+def load_log(path: str | Path, missing_ok: bool = False,
+             vendor_ids: set[str] | None = None) -> list[dict]:
+    try:
+        return _load_log(path, missing_ok, vendor_ids)
+    except InputError as error:
+        error.path = str(path)
+        raise
 
 
 def dump_log(drills: list[dict]) -> str:

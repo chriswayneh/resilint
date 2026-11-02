@@ -26,9 +26,18 @@ AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM
 class InputError(Exception):
     """Raised for unreadable or invalid input (exit code 2)."""
 
+    def __init__(self, message: str, *, path: str | None = None, line: int = 0):
+        super().__init__(message)
+        self.path = path
+        self.line = line
+
 
 class _AliasRefused(yaml.YAMLError):
     """A YAML anchor/alias was found; aliases are refused."""
+
+    def __init__(self, message: str, *, line: int = 0):
+        super().__init__(message)
+        self.line = line
 
 
 class _NoAliasLoader(yaml.SafeLoader):
@@ -37,7 +46,7 @@ class _NoAliasLoader(yaml.SafeLoader):
     def compose_node(self, parent, index):
         if self.check_event(yaml.AliasEvent):
             line = self.peek_event().start_mark.line + 1
-            raise _AliasRefused(f"YAML anchors/aliases are not allowed (line {line})")
+            raise _AliasRefused(f"YAML anchors/aliases are not allowed (line {line})", line=line)
         return super().compose_node(parent, index)
 
     def get_single_data(self):
@@ -253,7 +262,7 @@ def _yaml_lines(text: str, ids) -> dict:
     return out
 
 
-def load(path: str | Path, *, csv_delimiter: str = ",") -> dict:
+def _load(path: str | Path, *, csv_delimiter: str = ",") -> dict:
     p = Path(path)
     try:
         if not p.is_file():
@@ -275,9 +284,11 @@ def load(path: str | Path, *, csv_delimiter: str = ",") -> dict:
         try:
             data = yaml.load(text, Loader=_NoAliasLoader)  # nosec B506 - SafeLoader subclass
         except _AliasRefused as e:
-            raise InputError(f"{p}: {e}") from None
+            raise InputError(f"{p}: {e}", line=e.line) from None
         except yaml.YAMLError as e:
-            raise InputError(f"{p}: invalid YAML ({e.__class__.__name__})") from None
+            mark = getattr(e, "problem_mark", None)
+            raise InputError(f"{p}: invalid YAML ({e.__class__.__name__})",
+                             line=mark.line + 1 if mark is not None else 0) from None
         except RecursionError:
             raise InputError(f"{p}: YAML nested too deeply") from None
     try:
@@ -296,3 +307,15 @@ def load(path: str | Path, *, csv_delimiter: str = ",") -> dict:
     reg["source"] = quote(rel)
     reg["lines"] = csv_lines if csv_lines is not None else _yaml_lines(text, ids)
     return reg
+
+
+def load(path: str | Path, *, csv_delimiter: str = ",") -> dict:
+    """Load a register, retaining file and known physical-line context on errors."""
+    try:
+        return _load(path, csv_delimiter=csv_delimiter)
+    except InputError as error:
+        error.path = str(path)
+        match = re.match(r"CSV row ([0-9]+):", str(error))
+        if match:
+            error.line = int(match.group(1))
+        raise

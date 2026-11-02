@@ -18,6 +18,23 @@ from .roi import export
 from .rules import SEVERITIES, at_or_above, check
 
 
+def _diagnostic_text(value: object) -> str:
+    return "".join(c if c.isprintable() else f"\\x{ord(c):02x}" for c in str(value))
+
+
+def _error(message: object, file: str = "<cli>", line: int = 0) -> int:
+    """Emit one stable diagnostic; zero denotes an unavailable source line."""
+    if isinstance(message, InputError):
+        file = message.path or file
+        line = message.line
+    text = str(message)
+    if text.startswith(file + ": "):
+        text = text[len(file) + 2:]
+    print(f"resilint: error: {_diagnostic_text(file)}:{line}: {_diagnostic_text(text)}",
+          file=sys.stderr)
+    return 2
+
+
 def _within(path: str, root: str) -> bool:
     real, base = os.path.realpath(path), os.path.realpath(root)
     return os.path.commonpath([real, base]) == base
@@ -61,35 +78,28 @@ def _export(args) -> int:
     try:
         register = load(args.file, csv_delimiter=args.csv_delimiter)
     except InputError as e:
-        print(f"resilint: error: {e}", file=sys.stderr)
-        return 2
+        return _error(e, args.file)
     out = os.path.normpath(args.out_dir)
     if os.path.islink(out) or not os.path.isdir(out):
-        print("resilint: error: --out-dir must be an existing directory, not a symlink",
-              file=sys.stderr)
-        return 2
+        return _error("--out-dir must be an existing directory, not a symlink", out)
     root = os.environ.get("RESILINT_OUTPUT_ROOT")
     if root and not _within(out, root):
-        print(f"resilint: error: --out-dir resolves outside {root}", file=sys.stderr)
-        return 2
+        return _error(f"--out-dir resolves outside {root}", out)
     files = export(register)
     if not args.force:
         existing = [n for n in files if os.path.lexists(os.path.join(out, n))]
         if existing:
-            print(f"resilint: error: {', '.join(existing)} already exist in {out}; "
-                  "use --force to overwrite", file=sys.stderr)
-            return 2
+            return _error(f"{', '.join(existing)} already exist in {out}; "
+                          "use --force to overwrite", out)
     for name in files:  # validate every target before writing any
         err = check_target(os.path.join(out, name), args.file)
         if err:
-            print(f"resilint: error: {err}", file=sys.stderr)
-            return 2
+            return _error(err, os.path.join(out, name))
     for name, content in files.items():
         err = write_file(os.path.join(out, name), content, args.file,
                          exclusive=not args.force)
         if err:
-            print(f"resilint: error: {err}", file=sys.stderr)
-            return 2
+            return _error(err, os.path.join(out, name))
     print(f"wrote draft RoI export to {out} (draft mapping, not legal advice)")
     return 0
 
@@ -150,12 +160,10 @@ def _drill(args) -> int:
     for path in (log, lock_path):
         err = check_target(path, args.file, "--log")
         if err:
-            print(f"resilint: error: {err}", file=sys.stderr)
-            return 2
+            return _error(err, path)
     lock = _lock(lock_path)
     if isinstance(lock, str):
-        print(f"resilint: error: {lock}", file=sys.stderr)
-        return 2
+        return _error(lock, lock_path)
     try:
         try:
             register = load(args.file, csv_delimiter=args.csv_delimiter)
@@ -164,12 +172,10 @@ def _drill(args) -> int:
             new = _entry({"vendor": args.vendor, "date": args.date, "kind": args.kind,
                           "result": args.result, "notes": args.notes}, "drill", ids)
         except InputError as e:
-            print(f"resilint: error: {e}", file=sys.stderr)
-            return 2
+            return _error(e, log)
         err = check_target(log, args.file, "--log") or _replace(log, dump_log(drills + [new]))
         if err:
-            print(f"resilint: error: {err}", file=sys.stderr)
-            return 2
+            return _error(err, log)
     finally:
         os.close(lock)
     note = " (last-tested date updated)" if new["result"] != "fail" else ""
@@ -181,8 +187,7 @@ def _drill(args) -> int:
 class _Parser(argparse.ArgumentParser):
     def error(self, message):
         self.print_usage(sys.stderr)
-        print(f"resilint: error: {message}", file=sys.stderr)
-        sys.exit(2)
+        sys.exit(_error(message))
 
 
 def main(argv=None) -> int:
@@ -223,23 +228,20 @@ def main(argv=None) -> int:
     if args.cmd == "export-roi":
         return _export(args)
     if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
-        print("resilint: error: thresholds must be non-negative", file=sys.stderr)
-        return 2
+        return _error("thresholds must be non-negative")
     try:
         register = load(args.file, csv_delimiter=args.csv_delimiter)
         if args.drills:
             apply(register, load_log(args.drills))
     except InputError as e:
-        print(f"resilint: error: {e}", file=sys.stderr)
-        return 2
+        return _error(e, args.file)
     findings = check(register, stale_days=args.stale_days, max_critical=args.max_critical,
                      contact_days=args.contact_days)
     report = FORMATS[args.format](findings, register)
     if args.output:
         err = write_file(args.output, report + "\n", args.file)
         if err:
-            print(f"resilint: error: {err}", file=sys.stderr)
-            return 2
+            return _error(err, args.output)
     else:
         print(report)
     return 1 if at_or_above(findings, args.fail_on) else 0

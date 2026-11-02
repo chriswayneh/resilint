@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- CLI exit-2 diagnostics consistently include file and line context, with `0` for an unavailable line and `<cli>` for argument errors; control characters are escaped and CSV/YAML parser locations are retained where known.
 - Published a Draft 2020-12 register JSON Schema with field examples, editor/CI guidance and validation tests for the fictional register examples; runtime validation remains unchanged.
 - CSV register commands accept `--csv-delimiter ';'`; BOM/CRLF files and case-insensitive, whitespace-trimmed headers are supported. Malformed rows and invalid vendor/process values report their CSV row number with exit 2.
 - A CI performance regression checks 10,000 vendors and 2,000 processes from CSV, including JSON reporting, within five seconds; CLI tests verify clear errors above the documented 5 MiB input cap.

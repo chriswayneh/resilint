@@ -245,6 +245,8 @@ CI checks a fictional CSV register with 10,000 critical vendors linked to 2,000 
 
 ## Rules
 
+CLI failures use `resilint: error: <file>:<line>: <message>` on stderr with exit 2. A known physical input line is one-based; `0` means no reliable line is available, and `<cli>` identifies argument errors. Output errors name the destination, and drill-log errors name the log. Control characters are escaped to keep each diagnostic on one line. Exit 0 means success without findings at the selected threshold; exit 1 means findings reached that threshold. Argument parsing may also print usage.
+
 For editor and CI validation, use the [register v1 JSON Schema](schema/register.v1.json) and [field reference and validation guide](docs/schema.md). The schema complements runtime validation and resilience checks.
 
 | ID | Severity | Finding |
