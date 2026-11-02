@@ -279,7 +279,9 @@ issues:
   - id: C-5
     title: GitLab CI / generic CI recipe
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 36
     why: Not all teams use GitHub
     files: '`docs/ci.md`'
     acceptance: Copy-paste GitLab and Azure Pipelines snippets, tested by hand with the documented commands
