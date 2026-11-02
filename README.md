@@ -192,6 +192,8 @@ Uploading sends the report's vendor identifiers, finding messages and source loc
 
 Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing. The file path is relative to the working directory (with `uriBaseId: %SRCROOT%`); when the register is outside the working directory, the SARIF uri is just the file name.
 
+For GitLab, Azure Pipelines or another runner, see the [CI recipes](docs/ci.md).
+
 ### pre-commit
 
 The development hook `resilint` checks every selected register without changing it. It defaults to files named `vendors.yaml`, `vendors.yml` or `vendors.csv`; override `files` in your hook configuration for other names. Thresholds and ignores come from the repository's `.resilint.yaml`. Hook arguments are filenames; configure thresholds in that file instead of adding CLI flags to `args`.

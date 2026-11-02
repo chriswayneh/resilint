@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- GitLab CI, Azure Pipelines and generic CI recipes preserve check exit status and document report handling.
 - A pre-commit hook checks multiple vendor registers with repository rule settings, preserves inputs and treats option-like filenames as data.
 - A hosted Action self-test checks SARIF creation, threshold failure, zero findings and invalid-input outputs using the local composite Action.
 - A complete SHA-pinned SARIF upload workflow example scopes upload permissions to its job and preserves threshold/input failure status after upload.
