@@ -11,6 +11,7 @@ import time
 from datetime import date
 
 from . import __version__
+from .config import apply_ignores, load_config
 from .drills import KINDS, RESULTS, _entry, apply, dump_log, load_log
 from .loader import InputError, load
 from .report import FORMATS
@@ -197,13 +198,14 @@ def main(argv=None) -> int:
     c = sub.add_parser("check", help="check a vendor register (YAML or CSV)")
     c.add_argument("file")
     c.add_argument("--format", choices=sorted(FORMATS), default="text")
-    c.add_argument("--fail-on", choices=SEVERITIES, default="high")
-    c.add_argument("--stale-days", type=int, default=365)
-    c.add_argument("--max-critical", type=int, default=3,
+    c.add_argument("--fail-on", choices=SEVERITIES)
+    c.add_argument("--stale-days", type=int)
+    c.add_argument("--max-critical", type=int,
                    help="concentration threshold: critical processes per vendor")
-    c.add_argument("--contact-days", type=int, default=180,
+    c.add_argument("--contact-days", type=int,
                    help="max age in days of a vendor's contacts_verified date")
     c.add_argument("--output", metavar="FILE", help="write the report to FILE instead of stdout")
+    c.add_argument("--config", metavar="FILE", help="rule settings (default: cwd/.resilint.yaml)")
     e = sub.add_parser("export-roi", help="draft export toward DORA register-of-information templates")
     e.add_argument("file")
     e.add_argument("--out-dir", required=True, help="existing directory to write CSV files into")
@@ -227,6 +229,13 @@ def main(argv=None) -> int:
         return _drill(args)
     if args.cmd == "export-roi":
         return _export(args)
+    try:
+        settings = load_config(args.config)
+    except InputError as error:
+        return _error(error)
+    for key in ("fail_on", "stale_days", "contact_days", "max_critical"):
+        if getattr(args, key) is None:
+            setattr(args, key, getattr(settings, key))
     if args.stale_days < 0 or args.max_critical < 0 or args.contact_days < 0:
         return _error("thresholds must be non-negative")
     try:
@@ -237,6 +246,7 @@ def main(argv=None) -> int:
         return _error(e, args.file)
     findings = check(register, stale_days=args.stale_days, max_critical=args.max_critical,
                      contact_days=args.contact_days)
+    findings = apply_ignores(findings, settings)
     report = FORMATS[args.format](findings, register)
     if args.output:
         err = write_file(args.output, report + "\n", args.file)

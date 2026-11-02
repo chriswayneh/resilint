@@ -245,6 +245,8 @@ CI checks a fictional CSV register with 10,000 critical vendors linked to 2,000 
 
 ## Rules
 
+Per-project thresholds and expiring suppressions can be stored in `.resilint.yaml`; explicit CLI flags take precedence. See the [rule configuration guide](docs/config.md).
+
 CLI failures use `resilint: error: <file>:<line>: <message>` on stderr with exit 2. A known physical input line is one-based; `0` means no reliable line is available, and `<cli>` identifies argument errors. Output errors name the destination, and drill-log errors name the log. Control characters are escaped to keep each diagnostic on one line. Exit 0 means success without findings at the selected threshold; exit 1 means findings reached that threshold. Argument parsing may also print usage.
 
 For editor and CI validation, use the [register v1 JSON Schema](schema/register.v1.json) and [field reference and validation guide](docs/schema.md). The schema complements runtime validation and resilience checks.
@@ -307,7 +309,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 6/10 complete.** Next is `H-7`, stable error messages and codes.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 7/10 complete.** Next is `H-8`, rule configuration.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 

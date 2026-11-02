@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- `.resilint.yaml` rule thresholds and exact rule/vendor ignores with required reasons and expiry dates; explicit CLI flags override file settings and expired ignores re-fire findings.
 - CLI exit-2 diagnostics consistently include file and line context, with `0` for an unavailable line and `<cli>` for argument errors; control characters are escaped and CSV/YAML parser locations are retained where known.
 - Published a Draft 2020-12 register JSON Schema with field examples, editor/CI guidance and validation tests for the fictional register examples; runtime validation remains unchanged.
 - CSV register commands accept `--csv-delimiter ';'`; BOM/CRLF files and case-insensitive, whitespace-trimmed headers are supported. Malformed rows and invalid vendor/process values report their CSV row number with exit 2.

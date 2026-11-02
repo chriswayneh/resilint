@@ -170,7 +170,9 @@ issues:
   - id: H-7
     title: Stable error messages and codes
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 28
     why: Usable in CI logs
     files: '`loader.py`, `cli.py`'
     acceptance: 'Every exit-2 path prints `resilint: error: <file>:<line>: <msg>` to stderr; tests cover
