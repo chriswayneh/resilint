@@ -32,6 +32,8 @@ pytest -q --cov=src/resilint --cov-report=term-missing --cov-fail-under=90
 
 Each CI matrix job requires at least 90% total statement coverage across all Python modules in `src/resilint`, including modules the tests never import. This is an aggregate statement-coverage threshold, not a per-file or branch-coverage threshold. Missing lines are listed in the terminal report. No additional coverage exclusions are configured.
 
+CI runs the same lint, type and coverage gates on Linux, Windows and macOS with Python 3.10, 3.12 and 3.13 (nine combinations). Matrix jobs finish independently so a failure on one platform does not hide results from the others. Concurrent drill-write test failures include child exit codes and stderr to diagnose platform-specific errors.
+
 The CI coverage command is explicit; plain `pytest -q` and targeted test runs retain their existing behavior. Coverage data files are ignored by Git.
 
 ## Loader property tests
