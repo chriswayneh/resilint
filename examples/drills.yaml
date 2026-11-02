@@ -1,0 +1,7 @@
+# resilint drill log (tabletop and test results per vendor)
+drills:
+- vendor: example-cloud-wms
+  date: '2026-10-20'
+  kind: tabletop
+  result: fail
+  notes: failover took 9h against a 4h RTO

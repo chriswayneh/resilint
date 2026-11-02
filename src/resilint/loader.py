@@ -5,14 +5,22 @@ from __future__ import annotations
 import csv
 import io
 import math
-from datetime import date
+import os
+import re
+from datetime import date, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import quote
 
 import yaml
 
 CRITICALITIES = ("critical", "high", "medium", "low")
 MAX_BYTES = 5 * 1024 * 1024
+SCHEMA_VERSIONS = (1,)
+# ISO 3166-1 alpha-2 officially assigned codes (249).
+ISO_COUNTRIES = frozenset("""
+AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW
+""".split())  # noqa: SIM905
 
 
 class InputError(Exception):
@@ -49,15 +57,17 @@ def _num(value: Any, field: str, ctx: str) -> float | None:
     return n
 
 
-def _date(value: Any, ctx: str) -> date | None:
+def _date(value: Any, ctx: str, field: str = "last_tested") -> date | None:
     if value is None or (isinstance(value, str) and not value.strip()):
         return None
+    if isinstance(value, datetime):
+        return value.date()
     if isinstance(value, date):
         return value
     try:
         return date.fromisoformat(str(value).strip())
     except ValueError:
-        raise InputError(f"{ctx}: last_tested must be an ISO date (YYYY-MM-DD)") from None
+        raise InputError(f"{ctx}: {field} must be an ISO date (YYYY-MM-DD)") from None
 
 
 def _exit_plan(value: Any) -> bool:
@@ -99,9 +109,35 @@ def _list(value: Any, ctx: str, field: str) -> list[str]:
     return [str(p).strip() for p in value if str(p).strip()]
 
 
+def _lei(value: Any, ctx: str) -> str | None:
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return None
+    s = str(value).strip().upper()
+    if not re.fullmatch(r"[0-9A-Z]{18}[0-9]{2}", s):
+        raise InputError(f"{ctx}: lei must be 20 characters (ISO 17442)")
+    if int("".join(str(int(c, 36)) for c in s)) % 97 != 1:
+        raise InputError(f"{ctx}: lei check digits are invalid")
+    return s
+
+
+def _country(value: Any, ctx: str) -> str | None:
+    if value is None or (isinstance(value, str) and not value.strip()):
+        return None
+    s = str(value).strip().upper()
+    if s not in ISO_COUNTRIES:
+        raise InputError(f"{ctx}: country must be an assigned ISO 3166-1 alpha-2 code, got {s!r}")
+    return s
+
+
 def normalize(data: Any) -> dict:
     if not isinstance(data, dict):
         raise InputError("top level must be a mapping with 'vendors' (and optional 'processes')")
+    version = data.get("schema_version", 1)
+    if isinstance(version, str) and version.strip().isdigit():
+        version = int(version.strip())
+    if isinstance(version, bool) or version not in SCHEMA_VERSIONS:
+        raise InputError(f"unsupported schema_version {version!r}; supported: "
+                         + ", ".join(str(n) for n in SCHEMA_VERSIONS))
     raw_vendors = data.get("vendors")
     if not isinstance(raw_vendors, list):
         raise InputError("'vendors' must be a list")
@@ -122,6 +158,7 @@ def normalize(data: Any) -> dict:
             "id": pid,
             "name": str(p.get("name") or pid),
             "criticality": crit,
+            "criticality_assessed": bool(str(p.get("criticality") or "").strip()),
             "rto_hours": _num(p.get("rto_hours"), "rto_hours", ctx),
         }
 
@@ -149,9 +186,12 @@ def normalize(data: Any) -> dict:
             "contacts": _contacts(v.get("contacts"), ctx),
             "exit_plan": _exit_plan(v.get("exit_plan")),
             "last_tested": _date(v.get("last_tested"), ctx),
+            "lei": _lei(v.get("lei"), ctx),
+            "country": _country(v.get("country"), ctx),
+            "contacts_verified": _date(v.get("contacts_verified"), ctx, "contacts_verified"),
             "supports_processes": _list(v.get("supports_processes"), ctx, "supports_processes"),
         })
-    return {"vendors": vendors, "processes": processes}
+    return {"schema_version": version, "vendors": vendors, "processes": processes}
 
 
 def parse_csv(text: str) -> dict:
@@ -159,7 +199,9 @@ def parse_csv(text: str) -> dict:
     reader = csv.DictReader(io.StringIO(text))
     if not reader.fieldnames or "id" not in [f.strip() for f in reader.fieldnames]:
         raise InputError("CSV must have a header row including 'id'")
-    vendors, processes = [], []
+    vendors: list[dict] = []
+    processes: list[dict] = []
+    lines: dict[str, int] = {}
     for row in reader:
         row = {(k or "").strip(): (v or "").strip() for k, v in row.items() if k}
         kind = row.get("record_type", "vendor").lower() or "vendor"
@@ -167,9 +209,21 @@ def parse_csv(text: str) -> dict:
             processes.append(row)
         elif kind == "vendor":
             vendors.append(row)
+            lines.setdefault(row.get("id", ""), reader.line_num)
         else:
             raise InputError(f"CSV row {row.get('id')!r}: record_type must be vendor or process")
-    return {"vendors": vendors, "processes": processes}
+    return {"vendors": vendors, "processes": processes, "_lines": lines}
+
+
+def _yaml_lines(text: str, ids) -> dict:
+    """Best-effort line of each vendor's `id:` entry, for SARIF annotations."""
+    want, out = set(ids), {}
+    pat = re.compile(r"""^\s*(?:-\s*)?id:\s*["']?([^"'#]+?)["']?\s*(?:#.*)?$""")
+    for n, line in enumerate(text.splitlines(), 1):
+        m = pat.match(line)
+        if m and m.group(1) in want and m.group(1) not in out:
+            out[m.group(1)] = n
+    return out
 
 
 def load(path: str | Path) -> dict:
@@ -184,8 +238,10 @@ def load(path: str | Path) -> dict:
         raise InputError(f"{p}: cannot read file ({e.strerror})") from None
     except UnicodeDecodeError:
         raise InputError(f"{p}: file is not UTF-8 text") from None
+    csv_lines = None
     if p.suffix.lower() == ".csv":
         data = parse_csv(text)
+        csv_lines = data.pop("_lines")
     else:
         try:
             data = yaml.load(text, Loader=_NoAliasLoader)  # nosec B506 - SafeLoader subclass
@@ -196,6 +252,16 @@ def load(path: str | Path) -> dict:
         except RecursionError:
             raise InputError(f"{p}: YAML nested too deeply") from None
     try:
-        return normalize(data)
+        reg = normalize(data)
     except RecursionError:
         raise InputError(f"{p}: input nested too deeply") from None
+    ids = [v["id"] for v in reg["vendors"]]
+    try:
+        rel = Path(os.path.relpath(p)).as_posix()
+    except ValueError:  # different drive on Windows
+        rel = p.name
+    if rel == ".." or rel.startswith("../"):
+        rel = p.name
+    reg["source"] = quote(rel)
+    reg["lines"] = csv_lines if csv_lines is not None else _yaml_lines(text, ids)
+    return reg
