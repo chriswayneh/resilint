@@ -353,6 +353,10 @@ The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and accep
 
 See [SECURITY.md](SECURITY.md).
 
+## Development methodology
+
+This project uses an adapted [AWS AI-DLC](https://github.com/awslabs/aidlc-workflows) documentation workflow: inception before implementation, recorded stage decisions, comprehensive tests and security review, and one roadmap task per PR. See the [local workflow records](aidlc-docs/README.md) and [audit](aidlc-docs/audit.md). No native AWS runtime is installed by this adoption; GitHub approval, merges, tags, releases and settings remain user-controlled.
+
 ## Built with
 
 - Python 3.10+ (standard library + PyYAML)
