@@ -1,0 +1,21 @@
+HIGH     RL006 example-vendor-b: recovery time 8h exceeds process-a RTO 4h
+         maps to: DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10 (draft mapping, not legal advice)
+HIGH     RL006 example-vendor-b: recovery time 8h exceeds process-b RTO 4h
+         maps to: DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 10 (draft mapping, not legal advice)
+HIGH     RL001 example<vendor>|a: no incident notification SLA recorded
+         maps to: DORA Art. 30(3)(b), 30(2)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6 (draft mapping, not legal advice)
+HIGH     RL002 example<vendor>|a: no recovery time commitment recorded
+         maps to: DORA Art. 30(2)(e), 30(3)(a); NIS2 Art. 21(2)(c); PRA SS2/21 ch. 6 (draft mapping, not legal advice)
+HIGH     RL003 example<vendor>|a: no email or phone contact recorded
+         maps to: DORA Art. 30(2); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6 (draft mapping, not legal advice)
+HIGH     RL004 example<vendor>|a: no documented exit plan
+         maps to: DORA Art. 28(8), Art. 30(3)(f); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 10 (draft mapping, not legal advice)
+MEDIUM   RL008 example-vendor-b: no contact verification date recorded
+         maps to: DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6 (draft mapping, not legal advice)
+MEDIUM   RL009 example-vendor-b: most recent test on 2026-10-01 failed
+         maps to: DORA Art. 30(3)(c), Art. 11(6); NIS2 Art. 21(2)(c), 21(2)(f); PRA SS2/21 ch. 10 (draft mapping, not legal advice)
+MEDIUM   RL005 example<vendor>|a: no resilience test date recorded
+         maps to: DORA Art. 30(3)(c)-(d); NIS2 Art. 21(2)(f); PRA SS2/21 ch. 10 (draft mapping, not legal advice)
+MEDIUM   RL007 example<vendor>|a: supports 4 critical processes (threshold 3)
+         maps to: DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5 (draft mapping, not legal advice)
+10 findings (6 high, 4 medium).

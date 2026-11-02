@@ -49,7 +49,7 @@ Exit-2 diagnostics use `resilint: error: FILE:LINE: MESSAGE` on stderr. `0` mean
 
 Registers are read without mutation. Input files are capped at 5 MiB; YAML aliases are refused. CSV supports UTF-8 BOM, CRLF, normalized header case/whitespace and the selected comma/semicolon separator. See [schema details](schema.md).
 
-Text is readable in terminals; JSON is structured; Markdown and `regmap` carry draft regulation mappings; SARIF 2.1.0 supports code-scanning annotations. Locations and vendor identifiers can reveal register data. See [CI report handling](ci.md) before publishing them.
+Text is readable in terminals; JSON is structured; Markdown and `regmap` carry draft regulation mappings; SARIF 2.1.0 supports code-scanning annotations. See the [report contract](reports.md) for fields, schema and snapshots. Locations and vendor identifiers can reveal register data. See [CI report handling](ci.md) before publishing them.
 
 Output refuses input-file aliases and final symlinks. `RESILINT_OUTPUT_ROOT`, when set, constrains outputs to that directory tree; unset/empty allows ordinary filesystem destinations. The Action sets it to the workspace. Parent directories must exist. Normal reports and baselines are not atomic multi-file transactions; use version control or backups for recovery. Protection assumes trusted output parent directories, not concurrent hostile directory replacement.
 

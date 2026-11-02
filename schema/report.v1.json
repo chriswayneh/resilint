@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/chriswayneh/resilint/main/schema/report.v1.json",
+  "title": "resilint JSON report v1",
+  "description": "Offline report contract; consumers tolerate additive root/finding fields.",
+  "type": "object",
+  "required": [
+    "tool",
+    "version",
+    "findings"
+  ],
+  "properties": {
+    "tool": {
+      "const": "resilint"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/finding"
+      }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "required": [
+        "rule_id",
+        "rule",
+        "severity",
+        "vendor",
+        "message",
+        "regulation",
+        "regulation_note",
+        "field",
+        "regulation_refs"
+      ],
+      "properties": {
+        "rule_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": "^RL[0-9]{3}$"
+        },
+        "rule": {
+          "type": "string",
+          "minLength": 1
+        },
+        "severity": {
+          "type": "string",
+          "minLength": 1,
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        },
+        "vendor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "regulation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "regulation_note": {
+          "type": "string",
+          "minLength": 1
+        },
+        "field": {
+          "type": "string",
+          "minLength": 1
+        },
+        "regulation_refs": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}
