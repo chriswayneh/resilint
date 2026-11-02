@@ -192,7 +192,7 @@ class _Parser(argparse.ArgumentParser):
         sys.exit(_error(message))
 
 
-def main(argv=None) -> int:
+def main(argv=None, *, _summary: dict[str, str] | None = None) -> int:
     ap = _Parser(prog="resilint", description="Offline vendor resilience checks.")
     ap.add_argument("--version", action="version", version=f"resilint {__version__}")
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -290,6 +290,9 @@ def main(argv=None) -> int:
             return _error(err, args.output)
     else:
         print(report)
+    if _summary is not None:
+        _summary.update(findings=str(len(findings)), highest_severity=max(
+            (f.severity for f in findings), key=SEVERITIES.index, default="none"))
     return 0 if args.write_baseline else (1 if at_or_above(findings, args.fail_on) else 0)
 
 

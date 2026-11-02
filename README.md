@@ -166,6 +166,16 @@ resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
 
 The `format` input accepts `text`, `json`, `md`, `sarif`, or `regmap`; `fail-on` accepts `low`, `medium`, `high`, or `critical`. These inputs are passed to the CLI for validation. Unknown values exit with code 2 and fail the Action before any report is written.
 
+The development Action exposes three string outputs from the same check that creates the report:
+
+| Output | Value |
+| --- | --- |
+| `findings` | Total reported findings after configuration ignores, including severities below `fail-on` |
+| `highest-severity` | `low`, `medium`, `high`, `critical`, or `none` when there are no findings |
+| `exit-code` | `0` for a passing threshold, `1` for findings reaching it, `2` for an input or output error |
+
+Give the Action an `id: resilience` and read `${{ steps.resilience.outputs.findings }}`, `${{ steps.resilience.outputs.highest-severity }}` or `${{ steps.resilience.outputs.exit-code }}` in later steps. Set `continue-on-error: true` on the calling step when later steps must run after findings or invalid input. Counts and severity are empty on check errors; installation/runner failures may leave every output unset. Outputs do not change the Action's failing exit status. These outputs are not present in the published v0.4.0 tag; they will ship with the next release. See the [GitHub composite-output reference](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax#outputs-for-composite-actions) for output wiring.
+
 The development version of the composite Action uses Node 24 and requires Actions Runner v2.327.1 or later. Update self-hosted runners before using it; GitHub-hosted runners are supported. The published `v0.4.0` examples below retain that release's dependencies.
 
 ```yaml
