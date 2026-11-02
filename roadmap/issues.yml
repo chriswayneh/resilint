@@ -128,7 +128,9 @@ issues:
   - id: H-4
     title: Large-register performance
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 22
     why: Real registers have 1k–10k vendors
     files: '`tests/test_perf.py`, `loader.py`/`rules.py` if needed'
     acceptance: 10,000 vendors + 2,000 processes checks in <5s on CI; the 5 MB cap is documented, with
