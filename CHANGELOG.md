@@ -7,6 +7,7 @@
 - `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
 ### Changed
+- Each CI matrix job now requires at least 90% total statement coverage across `src/resilint`, using the development dependency `pytest-cov` and reporting missing lines.
 - Tests are grouped by loader, rules, reports, RoI exports, drills and CLI behavior, with shared helpers and platform fixtures; existing assertions and parametrized cases are preserved.
 - The Action format description includes `regmap` and documents CLI input validation. Self-tests execute its Bash check step to verify invalid formats and severity thresholds exit 2 without writing a report.
 - Roadmap documentation uses compact version and milestone summaries, with detailed task criteria and contributor guidance under `roadmap/`.
