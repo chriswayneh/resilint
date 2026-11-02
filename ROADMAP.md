@@ -2,7 +2,7 @@
 
 Where resilint is going, and what is ready to work on.
 
-**Current release:** [v0.4.0](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0). **Next release:** v0.4.1 maintenance. Milestones and scope may change.
+**Current release:** [v0.4.0](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0). **Next release:** v1.0.0, including the completed maintenance and hardening work. v2/v3 are deferred.
 
 - [Milestones](#milestones)
 - [v0.4.1: Maintenance](#v041-maintenance)
@@ -22,12 +22,12 @@ Where resilint is going, and what is ready to work on.
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
 | [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; unreleased) | 10 |
-| [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | In progress (1/7 merged) | 7 |
-| [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
+| [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
+| [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | In progress (3/6 merged) | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 15 complete, 23 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 24 complete, 14 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -52,7 +52,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `C-2`**, SARIF upload example.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `D-3`**, report schema and snapshots.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -76,12 +76,12 @@ Make the CLI easier to use in everyday development and CI workflows.
 | ID | Task |
 | --- | --- |
 | `C-1` | Action outputs ✅ — [#32](https://github.com/chriswayneh/resilint/pull/32) |
-| `C-2` | SARIF upload example workflow |
-| `C-3` | Action self-test workflow |
-| `C-4` | pre-commit hook |
-| `C-5` | GitLab CI / generic CI recipe |
-| `C-6` | `resilint init` |
-| `C-7` | `resilint explain RLxxx` |
+| `C-2` | SARIF upload example workflow ✅ — [#33](https://github.com/chriswayneh/resilint/pull/33) |
+| `C-3` | Action self-test workflow ✅ — [#34](https://github.com/chriswayneh/resilint/pull/34) |
+| `C-4` | pre-commit hook ✅ — [#35](https://github.com/chriswayneh/resilint/pull/35) |
+| `C-5` | GitLab CI / generic CI recipe ✅ — [#36](https://github.com/chriswayneh/resilint/pull/36) |
+| `C-6` | `resilint init` ✅ — [#37](https://github.com/chriswayneh/resilint/pull/37) |
+| `C-7` | `resilint explain RLxxx` ✅ — [#38](https://github.com/chriswayneh/resilint/pull/38) |
 
 ---
 
@@ -91,10 +91,10 @@ Document the supported interfaces and settle the compatibility contract.
 
 | ID | Task |
 | --- | --- |
-| `D-1` | `docs/` site content |
-| `D-2` | Stability policy |
+| `D-1` | `docs/` site content ✅ — [#39](https://github.com/chriswayneh/resilint/pull/39) |
+| `D-2` | Stability policy ✅ — [#40](https://github.com/chriswayneh/resilint/pull/40) |
 | `D-3` | JSON output schema + snapshot tests |
-| `D-4` | Legal disclaimer consistency |
+| `D-4` | Legal disclaimer consistency ✅ — [#41](https://github.com/chriswayneh/resilint/pull/41) |
 | `D-5` | Deprecate/remove anything not in the freeze |
 | `D-6` | CONTRIBUTING + issue/PR templates |
 
