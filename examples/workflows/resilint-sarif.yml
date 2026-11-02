@@ -1,0 +1,48 @@
+name: Vendor resilience
+
+# Copy to .github/workflows/resilint.yml and adjust the register path below.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  resilience:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read # Required for SARIF upload in private repositories.
+      security-events: write # Granted only to this upload job.
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Check register
+        id: resilience
+        uses: chriswayneh/resilint@0f0f6d5ab9ea14546bbc475fb9f38c9e3e1fedeb # Development commit with Action outputs
+        continue-on-error: true # Upload findings before enforcing the threshold.
+        with:
+          file: vendors.yaml
+          fail-on: high
+          format: sarif
+          output: resilint.sarif
+      - name: Upload findings
+        if: ${{ always() && (steps.resilience.outputs.exit-code == '0' || steps.resilience.outputs.exit-code == '1') }}
+        uses: github/codeql-action/upload-sarif@9b3254085494b55a0f7c4c2b3d2d52cc712ce370 # v4
+        with:
+          sarif_file: resilint.sarif
+          category: resilint
+      - name: Enforce resilience threshold
+        if: always()
+        shell: bash
+        env:
+          RL_EXIT_CODE: ${{ steps.resilience.outputs.exit-code }}
+        run: |
+          case "$RL_EXIT_CODE" in
+            0) exit 0 ;;
+            1) echo 'Resilience findings reach the configured threshold.'; exit 1 ;;
+            *) echo 'Resilience check did not complete successfully.' >&2; exit 2 ;;
+          esac

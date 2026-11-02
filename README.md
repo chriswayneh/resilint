@@ -186,24 +186,9 @@ The development version of the composite Action uses Node 24 and requires Action
     fail-on: high
 ```
 
-To get pull request annotations, write SARIF and upload it to code scanning (pin actions to full commit SHAs in your own workflow):
+For code-scanning annotations, copy the [complete SARIF workflow](examples/workflows/resilint-sarif.yml) into `.github/workflows/resilint.yml` and set the register path. It pins every Action to a full commit SHA, grants `security-events: write` only to the upload job, uploads reports after threshold findings, then restores the check's failing status. Invalid input skips upload and fails the final gate. The example currently pins the development commit that adds Action outputs; use the reviewed v1 release SHA when available.
 
-```yaml
-permissions:
-  contents: read
-  security-events: write
-steps:
-  - uses: actions/checkout@v4
-  - uses: chriswayneh/resilint@v0.4.0
-    continue-on-error: true      # still upload when findings fail the step
-    with:
-      file: vendors.yaml
-      format: sarif
-      output: resilint.sarif
-  - uses: github/codeql-action/upload-sarif@v3
-    with:
-      sarif_file: resilint.sarif
-```
+Uploading sends the report's vendor identifiers, finding messages and source locations to GitHub Code Scanning. Use it only for registers suitable for your repository's access policy. resilint itself still runs offline. Code-scanning availability and repository requirements are described in [GitHub's SARIF upload guide](https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/upload-sarif-file).
 
 Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing. The file path is relative to the working directory (with `uriBaseId: %SRCROOT%`); when the register is outside the working directory, the SARIF uri is just the file name.
 
