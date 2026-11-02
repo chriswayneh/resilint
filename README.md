@@ -351,6 +351,8 @@ The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and accep
 
 ## Security
 
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation gates and the fictional-data-only rule.
+
 See [SECURITY.md](SECURITY.md).
 
 ## Built with
