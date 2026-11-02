@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from datetime import date
 
 SEVERITIES = ("low", "medium", "high", "critical")
@@ -24,7 +24,26 @@ RULES = {
               "DORA Art. 28(4)(c), Art. 29; NIS2 Art. 21(2)(d); PRA SS2/21 ch. 5"),
     "RL008": ("stale-or-missing-contact-verification", "medium",
               "DORA Art. 30(2), 28(3); NIS2 Art. 21(2)(d); PRA SS2/21 ch. 6"),
+    "RL009": ("last-drill-failed", "medium",
+              "DORA Art. 30(3)(c), Art. 11(6); NIS2 Art. 21(2)(c), 21(2)(f); PRA SS2/21 ch. 10"),
 }
+
+
+FRAMEWORKS = ("DORA", "NIS2", "PRA SS2/21")
+
+
+def refs(regulation: str) -> dict[str, list[str]]:
+    """Split a rule's reference string into {framework: [references]}."""
+    out: dict[str, list[str]] = {fw: [] for fw in FRAMEWORKS}
+    for part in regulation.split(";"):
+        part = part.strip()
+        for fw in FRAMEWORKS:
+            if part.startswith(fw + " "):
+                for x in part[len(fw) + 1:].split(", "):
+                    x = x.strip()
+                    if x:
+                        out[fw].append("Art. " + x if x[0].isdigit() else x)
+    return out
 
 
 @dataclass
@@ -36,6 +55,11 @@ class Finding:
     message: str
     regulation: str
     regulation_note: str = REG_NOTE
+    regulation_refs: dict = field(default_factory=dict)
+
+    def __post_init__(self):
+        if not self.regulation_refs:
+            self.regulation_refs = refs(self.regulation)
 
     def to_dict(self) -> dict:
         return asdict(self)
@@ -69,6 +93,11 @@ def check(register: dict, stale_days: int = 365, max_critical: int = 3,
         elif (today - lt).days > stale_days:
             out.append(_f("RL005", vid,
                           f"last resilience test {lt.isoformat()} is older than {stale_days} days"))
+        drills = v.get("drills") or []
+        if drills and drills[-1]["result"] == "fail":
+            d = drills[-1]
+            out.append(_f("RL009", vid,
+                          f"most recent {d['kind']} on {d['date'].isoformat()} failed"))
         cv = v["contacts_verified"]
         if v["contacts"] and cv is None:
             out.append(_f("RL008", vid, "no contact verification date recorded"))
