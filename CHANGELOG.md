@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- `resilint explain RL001` through `RL009` provides offline rule descriptions, illustrative fixes and draft references; unknown IDs return a controlled error.
 - `resilint init [FILE]` creates a packaged, commented fictional starter register without overwriting existing files; its three intentional findings guide the first edit.
 - GitLab CI, Azure Pipelines and generic CI recipes preserve check exit status and document report handling.
 - A pre-commit hook checks multiple vendor registers with repository rule settings, preserves inputs and treats option-like filenames as data.

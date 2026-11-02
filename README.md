@@ -196,6 +196,8 @@ For GitLab, Azure Pipelines or another runner, see the [CI recipes](docs/ci.md).
 
 ### Starter register
 
+Use `resilint explain RL004` for a rule's description, illustrative fix and draft regulation references. All RL001–RL009 IDs are supported without a register or configuration file. Unknown IDs return 2. Examples must be replaced with actual evidence; this development command is not in the v0.4.0 release.
+
 The development CLI can create a commented fictional starter with `resilint init` (default `vendors.yaml`) or `resilint init path/to/vendors.yaml`. The destination's parent directory must exist. It refuses to overwrite any existing file or symlink and respects `RESILINT_OUTPUT_ROOT`. Replace the example commitments before using it for real checks.
 
 Running `resilint check vendors.yaml` on the untouched starter intentionally reports RL004 (missing exit plan), RL005 (no resilience test date) and RL008 (unverified contacts), returning 1. Creation itself returns 0; a refused or failed write returns 2. The published v0.4.0 tag predates `init`.
