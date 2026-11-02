@@ -1,0 +1,8 @@
+- id: resilint
+  name: resilint vendor register
+  description: Check recorded vendor resilience commitments offline
+  entry: python -I -m resilint.pre_commit
+  language: python
+  types: [file]
+  files: '(^|/)vendors\.(ya?ml|csv)$'
+  require_serial: true

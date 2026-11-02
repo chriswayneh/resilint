@@ -266,7 +266,9 @@ issues:
   - id: C-4
     title: pre-commit hook
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 35
     why: Catch gaps before the PR
     files: '`.pre-commit-hooks.yaml`, README'
     acceptance: '`pre-commit try-repo . resilint --files examples/vendors.yaml` runs'

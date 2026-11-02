@@ -192,6 +192,19 @@ Uploading sends the report's vendor identifiers, finding messages and source loc
 
 Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing. The file path is relative to the working directory (with `uriBaseId: %SRCROOT%`); when the register is outside the working directory, the SARIF uri is just the file name.
 
+### pre-commit
+
+The development hook `resilint` checks every selected register without changing it. It defaults to files named `vendors.yaml`, `vendors.yml` or `vendors.csv`; override `files` in your hook configuration for other names. Thresholds and ignores come from the repository's `.resilint.yaml`. Hook arguments are filenames; configure thresholds in that file instead of adding CLI flags to `args`.
+
+From a resilint checkout, try the hook without installing a Git hook:
+
+```bash
+pip install pre-commit
+pre-commit try-repo . resilint --files examples/vendors.yaml
+```
+
+The fictional example intentionally has high findings, so this command runs successfully as a check and reports a failing hook. Clean registers pass; malformed registers fail. Multiple files are all checked, with errors taking precedence over threshold findings. pre-commit installs a Python environment on first use; subsequent checks run offline. See [pre-commit configuration](https://pre-commit.com/#pre-commit-configyaml---repos) to add this repository at a reviewed commit containing `.pre-commit-hooks.yaml`; the published v0.4.0 tag predates this hook.
+
 ## Input schema
 
 YAML anchors and aliases (`&name` / `*name`) are refused (exit 2) to block alias-expansion attacks.
@@ -306,7 +319,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 3/7 complete.** Next is `C-4`, the pre-commit hook.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 4/7 complete.** Next is `C-5`, GitLab and generic CI recipes.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 
