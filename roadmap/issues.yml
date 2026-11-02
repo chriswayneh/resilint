@@ -142,7 +142,9 @@ issues:
   - id: H-5
     title: CSV robustness
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 24
     why: Spreadsheet exports vary
     files: '`loader.py`, tests, README'
     acceptance: Handles UTF-8 BOM, `;` delimiter (`--csv-delimiter`), CRLF, and header case/whitespace.

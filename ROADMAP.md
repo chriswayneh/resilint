@@ -21,13 +21,13 @@ Where resilint is going, and what is ready to work on.
 | --- | --- | --- | :---: |
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
-| [v0.5](#v05-real-world-data) | Real-world data | In progress (4/10 merged) | 10 |
+| [v0.5](#v05-real-world-data) | Real-world data | In progress (5/10 merged) | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | Planned | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 8 complete, 30 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 9 complete, 29 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -52,7 +52,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: in progress (4/10 merged).** Module tests, coverage, loader fuzzing and performance checks are in place. **Next: `H-5`**, CSV robustness.
+**Status: in progress (5/10 merged).** Test hardening and CSV robustness are in place. **Next: `H-6`**, the published register JSON Schema.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -60,8 +60,8 @@ Make large, messy vendor registers easier to validate and adopt.
 | `H-2` | Coverage gate | ✅ Complete — [#18](https://github.com/chriswayneh/resilint/pull/18) |
 | `H-3` | Property/fuzz tests for loader | ✅ Complete — [#20](https://github.com/chriswayneh/resilint/pull/20) |
 | `H-4` | Large-register performance | ✅ Complete — [#22](https://github.com/chriswayneh/resilint/pull/22) |
-| `H-5` | CSV robustness | **Next** |
-| `H-6` | Published JSON Schema for the register | Planned |
+| `H-5` | CSV robustness | ✅ Complete — [#24](https://github.com/chriswayneh/resilint/pull/24) |
+| `H-6` | Published JSON Schema for the register | **Next** |
 | `H-7` | Stable error messages and codes | Planned |
 | `H-8` | Rule config file | Planned |
 | `H-9` | Baseline mode | Planned |
