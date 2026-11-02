@@ -239,7 +239,9 @@ issues:
   - id: C-2
     title: SARIF upload example workflow
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 33
     why: The most common real use
     files: '`examples/workflows/resilint-sarif.yml`, README'
     acceptance: 'Uses `github/codeql-action/upload-sarif` pinned by SHA, with `security-events: write`
@@ -251,7 +253,9 @@ issues:
   - id: C-3
     title: Action self-test workflow
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 34
     why: Prevent a broken Action release
     files: '`.github/workflows/action-test.yml`'
     acceptance: 'Runs `uses: ./` on examples; asserts exit code 1 and the SARIF file exists'
@@ -262,7 +266,9 @@ issues:
   - id: C-4
     title: pre-commit hook
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 35
     why: Catch gaps before the PR
     files: '`.pre-commit-hooks.yaml`, README'
     acceptance: '`pre-commit try-repo . resilint --files examples/vendors.yaml` runs'
@@ -273,7 +279,9 @@ issues:
   - id: C-5
     title: GitLab CI / generic CI recipe
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 36
     why: Not all teams use GitHub
     files: '`docs/ci.md`'
     acceptance: Copy-paste GitLab and Azure Pipelines snippets, tested by hand with the documented commands
@@ -283,7 +291,9 @@ issues:
   - id: C-6
     title: '`resilint init`'
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 37
     why: Faster onboarding
     files: '`cli.py`, template'
     acceptance: Writes a commented starter `vendors.yaml` and refuses to overwrite; the output passes
@@ -295,7 +305,9 @@ issues:
   - id: C-7
     title: '`resilint explain RLxxx`'
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 38
     why: Self-serve fix guidance
     files: '`rules.py`, `cli.py`'
     acceptance: Prints rule description, fix example, and draft reg refs for all RL001–RL009; unknown
@@ -306,7 +318,7 @@ issues:
   - id: D-1
     title: '`docs/` site content'
     milestone: M3
-    status: planned
+    status: complete
     why: README is overloaded
     files: '`docs/{install,usage,rules,schema,ci,drills,roi,faq}.md`'
     acceptance: Every CLI flag and rule is documented; links check passes (`lychee` or a script in CI,
@@ -315,11 +327,13 @@ issues:
     depends_on:
       - H-8
       - C-7
+    completed_in:
+      - 39
 
   - id: D-2
     title: Stability policy
     milestone: M3
-    status: planned
+    status: complete
     why: v1 needs a contract
     files: '`docs/stability.md`'
     acceptance: Defines the semver surface (CLI flags, exit codes, JSON/SARIF fields, schema v1, rule
@@ -327,22 +341,26 @@ issues:
     size: S
     depends_on:
       - D-1
+    completed_in:
+      - 40
 
   - id: D-3
     title: JSON output schema + snapshot tests
     milestone: M3
-    status: planned
+    status: complete
     why: Auditors depend on the format
     files: '`schema/report.v1.json`, golden-file tests'
     acceptance: JSON output validates against the schema; golden snapshots for text/md/json/sarif/regmap
     size: M
     depends_on:
       - H-1
+    completed_in:
+      - 42
 
   - id: D-4
     title: Legal disclaimer consistency
     milestone: M3
-    status: planned
+    status: complete
     why: Regulatory mappings are drafts
     files: README, docs, report footers
     acceptance: '"Draft, not legal advice" appears in README, regmap, md, and RoI outputs; a test asserts
@@ -350,6 +368,8 @@ issues:
     size: S
     depends_on:
       - D-1
+    completed_in:
+      - 41
 
   - id: D-5
     title: Deprecate/remove anything not in the freeze
