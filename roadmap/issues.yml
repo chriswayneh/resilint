@@ -114,7 +114,9 @@ issues:
   - id: H-3
     title: Property/fuzz tests for loader
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 20
     why: Untrusted YAML/CSV from teams
     files: '`tests/test_loader_fuzz.py` (hypothesis)'
     acceptance: Random YAML/CSV never raises an uncaught exception. Outcomes are only a clean result or
