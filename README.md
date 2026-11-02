@@ -3,13 +3,13 @@
 # resilint
 
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Release: v0.2.0](https://img.shields.io/badge/release-v0.2.0-blue.svg)](https://github.com/chriswayneh/resilint/releases/tag/v0.2.0)
+[![Latest release](https://img.shields.io/github/v/release/chriswayneh/resilint)](https://github.com/chriswayneh/resilint/releases/latest)
 
 ### Vendor resilience checks that run every time your vendor list changes.
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Status:** v0.2.0 released (SARIF, contact verification, versioned schema). See the [roadmap](ROADMAP.md).
+**Status:** [v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) (2026-10-24), adding drill records and failed-drill findings. Includes SARIF, regulation mapping reports, and draft register-of-information export. See the [roadmap](ROADMAP.md).
 
 </div>
 
@@ -41,7 +41,7 @@ vendors:
 2. Run it:
 
 ```bash
-pip install git+https://github.com/chriswayneh/resilint
+pip install git+https://github.com/chriswayneh/resilint.git@v0.4.0
 resilint check vendors.yaml                  # gap list
 resilint check vendors.yaml --format regmap  # gaps grouped by regulation
 ```
@@ -96,7 +96,7 @@ Your team keeps critical vendors and the business processes that depend on them 
 - Too many critical processes concentrated on a single vendor (threshold you set)
 - Vendor contacts that have never been verified, or not within a window you set (default 180 days)
 
-It is read-only, runs offline, and works only on your own data. It does not contact vendors, scrape websites, or send anything anywhere.
+Checks run offline on your own data and leave the register unchanged. Report and export commands write local output files; `drill record` writes a local drill log. It does not contact vendors, scrape websites, or send anything anywhere.
 
 ## Evidence it produces (text, JSON, Markdown, SARIF, regulation mapping, draft RoI export)
 
@@ -104,7 +104,7 @@ It is read-only, runs offline, and works only on your own data. It does not cont
 |---|---|
 | Board and risk committee | A short Markdown summary: how many critical vendors, how many have gaps, and where concentration risk sits |
 | Internal and external auditors | Timestamped JSON findings tied to a Git commit, so every result is reproducible from history |
-| Regulators | Each finding tagged with a draft article mapping, plus (planned) export toward the DORA register-of-information templates |
+| Regulators | Each finding tagged with a draft article mapping, plus draft CSV export toward the DORA register-of-information templates; completion and validation are still required |
 | Engineering and procurement | Pull request annotations (SARIF) showing exactly which entry needs fixing |
 
 Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen severity, `2` bad input.
@@ -112,7 +112,9 @@ Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen 
 ## Quick start
 
 ```bash
-pip install git+https://github.com/chriswayneh/resilint
+git clone --branch v0.4.0 --depth 1 https://github.com/chriswayneh/resilint.git
+cd resilint
+pip install .
 resilint check examples/vendors.yaml               # text
 resilint check examples/vendors.csv --format md    # one-page gap report for leadership
 resilint check examples/vendors.yaml --format json --fail-on medium --stale-days 180
@@ -164,7 +166,7 @@ resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
 
 ```yaml
 - uses: actions/checkout@v4
-- uses: chriswayneh/resilint@main   # pin to a release tag once one exists
+- uses: chriswayneh/resilint@v0.4.0
   with:
     file: vendors.yaml
     fail-on: high
@@ -178,7 +180,7 @@ permissions:
   security-events: write
 steps:
   - uses: actions/checkout@v4
-  - uses: chriswayneh/resilint@main
+  - uses: chriswayneh/resilint@v0.4.0
     continue-on-error: true      # still upload when findings fail the step
     with:
       file: vendors.yaml
@@ -281,7 +283,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 
 ## Status
 
-**v0.3.0 released** (2026-10-24); v0.4 in review. See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
+**[v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0)** (2026-10-24). See the [roadmap](ROADMAP.md) and [changelog](CHANGELOG.md).
 
 ## Security
 

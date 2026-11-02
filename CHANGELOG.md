@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.4.0] - Unreleased
+## [0.4.0] - 2026-10-24
 ### Added
 - `resilint drill record REGISTER --vendor ID --kind tabletop|test --result pass|partial|fail [--date] [--notes] [--log]`: adds a drill result to a drill log (default `drills.yaml` next to the register) and rewrites the log in normalized form (comments in the log are not kept); the register is never rewritten. Future dates and log entries for unknown vendors are refused.
 - `check --drills LOG`: the latest passed or partial drill updates a vendor's effective last-tested date; rule RL009 (medium) flags a vendor whose most recent drill failed, with a draft regulation reference (not legal advice). Action input `drills`.
