@@ -124,6 +124,8 @@ Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen 
 
 Project policy is covered in [configuration](docs/config.md) and [baselines](docs/baseline.md). These guides include development features planned for v1; the published v0.4.0 release is identified below.
 
+The [v1 stability policy](docs/stability.md) defines supported interfaces, additive changes and deprecation notice periods.
+
 ## Quick start
 
 ```bash
@@ -343,7 +345,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `D-2`, stability policy.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `D-4`, consistent report disclaimers.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 
