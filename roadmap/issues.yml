@@ -213,7 +213,9 @@ issues:
   - id: H-10
     title: Windows/macOS CLI parity
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 31
     why: Users run locally
     files: '`ci.yml`'
     acceptance: Matrix ubuntu/windows/macos × 3.10/3.12/3.13 is green

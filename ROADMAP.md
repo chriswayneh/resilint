@@ -21,13 +21,13 @@ Where resilint is going, and what is ready to work on.
 | --- | --- | --- | :---: |
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
 | [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
-| [v0.5](#v05-real-world-data) | Real-world data | In progress (9/10 merged) | 10 |
+| [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; unreleased) | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | Planned | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | Planned | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | Planned | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 13 complete, 25 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 14 complete, 24 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -52,7 +52,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: in progress (9/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration and baselines are in place. **Next: `H-10`**, platform parity.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `C-1`**, Action outputs.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -65,7 +65,7 @@ Make large, messy vendor registers easier to validate and adopt.
 | `H-7` | Stable error messages and codes | ✅ Complete — [#28](https://github.com/chriswayneh/resilint/pull/28) |
 | `H-8` | Rule config file | ✅ Complete — [#29](https://github.com/chriswayneh/resilint/pull/29) |
 | `H-9` | Baseline mode | ✅ Complete — [#30](https://github.com/chriswayneh/resilint/pull/30) |
-| `H-10` | Windows/macOS CLI parity | **Next** |
+| `H-10` | Windows/macOS CLI parity | ✅ Complete — [#31](https://github.com/chriswayneh/resilint/pull/31) |
 
 ---
 
