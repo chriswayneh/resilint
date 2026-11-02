@@ -40,6 +40,12 @@ class _NoAliasLoader(yaml.SafeLoader):
             raise _AliasRefused(f"YAML anchors/aliases are not allowed (line {line})")
         return super().compose_node(parent, index)
 
+    def get_single_data(self):
+        try:
+            return super().get_single_data()
+        except (ValueError, OverflowError) as e:
+            raise yaml.YAMLError(f"invalid YAML value ({e.__class__.__name__})") from None
+
 
 def _num(value: Any, field: str, ctx: str) -> float | None:
     if value is None or (isinstance(value, str) and not value.strip()):
@@ -48,7 +54,7 @@ def _num(value: Any, field: str, ctx: str) -> float | None:
         raise InputError(f"{ctx}: {field} must be a number of hours")
     try:
         n = float(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         raise InputError(f"{ctx}: {field} must be a number of hours, got {value!r}") from None
     if not math.isfinite(n):
         raise InputError(f"{ctx}: {field} must be a finite number of hours")
@@ -133,8 +139,11 @@ def normalize(data: Any) -> dict:
     if not isinstance(data, dict):
         raise InputError("top level must be a mapping with 'vendors' (and optional 'processes')")
     version = data.get("schema_version", 1)
-    if isinstance(version, str) and version.strip().isdigit():
-        version = int(version.strip())
+    if isinstance(version, str) and version.strip().isdecimal():
+        try:
+            version = int(version.strip())
+        except ValueError:
+            raise InputError("unsupported schema_version; supported: 1") from None
     if isinstance(version, bool) or version not in SCHEMA_VERSIONS:
         raise InputError(f"unsupported schema_version {version!r}; supported: "
                          + ", ".join(str(n) for n in SCHEMA_VERSIONS))
@@ -197,21 +206,24 @@ def normalize(data: Any) -> dict:
 def parse_csv(text: str) -> dict:
     """CSV: one row per vendor. Processes use rows with record_type=process."""
     reader = csv.DictReader(io.StringIO(text))
-    if not reader.fieldnames or "id" not in [f.strip() for f in reader.fieldnames]:
-        raise InputError("CSV must have a header row including 'id'")
     vendors: list[dict] = []
     processes: list[dict] = []
     lines: dict[str, int] = {}
-    for row in reader:
-        row = {(k or "").strip(): (v or "").strip() for k, v in row.items() if k}
-        kind = row.get("record_type", "vendor").lower() or "vendor"
-        if kind == "process":
-            processes.append(row)
-        elif kind == "vendor":
-            vendors.append(row)
-            lines.setdefault(row.get("id", ""), reader.line_num)
-        else:
-            raise InputError(f"CSV row {row.get('id')!r}: record_type must be vendor or process")
+    try:
+        if not reader.fieldnames or "id" not in [f.strip() for f in reader.fieldnames]:
+            raise InputError("CSV must have a header row including 'id'")
+        for row in reader:
+            row = {(k or "").strip(): (v or "").strip() for k, v in row.items() if k}
+            kind = row.get("record_type", "vendor").lower() or "vendor"
+            if kind == "process":
+                processes.append(row)
+            elif kind == "vendor":
+                vendors.append(row)
+                lines.setdefault(row.get("id", ""), reader.line_num)
+            else:
+                raise InputError(f"CSV row {row.get('id')!r}: record_type must be vendor or process")
+    except csv.Error as e:
+        raise InputError(f"CSV row {reader.line_num}: invalid CSV ({e})") from None
     return {"vendors": vendors, "processes": processes, "_lines": lines}
 
 
@@ -255,6 +267,8 @@ def load(path: str | Path) -> dict:
         reg = normalize(data)
     except RecursionError:
         raise InputError(f"{p}: input nested too deeply") from None
+    except (ValueError, OverflowError) as e:
+        raise InputError(f"{p}: invalid input value ({e.__class__.__name__})") from None
     ids = [v["id"] for v in reg["vendors"]]
     try:
         rel = Path(os.path.relpath(p)).as_posix()

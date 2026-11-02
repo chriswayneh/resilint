@@ -2,8 +2,10 @@
 
 ## [Unreleased]
 ### Added
+- Reproducible Hypothesis tests exercise bounded YAML/CSV bytes, text, structured fields and valid registers through both the loader and CLI.
 - Repository metadata checks keep package/runtime versions, the latest released changelog entry, and README release references synchronized.
 ### Fixed
+- Invalid YAML scalar dates and oversized numeric values, unsupported schema-version strings, and CSV parser/field-limit errors now return a diagnostic with exit 2 instead of an uncaught exception.
 - `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
 ### Changed
