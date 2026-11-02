@@ -156,7 +156,9 @@ issues:
   - id: H-6
     title: Published JSON Schema for the register
     milestone: M1
-    status: planned
+    status: complete
+    completed_in:
+      - 26
     why: Lets teams validate in editors/CI
     files: '`schema/register.v1.json`, `docs/schema.md`, test'
     acceptance: Examples validate against the schema (test with `jsonschema` as a dev dep); every field
