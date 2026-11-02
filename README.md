@@ -124,6 +124,8 @@ Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen 
 
 Project policy is covered in [configuration](docs/config.md) and [baselines](docs/baseline.md). These guides include development features planned for v1; the published v0.4.0 release is identified below.
 
+The [v1 stability policy](docs/stability.md) defines supported interfaces, additive changes and deprecation notice periods.
+
 ## Quick start
 
 ```bash
