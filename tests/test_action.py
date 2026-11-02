@@ -35,19 +35,19 @@ def _bash():
     return bash
 
 
-def _run_check(tmp_path, fmt, fail_on="high"):
+def _run_check(tmp_path, fmt, fail_on="high", cwd=ROOT):
     step = next(step for step in _action()["runs"]["steps"]
                 if "RL_FORMAT" in step.get("env", {}))
     assert step["shell"] == "bash"
     output = tmp_path / "report.txt"
     env = {**os.environ,
            "PATH": sysconfig.get_path("scripts") + os.pathsep + os.environ["PATH"],
-           "RL_FILE": "examples/vendors.yaml", "RL_FORMAT": fmt,
+           "RL_FILE": str(ROOT / "examples/vendors.yaml"), "RL_FORMAT": fmt,
            "RL_FAIL_ON": fail_on, "RL_OUTPUT": str(output), "RL_DRILLS": "",
            "GITHUB_OUTPUT": str(tmp_path / "action-outputs"),
            "RESILINT_OUTPUT_ROOT": str(tmp_path)}
     result = subprocess.run([_bash(), "--noprofile", "--norc", "-eo", "pipefail", "-c",
-                             step["run"]], check=False, cwd=ROOT, env=env, capture_output=True,
+                             step["run"]], check=False, cwd=cwd, env=env, capture_output=True,
                             text=True, timeout=30)
     return result, output
 
@@ -111,3 +111,13 @@ def test_action_counts_match_report(tmp_path):
     assert int(values["findings"]) == len(findings)
     assert values["highest-severity"] == "high"
     assert values["exit-code"] == "0"
+
+
+def test_action_does_not_import_checkout_modules(tmp_path):
+    shadow = tmp_path / "resilint"
+    shadow.mkdir()
+    (shadow / "__init__.py").write_text("raise RuntimeError('checkout module executed')\n")
+    result, report = _run_check(tmp_path, "json", cwd=tmp_path)
+    assert result.returncode == 1, result.stderr
+    assert report.is_file()
+    assert "checkout module executed" not in result.stderr
