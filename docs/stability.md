@@ -30,3 +30,13 @@ Minor releases may add commands, flags, optional fields or rules. New rules can 
 Deprecations are announced in the changelog and affected guide with a replacement and migration example. Deprecated CLI options remain usable for the rest of the major version and for at least one subsequent minor release and six months before removal in a later major version. Warnings go to stderr, preserve the command's existing exit status, and have regression tests. Security-driven exceptions must state the reason and migration path.
 
 There are no active deprecations or planned removals for v1. Python internals and the experimental draft RoI mapping are explicitly outside the stable interface above. See [CLI usage](usage.md), [schema](schema.md), [baseline format](baseline.md), [configuration](config.md) and the [changelog](../CHANGELOG.md).
+
+## v1 freeze audit
+
+The v0.4.0 CLI was compared with the proposed v1 interface. All 17 existing long flags, the five report formats, the three existing command paths and RL001–RL009 are retained. The additions are `init`, `explain`, `--config`, `--baseline`, `--write-baseline` and `--csv-delimiter`.
+
+- Removed interfaces: none.
+- Deprecated interfaces: none; no deprecation warnings are currently emitted.
+- Excluded from the freeze: Python internals/adapters, exact human-readable prose and the experimental draft RoI column mapping listed above.
+
+There is no replacement migration to perform for v1. Normal invocations of all five command paths have a warning-free smoke test in `tests/test_cli_freeze.py`. Future deprecations must add positive warning/migration tests under the policy above. The new diagnostic envelope and input validation tightenings are described in the changelog; configuration/baseline policy and new rules should always be reviewed before updating CI.
