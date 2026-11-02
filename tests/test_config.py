@@ -127,7 +127,7 @@ def test_missing_oversize_and_empty_config(tmp_path):
     with pytest.raises(InputError, match="cannot read config"):
         load_config(path)
     path.write_text("")
-    assert load_config(path) == Settings()
+    assert load_config(path) == Settings(source=str(path))
     with path.open("wb") as stream:
         stream.seek(MAX_BYTES)
         stream.write(b"x")
@@ -142,3 +142,22 @@ def test_quoted_expiry_and_zero_thresholds(tmp_path):
     settings = load_config(path)
     assert settings.ignore[0].expires == date(2026, 11, 2)
     assert (settings.stale_days, settings.contact_days, settings.max_critical) == (0, 0, 0)
+
+
+def test_nonregular_config_rejected(tmp_path):
+    with pytest.raises(InputError, match="regular file"):
+        load_config(tmp_path)
+
+
+@pytest.mark.parametrize("explicit", [False, True])
+def test_report_cannot_overwrite_loaded_config(tmp_path, monkeypatch, capsys, explicit):
+    monkeypatch.chdir(tmp_path)
+    register = _register(tmp_path)
+    config = _config(tmp_path, {"fail_on": "low"}, ".resilint.yaml")
+    original = config.read_bytes()
+    args = ["check", str(register), "--output", str(config)]
+    if explicit:
+        args += ["--config", str(config)]
+    assert main(args) == 2
+    assert "must not be the input file" in capsys.readouterr().err
+    assert config.read_bytes() == original

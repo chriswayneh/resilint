@@ -14,7 +14,7 @@ ignore:
     expires: 2027-01-31
 ```
 
-All keys are optional; an empty file uses defaults shown above and no ignores. Unknown keys, invalid values or malformed files fail with exit 2. Config files use safe YAML, reject aliases and have the same 5 MiB limit as registers. These are local settings and are never fetched remotely.
+All keys are optional; an empty file uses defaults shown above and no ignores. Unknown keys, invalid values or malformed files fail with exit 2. Config inputs must be regular files, use safe YAML, reject aliases and have the same 5 MiB limit as registers. Report output cannot overwrite the loaded configuration. These are local settings and are never fetched remotely.
 
 `fail_on` accepts `low`, `medium`, `high` or `critical`. Day and concentration thresholds must be nonnegative integers; booleans and numeric strings are rejected. Explicit `--fail-on`, `--stale-days`, `--contact-days` and `--max-critical` flags override the corresponding file values, including zero. Without a flag or file value the built-in default applies. The entire file is validated even if a flag overrides a value. For example:
 

@@ -249,6 +249,10 @@ def main(argv=None) -> int:
     findings = apply_ignores(findings, settings)
     report = FORMATS[args.format](findings, register)
     if args.output:
+        if settings.source:
+            err = check_target(args.output, settings.source)
+            if err:
+                return _error(err, args.output)
         err = write_file(args.output, report + "\n", args.file)
         if err:
             return _error(err, args.output)

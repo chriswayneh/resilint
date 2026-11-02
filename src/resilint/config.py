@@ -2,7 +2,8 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+import stat
+from dataclasses import dataclass, replace
 from datetime import date, datetime
 from pathlib import Path
 
@@ -27,6 +28,7 @@ class Settings:
     contact_days: int = 180
     max_critical: int = 3
     ignore: tuple[Ignore, ...] = ()
+    source: str | None = None
 
 
 def load_config(path: str | Path | None = None) -> Settings:
@@ -34,15 +36,17 @@ def load_config(path: str | Path | None = None) -> Settings:
     file = Path(path) if path is not None else Path(".resilint.yaml")
     try:
         try:
-            size = file.stat().st_size
+            info = file.stat()
         except FileNotFoundError:
             if path is None and not file.is_symlink():
                 return Settings()
             raise
-        if size > MAX_BYTES:
+        if not stat.S_ISREG(info.st_mode):
+            raise InputError("config must be a regular file")
+        if info.st_size > MAX_BYTES:
             raise InputError("config file larger than 5 MB")
         data = yaml.load(file.read_text(encoding="utf-8-sig"), Loader=_NoAliasLoader)
-        return _settings(data)
+        return replace(_settings(data), source=str(file))
     except InputError as error:
         error.path = str(file)
         raise
