@@ -291,7 +291,9 @@ issues:
   - id: C-6
     title: '`resilint init`'
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 37
     why: Faster onboarding
     files: '`cli.py`, template'
     acceptance: Writes a commented starter `vendors.yaml` and refuses to overwrite; the output passes
