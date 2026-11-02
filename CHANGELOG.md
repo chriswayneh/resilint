@@ -6,6 +6,7 @@
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
 ### Changed
 - CI runs lint, type checks, and tests on both Linux and Windows with Python 3.10 and 3.12. Symlink tests require symlink privileges in CI; local Windows runs skip those tests only when that privilege is unavailable.
+- Runtime dependency PyYAML is updated to 6.0.3, retaining hash-pinned installation; all 73 allowed distribution hashes match PyPI's published SHA-256 digests.
 
 ## [0.4.0] - 2026-10-24
 ### Added
