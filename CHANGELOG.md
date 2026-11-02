@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
 - CI builds source/wheel distributions, validates metadata with Twine and smoke-tests an installed wheel outside the checkout, including the packaged starter template.
 - Contributor guidance and issue/PR templates include validation gates, exact-head review expectations and the fictional-data-only rule.
 - A JSON report schema and five deterministic report snapshots cover all rule IDs, repeated process findings, escaping and the stable output contract.
