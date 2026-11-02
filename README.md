@@ -164,6 +164,8 @@ resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
 
 ### GitHub Action
 
+The `format` input accepts `text`, `json`, `md`, `sarif`, or `regmap`; `fail-on` accepts `low`, `medium`, `high`, or `critical`. These inputs are passed to the CLI for validation. Unknown values exit with code 2 and fail the Action before any report is written.
+
 The development version of the composite Action uses Node 24 and requires Actions Runner v2.327.1 or later. Update self-hosted runners before using it; GitHub-hosted runners are supported. The published `v0.4.0` examples below retain that release's dependencies.
 
 ```yaml

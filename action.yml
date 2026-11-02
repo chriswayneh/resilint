@@ -8,7 +8,7 @@ inputs:
     description: Lowest severity that fails the step (low, medium, high, critical)
     default: high
   format:
-    description: Output format (text, json, md, sarif)
+    description: Output format (text, json, md, sarif, regmap); unknown values exit 2
     default: text
   output:
     description: Optional file to write the report to (e.g. resilint.sarif for code scanning upload)
