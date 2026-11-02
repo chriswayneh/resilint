@@ -45,3 +45,11 @@
 - Decision by Codex: proceed with the already-reviewed D-3 PR after verifying all 20 checks on its exact head; retain all remaining gates for subsequent PRs.
 
 - ADOPT-01 completion metadata in PR #43 is prospective and becomes effective only when this reviewed, passing PR is merged under the temporary authorization. Original product task definitions and counts are unaffected.
+
+## D-5 — existing draft verification and review handoff
+
+- Recorded: 2026-11-02T23:58:20.882866+00:00.
+- Actor: Codex, verification and manual code/security reviewer. No dot approval or retrospective design approval is claimed.
+- Scope: existing pre-adoption D-5 draft; see inception/d5-freeze-audit.md. No new runtime construction. Merged adoption guidance and the temporary user authorization are retained.
+- Evidence: complete three-file feature diff reviewed; no removed/deprecated CLI surfaces; smoke tests cover five normal command paths. Ruff/mypy pass, 300 tests pass with six local Windows privilege skips; links and whitespace checks pass. Test writes are temporary and synthetic; no new credentials, dependencies, permissions, SQL or network operations.
+- Decision: present one D-5 draft PR for routine implementation-stage review and hosted checks. That stage review remains pending; passing CI alone is not an approval. No merge until review and all gates pass, and only while the user’s temporary grant remains valid.
