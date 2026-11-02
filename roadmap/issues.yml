@@ -239,7 +239,9 @@ issues:
   - id: C-2
     title: SARIF upload example workflow
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 33
     why: The most common real use
     files: '`examples/workflows/resilint-sarif.yml`, README'
     acceptance: 'Uses `github/codeql-action/upload-sarif` pinned by SHA, with `security-events: write`
@@ -251,7 +253,9 @@ issues:
   - id: C-3
     title: Action self-test workflow
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 34
     why: Prevent a broken Action release
     files: '`.github/workflows/action-test.yml`'
     acceptance: 'Runs `uses: ./` on examples; asserts exit code 1 and the SARIF file exists'
