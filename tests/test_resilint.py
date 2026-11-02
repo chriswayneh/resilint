@@ -10,6 +10,20 @@ from resilint.rules import check
 TODAY = date(2026, 10, 1)
 
 
+@pytest.fixture
+def symlink_supported(tmp_path):
+    """Windows developers may lack symlink privileges; CI runners must have them."""
+    import os
+    link = tmp_path / "symlink-probe"
+    try:
+        link.symlink_to(tmp_path, target_is_directory=True)
+    except OSError as e:
+        if getattr(e, "winerror", None) == 1314 and not os.environ.get("CI"):
+            pytest.skip("Windows symlink privilege is unavailable")
+        raise
+    link.unlink()
+
+
 def good_vendor(**kw):
     v = {"id": "v1", "criticality": "critical", "notification_sla_hours": 4,
          "recovery_time_hours": 2, "contacts": [{"email": "a@example.com"}],
@@ -252,7 +266,7 @@ def test_sarif_uri_relative_to_cwd(tmp_path, monkeypatch, capsys):
     assert res[0]["locations"][0]["physicalLocation"]["artifactLocation"]["uri"] == "v.yaml"
 
 
-def test_output_refuses_symlinks(tmp_path):
+def test_output_refuses_symlinks(tmp_path, symlink_supported):
     target = _write(tmp_path, "keep.txt", "original")
     link = tmp_path / "link.sarif"
     link.symlink_to(target)
@@ -380,13 +394,13 @@ def test_export_roi_csv_injection_neutralized():
     assert "\n=" not in prov and ",=" not in prov
 
 
-def test_export_roi_bad_out_dir(tmp_path):
+def test_export_roi_bad_out_dir(tmp_path, symlink_supported):
     assert main(["export-roi", "examples/vendors.yaml",
                  "--out-dir", str(tmp_path / "missing")]) == 2
     real = tmp_path / "real"
     real.mkdir()
     link = tmp_path / "link"
-    link.symlink_to(real)
+    link.symlink_to(real, target_is_directory=True)
     assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(link)]) == 2
     assert not list(real.iterdir())
     bad = _write(tmp_path, "bad.yaml", "vendors: notalist")
@@ -473,7 +487,7 @@ def test_drill_record_rejects_bad_input(tmp_path, extra):
     assert not (tmp_path / "d.yaml").exists()
 
 
-def test_drill_log_refuses_symlink_and_register(tmp_path):
+def test_drill_log_refuses_symlink_and_register(tmp_path, symlink_supported):
     reg = _reg(tmp_path)
     target = tmp_path / "victim.txt"
     target.write_text("keep")
@@ -563,12 +577,12 @@ def test_output_root_empty_relative_missing(tmp_path, monkeypatch):
     assert not (tmp_path / "out.txt").exists() and not (tmp_path / "b.txt").exists()
 
 
-def test_export_roi_trailing_slash_symlink_refused(tmp_path):
+def test_export_roi_trailing_slash_symlink_refused(tmp_path, symlink_supported):
     p = tmp_path / "p"
     real = tmp_path / "real"
     p.mkdir()
     real.mkdir()
-    (p / "l").symlink_to(real)
+    (p / "l").symlink_to(real, target_is_directory=True)
     assert main(["export-roi", "examples/vendors.yaml", "--out-dir", str(p / "l") + "/"]) == 2
     assert not list(real.iterdir())
 
@@ -597,7 +611,7 @@ def test_cell_keeps_original_text_when_safe_or_prefixed():
     assert _cell("＝1+1") == "'＝1+1"
 
 
-def test_export_force_validates_all_targets_before_writing(tmp_path):
+def test_export_force_validates_all_targets_before_writing(tmp_path, symlink_supported):
     from resilint.roi import export
     reg = load("examples/vendors.yaml")
     names = list(export(reg))
@@ -634,26 +648,77 @@ def test_drill_concurrent_records_lose_nothing(tmp_path):
     reg, log = _reg(tmp_path), tmp_path / "d.yaml"
     cmd = [sys.executable, "-m", "resilint.cli", "drill", "record", str(reg), "--vendor", "v1",
            "--kind", "test", "--result", "pass", "--date", "2026-01-01", "--log", str(log)]
-    procs = [subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.PIPE)
-             for _ in range(6)]
-    codes = [p.wait() for p in procs]
+    procs = [subprocess.Popen(cmd + ["--notes", str(i)], stdout=subprocess.DEVNULL,
+                              stderr=subprocess.PIPE) for i in range(6)]
+    try:
+        errors = [p.communicate(timeout=20)[1] for p in procs]
+    finally:
+        for p in procs:
+            if p.poll() is None:
+                p.kill()
+                p.communicate()
+    codes = [p.returncode for p in procs]
     from resilint.drills import load_log
     assert all(c in (0, 2) for c in codes)
-    assert len(load_log(log)) == codes.count(0) >= 1
+    assert all(b"locked" in err for code, err in zip(codes, errors) if code == 2)
+    records = load_log(log)
+    expected = {str(i) for i, code in enumerate(codes) if code == 0}
+    assert len(records) == len(expected) >= 1
+    assert {d["notes"] for d in records} == expected
 
 
 def test_drill_lock_held_fails_cleanly(tmp_path, capsys):
-    import fcntl
     import os
     reg, log = _reg(tmp_path), tmp_path / "d.yaml"
-    fd = os.open(str(log) + ".lock", os.O_WRONLY | os.O_CREAT, 0o644)
-    fcntl.flock(fd, fcntl.LOCK_EX)
+    fd = os.open(str(log) + ".lock", os.O_RDWR | os.O_CREAT, 0o644)
+    if os.name == "nt":
+        import msvcrt
+        msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+    else:
+        import fcntl
+        fcntl.flock(fd, fcntl.LOCK_EX)
     try:
         assert _rec(reg, log, "--kind", "test", "--result", "pass") == 2
         assert "locked" in capsys.readouterr().err
         assert not log.exists()
     finally:
         os.close(fd)
+
+
+@pytest.mark.parametrize("invalid_first", [False, True])
+def test_drill_lock_released_after_record(tmp_path, invalid_first):
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    result = "fail" if invalid_first else "pass"
+    vendor = "missing" if invalid_first else "v1"
+    assert main(["drill", "record", str(reg), "--vendor", vendor,
+                 "--log", str(log), "--kind", "test", "--result", result]) == (
+                     2 if invalid_first else 0)
+    assert _rec(reg, log, "--kind", "test", "--result", "pass") == 0
+    from resilint.drills import load_log
+    assert len(load_log(log)) == (1 if invalid_first else 2)
+
+
+def test_drill_lock_io_error_closes_file(tmp_path, monkeypatch, capsys):
+    import errno
+    import os
+
+    from resilint import cli
+
+    descriptors = []
+
+    def fail(fd):
+        descriptors.append(fd)
+        raise OSError(errno.EIO, "lock unavailable")
+
+    monkeypatch.setattr(cli, "_try_lock", fail)
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    assert _rec(reg, log, "--kind", "test", "--result", "pass") == 2
+    assert "cannot lock" in capsys.readouterr().err
+    assert not log.exists()
+    assert len(descriptors) == 1
+    with pytest.raises(OSError) as error:
+        os.fstat(descriptors[0])
+    assert error.value.errno == errno.EBADF
 
 
 def test_drill_future_date_rejected(tmp_path):

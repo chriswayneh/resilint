@@ -1,6 +1,13 @@
 # Changelog
 
-## [0.4.0] - Unreleased
+## [0.4.1] - Unreleased
+### Fixed
+- `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
+- Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
+### Changed
+- CI runs lint, type checks, and tests on both Linux and Windows with Python 3.10 and 3.12. Symlink tests require symlink privileges in CI; local Windows runs skip those tests only when that privilege is unavailable.
+
+## [0.4.0] - 2026-10-24
 ### Added
 - `resilint drill record REGISTER --vendor ID --kind tabletop|test --result pass|partial|fail [--date] [--notes] [--log]`: adds a drill result to a drill log (default `drills.yaml` next to the register) and rewrites the log in normalized form (comments in the log are not kept); the register is never rewritten. Future dates and log entries for unknown vendors are refused.
 - `check --drills LOG`: the latest passed or partial drill updates a vendor's effective last-tested date; rule RL009 (medium) flags a vendor whose most recent drill failed, with a draft regulation reference (not legal advice). Action input `drills`.

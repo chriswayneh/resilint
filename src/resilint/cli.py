@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import errno
 import os
 import sys
 import tempfile
@@ -93,22 +94,32 @@ def _export(args) -> int:
     return 0
 
 
-def _lock(path: str):
-    """Exclusive non-blocking lock on a sidecar file; waits up to ~2 s. fd or error string."""
-    try:
+def _try_lock(fd: int) -> None:
+    if sys.platform == "win32":
+        import msvcrt
+        # Every writer locks byte zero, even when the sidecar is empty.
+        os.lseek(fd, 0, os.SEEK_SET)
+        msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+    else:
         import fcntl
-    except ImportError:  # pragma: no cover - non-POSIX
-        return None
-    flags = os.O_WRONLY | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
+        fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+
+
+def _lock(path: str) -> int | str:
+    """Exclusive non-blocking lock on a sidecar file; waits up to ~2 s. fd or error string."""
+    flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
     try:
         fd = os.open(path, flags, 0o644)
     except OSError as e:
         return f"cannot open lock {path} ({e.strerror})"
     for _ in range(20):
         try:
-            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            _try_lock(fd)
             return fd
-        except BlockingIOError:
+        except OSError as e:
+            if e.errno not in (errno.EACCES, errno.EAGAIN, errno.EDEADLK):
+                os.close(fd)
+                return f"cannot lock {path} ({e.strerror})"
             time.sleep(0.1)
     os.close(fd)
     return f"drill log is locked by another process ({path})"
@@ -160,8 +171,7 @@ def _drill(args) -> int:
             print(f"resilint: error: {err}", file=sys.stderr)
             return 2
     finally:
-        if lock is not None:
-            os.close(lock)
+        os.close(lock)
     note = " (last-tested date updated)" if new["result"] != "fail" else ""
     print(f"recorded {new['kind']} {new['result']} for {new['vendor']} on "
           f"{new['date'].isoformat()} in {log}{note}")
