@@ -1,0 +1,552 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/chriswayneh/resilint/main/schema/register.v1.json",
+  "title": "resilint register v1",
+  "description": "Documented authoring forms for a hierarchical vendor register. Runtime validation and resilience checks remain necessary.",
+  "type": "object",
+  "required": [
+    "vendors"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1,
+      "default": 1,
+      "description": "Register schema version; defaults to 1.",
+      "examples": [
+        1
+      ]
+    },
+    "vendors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/vendor"
+      },
+      "description": "Vendor records; an empty register is allowed.",
+      "examples": [
+        [
+          {
+            "id": "example-cloud",
+            "criticality": "high"
+          }
+        ]
+      ]
+    },
+    "processes": {
+      "type": [
+        "array",
+        "null"
+      ],
+      "items": {
+        "$ref": "#/$defs/process"
+      },
+      "description": "Optional business processes; omission or null means no processes.",
+      "examples": [
+        [
+          {
+            "id": "order-fulfilment",
+            "rto_hours": 4
+          }
+        ]
+      ]
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "identifier": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "criticality": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "hours": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "date": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date"
+    },
+    "contacts": {
+      "anyOf": [
+        {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Recorded email contact; not verified.",
+                    "examples": [
+                      "incidents@example.com"
+                    ]
+                  },
+                  "phone": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Recorded phone contact; not verified.",
+                    "examples": [
+                      "+1-555-0100"
+                    ]
+                  }
+                },
+                "anyOf": [
+                  {
+                    "required": [
+                      "email"
+                    ]
+                  },
+                  {
+                    "required": [
+                      "phone"
+                    ]
+                  }
+                ],
+                "additionalProperties": true
+              }
+            ]
+          }
+        }
+      ]
+    },
+    "processList": {
+      "anyOf": [
+        {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/identifier"
+          }
+        }
+      ]
+    },
+    "vendor": {
+      "type": "object",
+      "required": [
+        "id",
+        "criticality"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier",
+          "description": "Nonblank vendor identifier; must be unique at runtime.",
+          "examples": [
+            "example-cloud"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name; defaults to id.",
+          "examples": [
+            "Example Cloud Ltd"
+          ]
+        },
+        "criticality": {
+          "$ref": "#/$defs/criticality",
+          "description": "Only critical and high vendors receive rule checks.",
+          "examples": [
+            "high"
+          ]
+        },
+        "notification_sla_hours": {
+          "$ref": "#/$defs/hours",
+          "description": "Recorded incident notification commitment in hours.",
+          "examples": [
+            4
+          ]
+        },
+        "recovery_time_hours": {
+          "$ref": "#/$defs/hours",
+          "description": "Recorded recovery commitment in hours.",
+          "examples": [
+            8
+          ]
+        },
+        "contacts": {
+          "$ref": "#/$defs/contacts",
+          "description": "Contact strings or email/phone objects; a string may use semicolon-separated values.",
+          "examples": [
+            [
+              {
+                "email": "incidents@example.com"
+              }
+            ]
+          ]
+        },
+        "exit_plan": {
+          "type": [
+            "boolean",
+            "string",
+            "null"
+          ],
+          "description": "Boolean or recorded plan reference; no path is opened.",
+          "examples": [
+            "docs/exit/example.md"
+          ]
+        },
+        "last_tested": {
+          "$ref": "#/$defs/date",
+          "description": "ISO calendar date of the last resilience test.",
+          "examples": [
+            "2026-06-01"
+          ]
+        },
+        "contacts_verified": {
+          "$ref": "#/$defs/date",
+          "description": "ISO calendar date of the last contact verification.",
+          "examples": [
+            "2026-09-01"
+          ]
+        },
+        "lei": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "pattern": "^[0-9A-Z]{18}[0-9]{2}$",
+          "description": "Uppercase LEI; runtime also validates check digits.",
+          "examples": [
+            "9845000EXAMPLE000048"
+          ]
+        },
+        "country": {
+          "enum": [
+            null,
+            "AD",
+            "AE",
+            "AF",
+            "AG",
+            "AI",
+            "AL",
+            "AM",
+            "AO",
+            "AQ",
+            "AR",
+            "AS",
+            "AT",
+            "AU",
+            "AW",
+            "AX",
+            "AZ",
+            "BA",
+            "BB",
+            "BD",
+            "BE",
+            "BF",
+            "BG",
+            "BH",
+            "BI",
+            "BJ",
+            "BL",
+            "BM",
+            "BN",
+            "BO",
+            "BQ",
+            "BR",
+            "BS",
+            "BT",
+            "BV",
+            "BW",
+            "BY",
+            "BZ",
+            "CA",
+            "CC",
+            "CD",
+            "CF",
+            "CG",
+            "CH",
+            "CI",
+            "CK",
+            "CL",
+            "CM",
+            "CN",
+            "CO",
+            "CR",
+            "CU",
+            "CV",
+            "CW",
+            "CX",
+            "CY",
+            "CZ",
+            "DE",
+            "DJ",
+            "DK",
+            "DM",
+            "DO",
+            "DZ",
+            "EC",
+            "EE",
+            "EG",
+            "EH",
+            "ER",
+            "ES",
+            "ET",
+            "FI",
+            "FJ",
+            "FK",
+            "FM",
+            "FO",
+            "FR",
+            "GA",
+            "GB",
+            "GD",
+            "GE",
+            "GF",
+            "GG",
+            "GH",
+            "GI",
+            "GL",
+            "GM",
+            "GN",
+            "GP",
+            "GQ",
+            "GR",
+            "GS",
+            "GT",
+            "GU",
+            "GW",
+            "GY",
+            "HK",
+            "HM",
+            "HN",
+            "HR",
+            "HT",
+            "HU",
+            "ID",
+            "IE",
+            "IL",
+            "IM",
+            "IN",
+            "IO",
+            "IQ",
+            "IR",
+            "IS",
+            "IT",
+            "JE",
+            "JM",
+            "JO",
+            "JP",
+            "KE",
+            "KG",
+            "KH",
+            "KI",
+            "KM",
+            "KN",
+            "KP",
+            "KR",
+            "KW",
+            "KY",
+            "KZ",
+            "LA",
+            "LB",
+            "LC",
+            "LI",
+            "LK",
+            "LR",
+            "LS",
+            "LT",
+            "LU",
+            "LV",
+            "LY",
+            "MA",
+            "MC",
+            "MD",
+            "ME",
+            "MF",
+            "MG",
+            "MH",
+            "MK",
+            "ML",
+            "MM",
+            "MN",
+            "MO",
+            "MP",
+            "MQ",
+            "MR",
+            "MS",
+            "MT",
+            "MU",
+            "MV",
+            "MW",
+            "MX",
+            "MY",
+            "MZ",
+            "NA",
+            "NC",
+            "NE",
+            "NF",
+            "NG",
+            "NI",
+            "NL",
+            "NO",
+            "NP",
+            "NR",
+            "NU",
+            "NZ",
+            "OM",
+            "PA",
+            "PE",
+            "PF",
+            "PG",
+            "PH",
+            "PK",
+            "PL",
+            "PM",
+            "PN",
+            "PR",
+            "PS",
+            "PT",
+            "PW",
+            "PY",
+            "QA",
+            "RE",
+            "RO",
+            "RS",
+            "RU",
+            "RW",
+            "SA",
+            "SB",
+            "SC",
+            "SD",
+            "SE",
+            "SG",
+            "SH",
+            "SI",
+            "SJ",
+            "SK",
+            "SL",
+            "SM",
+            "SN",
+            "SO",
+            "SR",
+            "SS",
+            "ST",
+            "SV",
+            "SX",
+            "SY",
+            "SZ",
+            "TC",
+            "TD",
+            "TF",
+            "TG",
+            "TH",
+            "TJ",
+            "TK",
+            "TL",
+            "TM",
+            "TN",
+            "TO",
+            "TR",
+            "TT",
+            "TV",
+            "TW",
+            "TZ",
+            "UA",
+            "UG",
+            "UM",
+            "US",
+            "UY",
+            "UZ",
+            "VA",
+            "VC",
+            "VE",
+            "VG",
+            "VI",
+            "VN",
+            "VU",
+            "WF",
+            "WS",
+            "YE",
+            "YT",
+            "ZA",
+            "ZM",
+            "ZW"
+          ],
+          "description": "Assigned uppercase ISO 3166-1 alpha-2 code from the loader snapshot.",
+          "examples": [
+            "IE"
+          ]
+        },
+        "supports_processes": {
+          "$ref": "#/$defs/processList",
+          "description": "Process ids as an array or semicolon-separated string.",
+          "examples": [
+            [
+              "order-fulfilment"
+            ]
+          ]
+        }
+      },
+      "additionalProperties": true
+    },
+    "process": {
+      "type": "object",
+      "required": [
+        "id"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/identifier",
+          "description": "Nonblank process identifier.",
+          "examples": [
+            "order-fulfilment"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "description": "Display name; defaults to id.",
+          "examples": [
+            "Order fulfilment"
+          ]
+        },
+        "criticality": {
+          "$ref": "#/$defs/criticality",
+          "description": "Process criticality; defaults to critical when omitted.",
+          "examples": [
+            "critical"
+          ],
+          "default": "critical"
+        },
+        "rto_hours": {
+          "$ref": "#/$defs/hours",
+          "description": "Recorded recovery-time objective in hours.",
+          "examples": [
+            4
+          ]
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

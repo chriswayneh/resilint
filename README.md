@@ -245,6 +245,8 @@ CI checks a fictional CSV register with 10,000 critical vendors linked to 2,000 
 
 ## Rules
 
+For editor and CI validation, use the [register v1 JSON Schema](schema/register.v1.json) and [field reference and validation guide](docs/schema.md). The schema complements runtime validation and resilience checks.
+
 | ID | Severity | Finding |
 |---|---|---|
 | RL001 | high | No notification SLA |
