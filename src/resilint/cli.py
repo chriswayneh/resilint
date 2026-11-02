@@ -18,7 +18,7 @@ from .drills import KINDS, RESULTS, _entry, apply, dump_log, load_log
 from .loader import InputError, load
 from .report import FORMATS
 from .roi import export
-from .rules import SEVERITIES, at_or_above, check
+from .rules import RULES, SEVERITIES, at_or_above, check, explain
 
 
 def _diagnostic_text(value: object) -> str:
@@ -199,6 +199,8 @@ def main(argv=None, *, _summary: dict[str, str] | None = None) -> int:
     sub = ap.add_subparsers(dest="cmd", required=True)
     starter = sub.add_parser("init", help="write a fictional starter register without overwriting")
     starter.add_argument("file", nargs="?", default="vendors.yaml", help="destination YAML file")
+    guide = sub.add_parser("explain", help="show a rule's meaning, fix example and draft references")
+    guide.add_argument("rule", help="rule ID, such as RL004")
     c = sub.add_parser("check", help="check a vendor register (YAML or CSV)")
     c.add_argument("file")
     c.add_argument("--format", choices=sorted(FORMATS), default="text")
@@ -232,6 +234,11 @@ def main(argv=None, *, _summary: dict[str, str] | None = None) -> int:
         parser.add_argument("--csv-delimiter", choices=(",", ";"), default=",",
                             help="CSV field separator (default: comma; ignored for YAML)")
     args = ap.parse_args(argv)
+    if args.cmd == "explain":
+        if args.rule not in RULES:
+            return _error(f"unknown rule {args.rule!r}; expected RL001 through RL009")
+        print(explain(args.rule))
+        return 0
     if args.cmd == "init":
         try:
             template = files("resilint").joinpath("templates/vendors.yaml").read_text(

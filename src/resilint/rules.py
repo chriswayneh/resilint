@@ -31,6 +31,45 @@ RULES = {
 
 FRAMEWORKS = ("DORA", "NIS2", "PRA SS2/21")
 
+# Examples illustrate recorded evidence; they do not establish commitments.
+GUIDANCE = {
+    "RL001": (("A critical/high vendor has no incident-notification commitment recorded. "
+              "Record the hours agreed in the contract."), "notification_sla_hours: 24"),
+    "RL002": (("A critical/high vendor has no recovery-time commitment recorded. "
+              "Record the agreed recovery time in hours."), "recovery_time_hours: 4"),
+    "RL003": (("A critical/high vendor has no email or phone contact. "
+              "Record a verified incident contact."), "contacts:\n  - email: incidents@example.test"),
+    "RL004": (("A critical/high vendor has no documented exit plan. "
+              "Create or locate the plan and record its reference."),
+              "exit_plan: docs/exit/example-vendor.md"),
+    "RL005": (("A critical/high vendor has no test date, or its test is older than stale_days. "
+              "Complete a resilience test and record its actual date; replace YYYY-MM-DD below."),
+              "last_tested: YYYY-MM-DD"),
+    "RL006": (("A critical/high vendor's recovery time exceeds a supported process's RTO. "
+              "Resolve the mismatch and record the agreed commitment; the example assumes a 4h RTO."),
+              "recovery_time_hours: 4"),
+    "RL007": (("A critical/high vendor supports more critical processes than max_critical. "
+              "Review concentration and recovery options, keeping all actual dependencies recorded. "
+              "Update this list only after a real dependency change."),
+              "supports_processes: [example-process]"),
+    "RL008": (("A critical/high vendor's contacts lack verification or are older than contact_days. "
+              "Verify the contacts and record the actual date; replace YYYY-MM-DD below."),
+              "contacts_verified: YYYY-MM-DD"),
+    "RL009": (("The latest applied drill for a critical/high vendor failed. "
+              "Address the failure, rerun the drill, then record the actual result and date. "
+              "The example is for a completed successful retest; replace the vendor and date."),
+              ("resilint drill record vendors.yaml --vendor example-vendor --kind test "
+              "--result pass --date YYYY-MM-DD")),
+}
+
+
+def explain(rule_id: str) -> str:
+    name, severity, regulation = RULES[rule_id]
+    description, example = GUIDANCE[rule_id]
+    return (f"{rule_id}: {name}\nSeverity: {severity}\n\n{description}\n\n"
+            f"Illustrative fix (use your actual evidence):\n{example}\n\n"
+            f"References ({REG_NOTE}):\n{regulation}")
+
 FINDING_FIELDS = {
     "RL001": "notification_sla_hours", "RL002": "recovery_time_hours", "RL003": "contacts",
     "RL004": "exit_plan", "RL005": "last_tested", "RL006": "supports_processes",

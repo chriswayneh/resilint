@@ -305,7 +305,9 @@ issues:
   - id: C-7
     title: '`resilint explain RLxxx`'
     milestone: M2
-    status: planned
+    status: complete
+    completed_in:
+      - 38
     why: Self-serve fix guidance
     files: '`rules.py`, `cli.py`'
     acceptance: Prints rule description, fix example, and draft reg refs for all RL001–RL009; unknown
