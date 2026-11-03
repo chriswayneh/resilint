@@ -118,3 +118,12 @@
 - Decision: approved with no blocking findings in independent static review. Package/Twine/fresh-wheel smoke, read-only token, pinned actions, disabled checkout credential persistence and lack of untrusted PR interpolation match scope. Setuptools 77.0.3 supports Python >=3.9, including the 3.10 floor. No runtime version/dependency/behavior, publication or access changes.
 - Evidence: dot independently verified all nine platform jobs and package job in run 41552026107 and Action self-test run 41552026163 passed at the reviewed head. Local 300-test result and archive/license/resource byte checks remain author-reported, not independently executed by dot. No hermetic/reproducible-build claim.
 - Next permitted action: append only this decision, inspect that audit-only delta and require all hosted gates on the resulting new head. Old-head results do not transfer. Any merge independently requires actual user scope and unexpired authorization; this review grants no reserved-action permission. Preserve other drafts/artifacts; no cleanup, denied-action bypass, history rewriting or access/settings changes. R-2 remains blocked on R-1, and publisher registration requires specific action-time user confirmation.
+
+## DOCS-README — presentation alignment inception and construction
+
+- Recorded: 2026-11-03T06:26:58+00:00.
+- Actor: Grok Bot (AI), author, acting on the user's request for this documentation task. Stage review is by Grok Bot (AI), not personal user approval or formal GitHub approval.
+- Artifact: inception/readme-presentation-design.md and inception/readme-presentation-plan.md; branch docs/readme-presentation.
+- Decision: proceed with documentation-only construction as designed. No code, dependency, workflow, setting, visibility, tag or release change.
+- Evidence: demo output re-run against tag v0.4.0 matched the README; local gate results are reported in the draft PR.
+- Next permitted action: open one draft PR for the user's review. Merge and other reserved actions remain with the user.
