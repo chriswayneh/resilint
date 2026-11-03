@@ -345,7 +345,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `P-1`, CI package builds.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `P-2`, reviewed release automation and publisher setup.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 
