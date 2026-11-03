@@ -118,3 +118,22 @@
 - Decision: approved with no blocking findings in independent static review. Package/Twine/fresh-wheel smoke, read-only token, pinned actions, disabled checkout credential persistence and lack of untrusted PR interpolation match scope. Setuptools 77.0.3 supports Python >=3.9, including the 3.10 floor. No runtime version/dependency/behavior, publication or access changes.
 - Evidence: dot independently verified all nine platform jobs and package job in run 41552026107 and Action self-test run 41552026163 passed at the reviewed head. Local 300-test result and archive/license/resource byte checks remain author-reported, not independently executed by dot. No hermetic/reproducible-build claim.
 - Next permitted action: append only this decision, inspect that audit-only delta and require all hosted gates on the resulting new head. Old-head results do not transfer. Any merge independently requires actual user scope and unexpired authorization; this review grants no reserved-action permission. Preserve other drafts/artifacts; no cleanup, denied-action bypass, history rewriting or access/settings changes. R-2 remains blocked on R-1, and publisher registration requires specific action-time user confirmation.
+
+## P-2 — user inception and push approval
+
+- Received and recorded: 2026-11-03T00:29:03.242777+00:00.
+- Actual approver: user, explicitly approving the full P-2 design and execution plan and requesting it be pushed.
+- Decision: authorize scoped repository construction, verification and one draft PR. This approval follows presentation of both complete documents; it is not implementation-stage review.
+- Scope: release workflow/helper/tests/docs and audit, preserving runtime behavior, existing work and all gates. P-1 is merged. Keep P-2 planned until external acceptance is evidenced.
+- Boundaries: publisher registration requires separate specific action-time confirmation after account/target verification. No account/access setup, settings changes, publication, tags, cleanup or history rewriting is included. Actual releases and merges retain their separate gates and authorization boundaries.
+- Next permitted action: integrate current main normally into the existing P-2 branch, reconcile approved scope, verify locally and through hosted CI, push a draft PR and present the immutable diff for implementation review.
+
+## P-2 — delegated inception review
+
+- Received and recorded: 2026-11-03T00:29:15.700551+00:00.
+- Actual reviewer: dot, delegated routine design reviewer, not personal user or formal GitHub/implementation approval.
+- Decision: approve the supplied P-2 design and plan for repository-only construction and one draft PR. User construction/push approval is recorded separately above.
+- Conditions: strict tag/version/dated-changelog/main-ancestry checks, safe quoted environment inputs, pinned actions, read-only default and isolated publisher OIDC permission. Preserve protected environments; same build artifact goes to TestPyPI and then stable-only PyPI after exact-version external-venv verification. No extra-index dependency resolution; bounded retries, immutable versions and duplicate-upload failure.
+- Validation: metadata failure/normalization tests, locally testable ancestry rejection, static workflow permission/dependency assertions, full local/hosted gates, syntax and complete-diff security review. No publication or live trust setup for tests.
+- Boundaries: no persistent access, publisher registration, settings/environment changes, tags/releases or release triggering. Any activating merge or security-permission expansion requires separate assessment under actual user scope and tool policy. Keep P-2 planned; external acceptance and R-1 prerequisites cannot be inferred from a workflow PR. Preserve other work and artifacts; no cleanup or denial bypass.
+- Next permitted action: construct the reviewed repository draft and return the immutable full patch and actual evidence for independent implementation/security review.

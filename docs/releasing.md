@@ -4,7 +4,7 @@ Release publication is delegated only to the maintainer or an explicitly authori
 
 ## One-time setup
 
-Configure a [pending publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/) in both package-index accounts, or add a publisher to the existing project:
+After verifying the signed-in account and project ownership, obtain specific action-time user confirmation of the project, repository, workflow and environment before creating persistent publisher trust. General release permission or sign-in alone does not authorize registration. Configure a [pending publisher](https://docs.pypi.org/trusted-publishers/creating-a-project-through-oidc/) in both package-index accounts, or add a publisher to the existing project:
 
 | Field | PyPI | TestPyPI |
 | --- | --- | --- |
@@ -16,7 +16,7 @@ Configure a [pending publisher](https://docs.pypi.org/trusted-publishers/creatin
 
 The accounts are separate and require their own sign-in and two-factor setup. Do not put passwords, API tokens or recovery codes in GitHub or chat. The workflow requests short-lived OIDC credentials; no PyPI API-token secret is used.
 
-Create the GitHub environments with the matching names. Restrict deployments to version tags (`v*`), with no branches allowed. Require the maintainer's manual approval on `pypi`; inspect the tag, commit and preceding verification jobs before approving. An authorized delegate can act within the maintainer's existing release authorization. Keep the approval gate enabled.
+The matching GitHub environments already exist; inspect their protection and tag policies without changing settings. Any settings changes require separate user authorization. Restrict deployments to version tags (`v*`), with no branches allowed. Require the maintainer's manual approval on `pypi`; inspect the tag, commit and preceding verification jobs before approving. Routine design/implementation review does not authorize environment approval, activating merges, tags or publication; verify the actual user authorization and any expiry at action time. Keep the approval gate enabled.
 
 ## Candidate and stable publication
 
@@ -33,3 +33,5 @@ The source spelling `1.0.0-rc1` becomes `1.0.0rc1` in normalized Python distribu
 If a job fails, inspect its logs and rerun failed jobs after correcting the external condition. A whole-workflow rerun may attempt a duplicate upload; duplicate versions fail rather than silently skipping files. Never replace a published version with different bytes. If a source change is necessary after publication, use a new candidate/patch version and review it again.
 
 The first end-to-end run needs both publisher registrations and environment setup. A merged workflow alone is not evidence that publication works. See the [stability policy](stability.md) for compatibility expectations.
+
+P-2 remains planned until maintainer configuration is verified. Workflow validation does not prove publisher registration, a successful OIDC upload or installation from an index.

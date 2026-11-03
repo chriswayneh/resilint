@@ -88,6 +88,7 @@ jobs:
           mkdir "$RUNNER_TEMP/release-quickstart"
           cd "$RUNNER_TEMP/release-quickstart"
           "$RUNNER_TEMP/release-verify/bin/resilint" --version
+          "$RUNNER_TEMP/release-verify/bin/python" -I -c 'import importlib.metadata, os; assert importlib.metadata.version("resilint") == os.environ["RELEASE_VERSION"]'
           "$RUNNER_TEMP/release-verify/bin/resilint" init vendors.yaml
           "$RUNNER_TEMP/release-verify/bin/resilint" check vendors.yaml --fail-on critical --format json --output report.json
           "$RUNNER_TEMP/release-verify/bin/python" -I - <<'PY'

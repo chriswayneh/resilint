@@ -40,3 +40,49 @@ def test_refuse_unsynced_release_files(tmp_path, file, text):
     (tmp_path / file).write_text(text)
     with pytest.raises(ValueError):
         metadata(tmp_path, "v1.0.0")
+
+
+def test_release_workflow_preserves_publication_gates():
+    import yaml
+
+    workflow = yaml.safe_load((Path(__file__).resolve().parents[1]
+                               / ".github/workflows/release.yml").read_text())
+    jobs = workflow["jobs"]
+    assert workflow["permissions"] == {"contents": "read"}
+    assert jobs["testpypi"]["needs"] == "build"
+    assert jobs["verify-testpypi"]["needs"] == ["build", "testpypi"]
+    assert jobs["pypi"]["needs"] == ["build", "verify-testpypi"]
+    assert jobs["pypi"]["if"] == "needs.build.outputs.stable == 'true'"
+    for name in ("testpypi", "pypi"):
+        assert jobs[name]["permissions"] == {"id-token": "write"}
+        assert jobs[name]["environment"] == name
+        steps = jobs[name]["steps"]
+        assert len(steps) == 2  # download existing build, then publish; no rebuild
+        assert steps[0]["with"]["name"] == "distributions"
+    for name in ("build", "verify-testpypi"):
+        assert "id-token" not in jobs[name].get("permissions", {})
+    verification = jobs["verify-testpypi"]["steps"][-1]["run"]
+    assert "--no-deps --index-url https://test.pypi.org/simple/" in verification
+    assert "--extra-index-url" not in verification
+    assert 'importlib.metadata.version("resilint") == os.environ["RELEASE_VERSION"]' in verification
+
+
+def test_release_ancestry_rejects_unmerged_commit(tmp_path):
+    import subprocess
+
+    def git(*args, check=True):
+        return subprocess.run(["git", *args], cwd=tmp_path, check=check,
+                              capture_output=True, text=True)
+
+    git("init", "-b", "main")
+    git("config", "user.name", "Synthetic Test")
+    git("config", "user.email", "test@example.test")
+    git("commit", "--allow-empty", "-m", "merged base")
+    git("update-ref", "refs/remotes/origin/main", "HEAD")
+    workflow = (Path(__file__).resolve().parents[1]
+                / ".github/workflows/release.yml").read_text()
+    assert "git merge-base --is-ancestor HEAD origin/main" in workflow
+    assert git("merge-base", "--is-ancestor", "HEAD", "origin/main").returncode == 0
+    git("switch", "-c", "unmerged")
+    git("commit", "--allow-empty", "-m", "unmerged candidate")
+    assert git("merge-base", "--is-ancestor", "HEAD", "origin/main", check=False).returncode == 1
