@@ -1,6 +1,6 @@
 # Roadmap working guide
 
-The [roadmap overview](../ROADMAP.md) is the readable summary. [Task definitions](issues.yml) retain the acceptance criteria, files, effort estimates and dependencies for all 38 tasks.
+The [roadmap overview](../ROADMAP.md) is the readable summary. [Task definitions](issues.yml) retain the acceptance criteria, files, effort estimates and dependencies for all 38 product tasks; governance adoption is tracked separately.
 
 - [Contributor rules](#contributor-rules)
 - [Coverage gate](#coverage-gate)
@@ -9,18 +9,19 @@ The [roadmap overview](../ROADMAP.md) is the readable summary. [Task definitions
 - [Released versions](#released-versions)
 - [Historical baseline](#historical-baseline)
 
-Include final task status, completion PRs in `issues.yml`, and overview updates in the feature PR so they reach `main` together at merge. Mark a version released only after publication by the maintainer or authorized delegate.
+Include final task status, completion PRs in `issues.yml`, and overview updates in the feature PR so they reach `main` together at merge. Mark a version released only after publication by the maintainer.
 
 ## Contributor rules
 
 1. One task = one branch `<type>/<task-id>-<slug>` = one small PR against `main`. Don't bundle tasks.
 2. Never force-push, rebase, or rewrite history. Fix review feedback with new commits.
-3. Merge after review passes on the exact head commit (code PRs also need a security review). The maintainer may explicitly delegate review, merging and release publication; delegated work retains all validation gates.
-4. Never change repo visibility, settings, branch protection, or secrets. Tags and releases are created by the maintainer or an explicitly authorized delegate (task R-5).
+3. Merge after review passes on the exact head commit (code PRs also need a security review). Dot may review routine stages under delegated authority, recorded as dot’s review. GitHub PR approval, merging and release publication remain with the user; all validation gates still apply.
+4. Never change repo visibility, settings, branch protection, or secrets. Tags and releases are created by the maintainer (task R-5).
 5. Every PR must pass the gate commands locally: `ruff check . && mypy src && pytest -q && git diff --check`. Paste the output in the PR body.
 6. The PR body includes the task id, what changed, the acceptance results, and a CHANGELOG `[Unreleased]` entry for any user-visible change.
 7. Keep these non-goals: no network calls, no vendor contact or scraping, no SaaS, no telemetry. Use fictional data only in examples and tests.
 8. Update docs in the same PR when behavior, flags, or schema change.
+9. Follow [AGENTS.md](../AGENTS.md) and the [workflow records](../aidlc-docs/README.md): design before implementation, real stage decisions recorded before advancement, and security review before presentation.
 
 ## Coverage gate
 
@@ -50,7 +51,7 @@ Raw inputs are capped at 512 bytes or 1,024 characters; structured values use at
 
 Apply this checklist to each release from v0.4.1 through v1.0.0.
 
-- [ ] All milestone PRs merged by the maintainer or authorized delegate after review (+ security review for code) on the exact head SHA
+- [ ] All milestone PRs merged by the maintainer after review (+ security review for code) on the exact head SHA
 - [ ] `pyproject.toml` version == `src/resilint/__init__.py` == CHANGELOG heading (`tests/test_meta.py` green)
 - [ ] CHANGELOG: `[Unreleased]` renamed to `[X.Y.Z] - YYYY-MM-DD`; Added/Changed/Security/Fixed filled in; fresh empty `[Unreleased]`
 - [ ] README/ROADMAP/SECURITY status and badges reflect the release; Action examples pinned to the new tag
@@ -58,7 +59,7 @@ Apply this checklist to each release from v0.4.1 through v1.0.0.
 - [ ] `python -m build && twine check dist/*`; fresh-venv install + `resilint --version`
 - [ ] Secrets scan clean (gitleaks/trufflehog on full history); `pip-audit` clean; examples contain only fictional data
 - [ ] Action self-test green; all `uses:` are full-SHA pinned
-- [ ] Tag `vX.Y.Z` created by the maintainer or authorized delegate; release notes from CHANGELOG; SBOM + provenance attached; PyPI publish approved in the `pypi` environment
+- [ ] Tag `vX.Y.Z` created by the maintainer; release notes from CHANGELOG; SBOM + provenance attached; PyPI publish approved in the `pypi` environment
 - [ ] For v1: move the `v1` tag; announce the stability policy
 
 ## Released versions
