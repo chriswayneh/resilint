@@ -180,3 +180,12 @@
 - Full fetched-history Gitleaks scan: 104 commits, no leaks. Real online runtime audit: no known vulnerabilities. Controlled adverse outcomes remain simulated and are not claimed as live incidents.
 - Reviewed the correction diff and retained complete branch security review evidence: read-only tokens, verified wheel/hash installation, no application install in production audit, no privileged events, report uploads, credentials or vendor records. No blocking author finding; independent exact-head review is still required before merge.
 - Next authorized action: commit these three explicit files, push the isolated P-4 branch and create a draft PR for actual hosted checks. Keep other drafts and preserved work unchanged; P-4 remains planned with CodeQL deferred.
+
+## P-4 — bounded follow-up received after publication
+
+- Recorded: 2026-11-03T02:28:33.508182+00:00. Source: dot forwarded actual user approval of the concrete scanner-only typing-extensions correction and validation request; this is personal user approval of that bounded request, distinct from delegated design review and not future blanket authority.
+- State on receipt: correction already committed and pushed as 0006e5b5d3a80b98769663f6d3c305a15adecc9a in draft PR #49 under the preceding direct user push approval in this chat. The original rejected command had not executed; the subsequent approved correction succeeded. No further retry is needed or performed.
+- New boundary: local-only documentation clarification and evidence; no additional push, PR creation, merge, tags, publication, settings, services or cleanup. Preserve other drafts and artifacts.
+- Approved documentation change: explicitly limit the no-application-install/build/hooks statement to the two production scanner jobs and state in the same paragraph that scanner-controls executes repository tests, conftest and runner.
+
+- Follow-up verification recorded 2026-11-03T02:28:48.138971+00:00: documentation-only change reviewed; Ruff, mypy (11 files), Markdown links (36 files) and whitespace passed again. The unchanged code/locks retain the post-correction 351-pass/six-existing-skip suite, strict six-control success and separate 29-package production/34-package controls Linux-target closure evidence above. No Linux runtime success is inferred. Create a local-only review commit and complete correction patch; do not push it.
