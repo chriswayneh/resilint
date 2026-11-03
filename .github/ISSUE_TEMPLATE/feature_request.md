@@ -4,7 +4,7 @@ about: Propose a focused improvement to offline resilience checks
 title: ''
 ---
 
-Use fictional data only. Do not include real vendor information, secrets or personal data.
+Use fictional data only. Do not include real vendor information, secrets PHI, PII or personal data.
 
 ## Problem and proposed behavior
 

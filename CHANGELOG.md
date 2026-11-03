@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Contributor guidance and issue/PR templates include validation gates, exact-head review expectations and the fictional-data-only rule.
+- Documented an adapted AI-DLC workflow with inception plans, truthful stage audits, existing test/security gates, user-owned publication actions and consolidated notification guidance.
 - A JSON report schema and five deterministic report snapshots cover all rule IDs, repeated process findings, escaping and the stable output contract.
 - A v1 stability and deprecation policy defines the supported CLI, report, schema, baseline and integration interfaces and their compatibility limits.
 - Dedicated installation, usage, rule, drill, export and FAQ guides document every CLI option; CI checks relative Markdown links and headings without fetching external URLs.

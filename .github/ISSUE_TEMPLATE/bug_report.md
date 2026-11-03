@@ -4,7 +4,7 @@ about: Report a reproducible CLI or integration problem using fictional data
 title: ''
 ---
 
-Use fictional data only. Remove vendor contracts, real contacts, credentials and personal data. Report security issues privately using [SECURITY.md](https://github.com/chriswayneh/resilint/blob/main/SECURITY.md).
+Use fictional data only. Remove vendor contracts, real contacts, credentials PHI, PII and personal data. Report security issues privately using [SECURITY.md](https://github.com/chriswayneh/resilint/blob/main/SECURITY.md).
 
 ## Environment
 
