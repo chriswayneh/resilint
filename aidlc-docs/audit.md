@@ -45,3 +45,20 @@
 - Decision by Codex: proceed with the already-reviewed D-3 PR after verifying all 20 checks on its exact head; retain all remaining gates for subsequent PRs.
 
 - ADOPT-01 completion metadata in PR #43 is prospective and becomes effective only when this reviewed, passing PR is merged under the temporary authorization. Original product task definitions and counts are unaffected.
+
+## D-5 — existing draft verification and review handoff
+
+- Recorded: 2026-11-02T23:58:20.882866+00:00.
+- Actor: Codex, verification and manual code/security reviewer. No dot approval or retrospective design approval is claimed.
+- Scope: existing pre-adoption D-5 draft; see inception/d5-freeze-audit.md. No new runtime construction. Merged adoption guidance and the temporary user authorization are retained.
+- Evidence: complete three-file feature diff reviewed; no removed/deprecated CLI surfaces; smoke tests cover five normal command paths. Ruff/mypy pass, 300 tests pass with six local Windows privilege skips; links and whitespace checks pass. Test writes are temporary and synthetic; no new credentials, dependencies, permissions, SQL or network operations.
+- Decision: present one D-5 draft PR for routine implementation-stage review and hosted checks. That stage review remains pending; passing CI alone is not an approval. No merge until review and all gates pass, and only while the user’s temporary grant remains valid.
+
+## D-5 — delegated implementation-stage approval
+
+- Received and recorded: 2026-11-03T00:02:24.310431+00:00.
+- Actual reviewer: dot, acting under the user’s delegated routine-review authority. This is not personal user approval or a formal GitHub PR approval.
+- Reviewed artifact: PR #44 at 6ef9e3280c815f9e40c153afe81db6b922262c7b, complete eight-file diff.
+- Decision: approved conditionally on all exact-head hosted gates passing. Static review found no blocking defects and confirmed 16 explicit prior flags plus help, three original command paths, four newer flags plus init/explain, five report formats and RL001–RL009, and synthetic warning-free smoke tests across five paths. No runtime, dependency or permission changes.
+- Evidence limit: dot performed static review; author-reported local tests were not independently rerun by dot.
+- Next permitted action: append this approval only, push the resulting new head and verify all hosted gates on that new head. Existing code review does not prove new-head CI success. Any merge separately requires the user’s bounded authorization to remain valid at action time. No unrelated construction or reserved action is authorized by this review.

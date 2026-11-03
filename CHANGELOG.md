@@ -26,6 +26,7 @@
 - `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
 ### Changed
+- The v1 interface audit retains all existing commands, flags, formats and rule IDs; no interfaces are removed or deprecated, and supported command paths are checked for unexpected warnings.
 - README, Markdown/regulation reports and draft RoI notes share the explicit label “Draft, not legal advice”; structured regulation-note fields retain their existing wording.
 - CI now tests Linux, Windows and macOS on Python 3.10, 3.12 and 3.13 independently; concurrent drill-write failures include each child process's diagnostic.
 - Each CI matrix job now requires at least 90% total statement coverage across `src/resilint`, using the development dependency `pytest-cov` and reporting missing lines.
