@@ -57,4 +57,4 @@ The check step fails on either threshold findings or invalid input. The report r
 
 ## GitHub Actions
 
-See the [SHA-pinned SARIF upload workflow](../examples/workflows/resilint-sarif.yml) and the [Action inputs and outputs](../README.md#github-action). The upload example grants `security-events: write` only to its upload job, sends completed reports to GitHub Code Scanning, and then enforces the original threshold status. Review repository access before uploading register-derived data.
+See the [SHA-pinned SARIF upload workflow](../examples/workflows/resilint-sarif.yml) and the [Action inputs and outputs](reference.md#github-action). The upload example grants `security-events: write` only to its upload job, sends completed reports to GitHub Code Scanning, and then enforces the original threshold status. Review repository access before uploading register-derived data.

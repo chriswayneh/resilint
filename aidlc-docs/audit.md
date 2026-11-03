@@ -119,6 +119,15 @@
 - Evidence: dot independently verified all nine platform jobs and package job in run 41552026107 and Action self-test run 41552026163 passed at the reviewed head. Local 300-test result and archive/license/resource byte checks remain author-reported, not independently executed by dot. No hermetic/reproducible-build claim.
 - Next permitted action: append only this decision, inspect that audit-only delta and require all hosted gates on the resulting new head. Old-head results do not transfer. Any merge independently requires actual user scope and unexpired authorization; this review grants no reserved-action permission. Preserve other drafts/artifacts; no cleanup, denied-action bypass, history rewriting or access/settings changes. R-2 remains blocked on R-1, and publisher registration requires specific action-time user confirmation.
 
+## DOCS-README — presentation alignment inception and construction
+
+- Recorded: 2026-11-03T06:26:58+00:00.
+- Actor: Grok Bot (AI), author, acting on the user's request for this documentation task. Stage review is by Grok Bot (AI), not personal user approval or formal GitHub approval.
+- Artifact: inception/readme-presentation-design.md and inception/readme-presentation-plan.md; branch docs/readme-presentation.
+- Decision: proceed with documentation-only construction as designed. No code, dependency, workflow, setting, visibility, tag or release change.
+- Evidence: demo output re-run against tag v0.4.0 matched the README; local gate results are reported in the draft PR.
+- Next permitted action: open one draft PR for the user's review. Merge and other reserved actions remain with the user.
+
 ## P-4 — delegated inception approval, Alternative A only
 
 - Received and recorded: 2026-11-03T01:11:46.175559+00:00.
@@ -214,3 +223,11 @@
 - Decision: approve local-only reconciliation of PR #49 starting at 66bce75668243e311631fdde0c2203e92a11cad5 against reverified main b58fd6fb5d3e0cf9b197ac21877e12408538e480. Prioritize functional scanner integration; preserve presentation and all other partial work.
 - Plan: separate worktree; ordinary merge; resolve only the expected audit conflict by retaining both histories, including the publication-approval correction. Keep scanner code/locks and README/presentation unchanged. Run all required local gates and six real scanner controls; inspect full merged task diff and return immutable head/parents/patches/checksums for independent review BEFORE PUSH.
 - Boundaries: no remote mutation, formal GitHub approval, merge into main, tags, settings, CodeQL, release/trust registration, cleanup or denied-action retry. Unexpected base, scope or conflict requires reporting before dependent work. Preserve all existing worktrees, branches, private records and artifacts.
+
+## P-4 — local reconciliation verification
+
+- Recorded: 2026-11-03T10:27:48.788291+00:00. Actor: Codex, implementing dot's bounded local reconciliation approval; not final independent approval or publication authority.
+- Resolution: retained the complete main audit and PR #49 audit histories, including the explicit correction of unverified publication authority. Main is b58fd6fb5d3e0cf9b197ac21877e12408538e480; original PR head is 66bce75668243e311631fdde0c2203e92a11cad5. Only the expected audit conflict required resolution.
+- Verification: Ruff passed; mypy passed for 11 source files; link checker passed across 39 Markdown files with zero errors; whitespace checks passed. Full local suite: 351 passed, 6 existing Windows skips in 52.32 seconds. Separately, all six real scanner controls passed in 11.92 seconds, with collection and every setup/call/teardown phase passing and no skips.
+- Review: scanner workflow, scripts, tests and locks are unchanged from the independently reviewed original PR head; all task files except this audit are identical to that head. README, banner and presentation documentation match main. Complete reconciliation and task diffs reviewed for secrets, input validation, least privilege, injection, dependency safety and public-record privacy; no new blocking issue found. Existing static security review is reused by exact file identity, not represented as a new independent review. SQL controls are inapplicable.
+- Limits and next action: create the ordinary immutable local merge commit and export review patches/checksums, then return for dot review. Existing hosted results apply only to the original published head; this local merge has no hosted exact-head results. No push or hosted run is authorized while Actions usage eligibility is being checked. CodeQL and final P-4 completion remain deferred. No remote mutation, release, trust registration, settings change or cleanup performed.
