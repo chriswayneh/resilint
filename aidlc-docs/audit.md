@@ -119,6 +119,15 @@
 - Evidence: dot independently verified all nine platform jobs and package job in run 41552026107 and Action self-test run 41552026163 passed at the reviewed head. Local 300-test result and archive/license/resource byte checks remain author-reported, not independently executed by dot. No hermetic/reproducible-build claim.
 - Next permitted action: append only this decision, inspect that audit-only delta and require all hosted gates on the resulting new head. Old-head results do not transfer. Any merge independently requires actual user scope and unexpired authorization; this review grants no reserved-action permission. Preserve other drafts/artifacts; no cleanup, denied-action bypass, history rewriting or access/settings changes. R-2 remains blocked on R-1, and publisher registration requires specific action-time user confirmation.
 
+## DOCS-README — presentation alignment inception and construction
+
+- Recorded: 2026-11-03T06:26:58+00:00.
+- Actor: Grok Bot (AI), author, acting on the user's request for this documentation task. Stage review is by Grok Bot (AI), not personal user approval or formal GitHub approval.
+- Artifact: inception/readme-presentation-design.md and inception/readme-presentation-plan.md; branch docs/readme-presentation.
+- Decision: proceed with documentation-only construction as designed. No code, dependency, workflow, setting, visibility, tag or release change.
+- Evidence: demo output re-run against tag v0.4.0 matched the README; local gate results are reported in the draft PR.
+- Next permitted action: open one draft PR for the user's review. Merge and other reserved actions remain with the user.
+
 ## P-5 — delegated inception approval and isolated draft delivery
 
 - Received and recorded: 2026-11-03T00:56:13.906206+00:00.
@@ -153,3 +162,12 @@
 - Decision: reconcile PR #48 only, locally, against verified main b58fd6fb5d3e0cf9b197ac21877e12408538e480, starting at b7d4abf16515aa056892c68d133702b73e75247a. Preserve the DataGrant-style presentation, move the Action-reference policy to the relocated reference section, preserve all audit entries, task definitions and prospective P-5 completion metadata.
 - Plan: isolated worktree, ordinary main merge without rebase/force-push, explicit README/audit resolution, full local gates and content/anchor/roadmap checks, complete diff/security/privacy review, immutable local merge commit and patch evidence.
 - Limits: return for independent review BEFORE PUSH. No remote mutation, formal approval, PR merge, tags, settings, publishing/trust changes, cleanup or denied-operation retry; preserve other branches, PRs and local work.
+
+## P-5 — local reconciliation verification
+
+- Recorded: 2026-11-03T10:23:14.544111+00:00. Actor: Codex, reconciliation author; independent implementation review remains pending.
+- Resolution: retain main README/banner/CI documentation unchanged; move the original P-5 adoption paragraph into docs/reference.md under GitHub Action, changing only its relative stability-policy link. Preserve all main and original P-5 audit entries; retain future v1 availability, immutable-version policy and SHA/transitive-dependency limits.
+- Targeted checks: exact content equality for README/banner and unchanged presentation sections, reference differs from main only by the relocated paragraph, both audit histories retained, and all 38 original task definitions preserved with only P-5 prospective completion/reference changed. Counts remain 28/38 on main and become 29/38 only if P-5 is merged.
+- Local gates: Ruff passed; mypy passed for 11 files; 300 tests passed with six existing Windows privilege skips in 39.27 seconds; relative Markdown links in 37 files and whitespace passed. No new executable tests were added for this documentation resolution.
+- Full task/resolution diff reviewed for security/privacy and scope; no blocking author finding. No runtime, dependency, workflow, settings, credentials or actual tag changes. Public records exclude private local evidence paths. Hosted checks for this new head have not run; prior-head results do not transfer.
+- Next permitted action: create an immutable ordinary local merge commit and complete patch evidence for dot review before any push. No remote action or other-PR work is granted by this handoff.
