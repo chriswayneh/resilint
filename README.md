@@ -345,7 +345,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 1/7 complete.** Next is `C-2`, the SARIF upload example.
+**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `P-2`, reviewed release automation and publisher setup.
 
 The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
 
@@ -354,6 +354,10 @@ The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and accep
 See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation gates and the fictional-data-only rule.
 
 See [SECURITY.md](SECURITY.md).
+
+## Development methodology
+
+This project uses an adapted [AWS AI-DLC](https://github.com/awslabs/aidlc-workflows) documentation workflow: inception before implementation, recorded stage decisions, comprehensive tests and security review, and one roadmap task per PR. See the [local workflow records](aidlc-docs/README.md) and [audit](aidlc-docs/audit.md). No native AWS runtime is installed by this adoption; GitHub approval, merges, tags, releases and settings remain user-controlled.
 
 ## Built with
 

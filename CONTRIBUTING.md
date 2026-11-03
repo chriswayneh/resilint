@@ -1,8 +1,10 @@
 # Contributing
 
-Use fictional data only in examples, tests, screenshots, issues and pull requests. Never submit real vendor contracts, contact details, secrets or personal data. Report suspected vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+Use fictional data only in examples, tests, screenshots, issues and pull requests. Never submit real vendor contracts, contact details, secrets, PHI, PII or personal data. Report suspected vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
 
 resilint runs locally and offline. Keep changes focused on recorded commitments; vendor contact, scraping, telemetry and hosted services are outside scope. The active release target is v1.0; later major versions are deferred.
+
+Read [AGENTS.md](AGENTS.md), the [roadmap](ROADMAP.md) and [workflow records](aidlc-docs/README.md) before substantive work. Establish a technical design and execution plan before implementation; record actual stage decisions in the audit before advancing. Dot’s delegated routine review must be attributed to dot, never represented as personal user approval.
 
 ## Development setup
 
@@ -38,4 +40,4 @@ Write tests for changed behavior and meaningful regressions. Review report snaps
 
 ## Review and releases
 
-The maintainer or explicitly authorized delegate reviews the exact head before merging; code changes also receive security review. Keep the roadmap's completion record in the same PR so it becomes true at merge. Release only after the [release checklist](roadmap/README.md#release-checklist) passes. The [stability policy](docs/stability.md) defines the v1 compatibility contract and deprecation requirements.
+Review the exact head before merging; code changes also receive security review. GitHub PR approval, merging, tags, releases and repository settings remain user-owned unless the user explicitly authorizes a scoped exception. A routine design or implementation-stage review is not a formal GitHub approval or permission for reserved actions; verify any bounded authorization at action time. Keep the roadmap's completion record in the same PR so it becomes true at merge. Release only after the [release checklist](roadmap/README.md#release-checklist) passes. The [stability policy](docs/stability.md) defines the v1 compatibility contract and deprecation requirements.
