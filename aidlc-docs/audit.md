@@ -136,3 +136,13 @@
 - Local validation: Ruff passes; mypy passes for 11 source files; pytest 300 passed, six local Windows privilege skips in 37.74 seconds; links in 34 tracked Markdown files and whitespace pass. Live remote lookup found no v1 or v1.0.0 tags. Documentation uses the existing release checklist, marks those references future/unavailable and preserves prior examples. Roadmap comparison proves only P-5 status/completion reference changes, with original definitions/governance preserved. Prospective 29/38 completion takes effect only on merge.
 - Security/privacy review: complete documentation diff reviewed for misleading availability/authority, private information and accidental executable changes; no blocking author findings. No runtime, workflow, dependency, permission, account/access, tag or release changes. SQL/executable-input controls are inapplicable. Existing draft branches, stash, private combined records and generated artifacts are preserved.
 - Next permitted action: push the final scoped draft and return immutable base/head diff plus actual hosted results for independent implementation review. Do not merge or perform reserved actions. P-2 remains a separate draft and incomplete; no release or authority renewal is implied.
+
+## P-5 — delegated implementation-stage approval
+
+- Received and recorded: 2026-11-03T01:01:41.314852+00:00.
+- Actual reviewer: dot, delegated routine reviewer; not personal user review, formal GitHub approval or merge permission.
+- Reviewed artifact: all eight file diffs and full base/head contents for PR #48, head 2840cbeed2ff4427560e34b2c55ccbc2679ca08c versus base 0c82503ce1fa737276be6c70c0230335c8b8406f.
+- Decision: implementation stage approved with no blockers. Independent review confirms original 38 task definitions preserved except prospective P-5 completion, accurate future-reference policy/links/authority and no runtime, workflow, access or privacy changes.
+- Evidence: reviewer independently verified all ten jobs in CI run 41556504350 and Action self-test run 41556504354 passed at the reviewed head. Review was static plus hosted evidence; local 300 tests and six Windows privilege skips remain author-reported and were not independently rerun.
+- Next permitted action: append only this P-5 decision, verify the audit-only delta, push only that update on the existing isolated PR #48 branch, and verify all hosted gates on the resulting new head. Old-head CI does not transfer. Keep PR #48 draft and unmerged.
+- Boundaries: no formal GitHub approval, merge, tags, publication, settings/access/workflow changes, cleanup, denied-action retry, PR #47 changes or other construction. Preserve all existing drafts/artifacts and scope. No deadline pressure or authority expansion.
