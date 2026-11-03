@@ -80,3 +80,12 @@
 - Validation: Ruff passes; mypy passes for 11 source files; full pytest reports 300 passed and six local Windows privilege skips. Links in 30 tracked Markdown files pass. Issue YAML frontmatter, fictional-data/PHI/PII requirements and all five gate commands pass explicit content checks; whitespace checks pass.
 - Security/privacy review: complete feature diff reviewed. Templates direct vulnerability reports privately and exclude real vendor data, secrets, PHI and PII. No runtime execution, dependencies, network behavior, permission or SQL changes; corresponding runtime controls are inapplicable. Public additions contain no private paths, raw transcripts or internal coordination IDs.
 - Decision: present the final exact-head diff and hosted checks for separate implementation-stage review. That review remains pending; inception approval and passing tests alone do not approve implementation. Completion metadata becomes effective only on merge; any merge also requires valid user authorization at action time. R-2 remains blocked on R-1.
+
+## D-6 — delegated implementation-stage approval
+
+- Received and recorded: 2026-11-03T00:13:18.098034+00:00.
+- Actual reviewer: dot, under delegated routine-review authority; not personal user approval or formal GitHub PR approval.
+- Reviewed artifact: complete 11-file PR #45 diff from b51422353f4205f9e797bb3ac27bb9ee951efcc5 to 8125c1fbcce8bda23f25c14050f9937f640b1656.
+- Decision: implementation stage approved conditionally on all final exact-head hosted checks passing. No blocking security/privacy defect found; fictional-only submissions, private vulnerability reporting, required gates, offline documentation scope, truthful attribution/reserved actions and prospective 27/38 metadata match approved scope.
+- Evidence limit: dot reviewed the complete immutable diff but did not independently execute tests; local results remain author-reported.
+- Next permitted action: append only this decision, verify the resulting diff contains only this audit entry and require all hosted gates on the new head. Prior-head CI does not transfer. Any merge independently requires valid user scope and unexpired authorization at action time. No tags, releases, settings/access changes, cleanup, history rewriting or unrelated construction are authorized by this review. R-2 remains blocked on R-1; persistent publisher access requires specific action-time user confirmation.
