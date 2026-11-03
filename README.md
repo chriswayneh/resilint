@@ -1,23 +1,24 @@
 <div align="center">
 
-# resilint
+<img src="docs/assets/banner.svg" alt="resilint: offline vendor resilience checks for DORA, NIS2 and PRA SS2/21, run from your vendor register in Git" width="100%">
 
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Latest release](https://img.shields.io/github/v/release/chriswayneh/resilint)](https://github.com/chriswayneh/resilint/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![CI](https://github.com/chriswayneh/resilint/actions/workflows/ci.yml/badge.svg)](https://github.com/chriswayneh/resilint/actions/workflows/ci.yml)
 
-### Vendor resilience checks that run every time your vendor list changes.
+**Vendor resilience checks that run every time your vendor list changes.**
 
-An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
-
-**Status:** [v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) (2026-10-24), adding drill records and failed-drill findings. Includes SARIF, regulation mapping reports, and draft register-of-information export. See the [roadmap](ROADMAP.md).
+[Docs](docs/usage.md) · [Reference](docs/reference.md) · [Releases](https://github.com/chriswayneh/resilint/releases)
 
 </div>
 
+An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML or CSV file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
+
+**Status:** [v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) (2026-10-24), adding drill records and failed-drill findings. It includes SARIF, regulation mapping reports, and draft register-of-information export. v1 is in development and is not released; resilint is not published on PyPI. Features marked **development-only** are on `main` and are not in v0.4.0. See the [roadmap](ROADMAP.md).
+
 > **A note on this repo:** This GitHub account is my personal playground, where I experiment, learn, and build security tools in the open. Projects here are personal work, not a product or company offering.
 
----
-
-## See it in 60 seconds
+## Demo
 
 **The decision it supports:** which critical vendors to escalate, re-contract, or re-test before an auditor or regulator asks.
 
@@ -70,9 +71,11 @@ MEDIUM   RL005 example-payments-cloud: last resilience test 2025-03-01 is older 
 | Art. 21(2)(f) | RL005, RL009 | 1 | example-payments-cloud |
 ```
 
-**Draft, not legal advice.** All references are a draft mapping.
+The check exits `1` because findings reached the default `high` threshold (re-verified against the v0.4.0 tag on 2026-11-03). The register is entirely fictional. **Draft, not legal advice.** All references are a draft mapping.
 
-## The problem, in business terms
+## Features
+
+### The problem, in business terms
 
 - **A signed contract is the starting point, not proof of resilience.** Notification windows, recovery times, and exit plans are only useful if they exist, are current, and match what the business actually needs.
 - **Annual questionnaires go stale.** A vendor's answers are a snapshot. Contacts change, services move, and new business processes start depending on a supplier between review cycles.
@@ -80,25 +83,16 @@ MEDIUM   RL005 example-payments-cloud: last resilience test 2025-03-01 is older 
 
 Regulators now expect firms to show this is managed continuously, not once a year.
 
-## What resilint does
 
-Your team keeps critical vendors and the business processes that depend on them in a plain YAML file under version control, or exports a CSV from the spreadsheet they already keep. On every change (pull request, commit, or scheduled run), resilint checks it and reports:
+**Missing commitments** for any vendor marked critical or high: no incident notification SLA, no recovery time commitment, no email or phone contact, no documented exit plan, or no resilience test within the required window.
 
-**Missing commitments** for any vendor marked critical or high:
-- No incident notification time (SLA)
-- No recovery time commitment
-- No email or phone contact
-- No documented exit plan
-- No resilience test or exercise within the required window
+**Consistency problems:** a vendor recovery time slower than a dependent process's RTO, too many critical processes concentrated on one vendor (threshold you set), contacts never verified or not verified within a window (default 180 days), and a failed latest drill.
 
-**Consistency problems:**
-- A vendor's promised recovery time is slower than the recovery target of a business process that depends on it
-- Too many critical processes concentrated on a single vendor (threshold you set)
-- Vendor contacts that have never been verified, or not within a window you set (default 180 days)
+**Released in v0.4.0:** YAML/CSV registers, nine rules (RL001–RL009), text/JSON/Markdown/SARIF/regmap output, draft RoI export, drill records and the `chriswayneh/resilint@v0.4.0` GitHub Action.
 
-Checks run offline on your own data and leave the register unchanged. Report and export commands write local output files; `drill record` writes a local drill log. It does not contact vendors, scrape websites, or send anything anywhere.
+**Development-only (on `main`, not in v0.4.0):** `resilint init`, `resilint explain`, the pre-commit hook, Action outputs, `.resilint.yaml` rule configuration and baselines. See the [reference](docs/reference.md) and [changelog](CHANGELOG.md).
 
-## Evidence it produces (text, JSON, Markdown, SARIF, regulation mapping, draft RoI export)
+### Evidence it produces
 
 | Audience | What they get |
 |---|---|
@@ -109,22 +103,20 @@ Checks run offline on your own data and leave the register unchanged. Report and
 
 Exit codes make it CI-friendly: `0` clean, `1` findings at or above your chosen severity, `2` bad input.
 
-## Documentation
+## Architecture
 
-| Guide | Contents |
-| --- | --- |
-| [Install](docs/install.md) | Supported Python/platforms, released and development installs |
-| [Use the CLI](docs/usage.md) | Every check flag, starter registers, diagnostics and exit codes |
-| [Rules](docs/rules.md) | All nine rules with illustrative fixes and draft references |
-| [Register schema](docs/schema.md) | Fields, examples and editor validation |
-| [CI](docs/ci.md) | GitHub, GitLab, Azure and generic pipelines |
-| [Drills](docs/drills.md) | Record and apply tabletop/test evidence |
-| [Draft RoI export](docs/roi.md) | Export flags, output tables and limitations |
-| [FAQ](docs/faq.md) | Common behavior and troubleshooting |
+```mermaid
+flowchart LR
+  A["vendors.yaml / vendors.csv<br/>(in Git)"] --> B["Safe loader<br/>5 MiB limit, no YAML aliases"]
+  D["drills.yaml<br/>(optional)"] --> B
+  B --> C["Rules RL001–RL009"]
+  C --> E["Draft regulation mapping<br/>DORA · NIS2 · PRA SS2/21"]
+  E --> F["Reports: text · JSON · Markdown · SARIF · regmap"]
+  B --> G["export-roi: draft CSV tables"]
+  F --> H["Exit code 0 / 1 / 2"]
+```
 
-Project policy is covered in [configuration](docs/config.md) and [baselines](docs/baseline.md). These guides include development features planned for v1; the published v0.4.0 release is identified below.
-
-The [v1 stability policy](docs/stability.md) defines supported interfaces, additive changes and deprecation notice periods.
+Everything above runs locally and offline. Nothing is sent anywhere unless your own CI workflow uploads a SARIF report (see [Limits](#limits)).
 
 ## Quick start
 
@@ -157,171 +149,29 @@ Example Markdown report (from the fictional `examples/` data):
 | medium | example-cloud-wms | contacts last verified 2025-01-15, older than 180 days | RL008 | ... |
 ```
 
-### Regulation mapping report and draft RoI export
+## CLI at a glance
 
-```bash
-resilint check examples/vendors.yaml --format regmap        # findings grouped by DORA / NIS2 / PRA reference
-mkdir roi && resilint export-roi examples/vendors.yaml --out-dir roi
-```
+| Command | What it does | Availability |
+| --- | --- | --- |
+| `resilint check FILE` | Run rules; `--format text\|json\|md\|sarif\|regmap`, `--fail-on`, `--stale-days`, `--contact-days`, `--max-critical` | v0.4.0 |
+| `resilint check FILE --drills LOG` | Apply recorded drill outcomes (RL009) | v0.4.0 |
+| `resilint export-roi FILE --out-dir DIR` | Draft register-of-information CSV tables | v0.4.0 |
+| `resilint drill record FILE --vendor ID ...` | Append tabletop/test evidence to a drill log | v0.4.0 |
+| `resilint check --baseline / --write-baseline` | Report only new findings | development-only |
+| `resilint init [PATH]` | Write a fictional starter register | development-only |
+| `resilint explain RLxxx` | Describe a rule and its draft references | development-only |
 
-`--format regmap` lists every DORA, NIS2, and PRA SS2/21 reference the rules map to, with the rules, finding count, and affected vendors for each. JSON findings also carry a structured `regulation_refs` field. All references are a draft mapping, not legal advice.
+Full flags: [CLI guide](docs/usage.md). Exit codes: `0` clean, `1` findings at or above threshold, `2` input/output error.
 
-`export-roi` writes three partial CSV tables and a README for working toward a register-of-information export. They are draft mapping, not legal advice, and require completion and validation before submission. The [export guide](docs/roi.md) covers table contents, formula neutralization, output guards and `--force`.
+## Limits
 
-### Drill records
+- **Draft mapping, not legal advice.** Regulation references are draft guidance and not a compliance guarantee. Confirm interpretations with your compliance and legal teams. The RoI export is partial and requires completion and validation before submission.
+- **Local and offline.** Checks run on your own data and leave the register unchanged. resilint does not contact vendors, scrape websites, use SaaS or send telemetry. Report/export commands write local files; `drill record` writes a local drill log.
+- **Optional CI upload is yours.** If you use the [SARIF workflow](docs/reference.md#github-action), GitHub Code Scanning receives vendor identifiers, finding messages and source locations. Use it only for registers suitable for your repository's access policy.
+- **Use fictional data to try it.** Never commit real vendor records, PHI, PII or credentials to a public repository. See [SECURITY.md](SECURITY.md).
+- **It checks commitments, not vendors.** It complements TPRM and GRC platforms; it does not replace due diligence.
 
-```bash
-resilint check examples/vendors.yaml --drills examples/drills.yaml   # sample log: RL009 shows
-resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
-  --kind tabletop --result pass --date 2026-10-20 --notes "failover in 3h" --log /tmp/drills.yaml
-```
-
-`drill record` stores tabletop/test evidence in a separate log while preserving the register. `check --drills LOG` applies recorded outcomes and can report a failed latest drill. The [drill guide](docs/drills.md) covers every flag, date handling, locking and recovery behavior. The Action accepts an optional `drills` input.
-
-### GitHub Action
-
-The `format` input accepts `text`, `json`, `md`, `sarif`, or `regmap`; `fail-on` accepts `low`, `medium`, `high`, or `critical`. These inputs are passed to the CLI for validation. Unknown values exit with code 2 and fail the Action before any report is written.
-
-The development Action exposes three string outputs from the same check that creates the report:
-
-| Output | Value |
-| --- | --- |
-| `findings` | Total reported findings after configuration ignores, including severities below `fail-on` |
-| `highest-severity` | `low`, `medium`, `high`, `critical`, or `none` when there are no findings |
-| `exit-code` | `0` for a passing threshold, `1` for findings reaching it, `2` for an input or output error |
-
-Give the Action an `id: resilience` and read `${{ steps.resilience.outputs.findings }}`, `${{ steps.resilience.outputs.highest-severity }}` or `${{ steps.resilience.outputs.exit-code }}` in later steps. Set `continue-on-error: true` on the calling step when later steps must run after findings or invalid input. Counts and severity are empty on check errors; installation/runner failures may leave every output unset. Outputs do not change the Action's failing exit status. These outputs are not present in the published v0.4.0 tag; they will ship with the next release. See the [GitHub composite-output reference](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax#outputs-for-composite-actions) for output wiring.
-
-The development version of the composite Action uses Node 24 and requires Actions Runner v2.327.1 or later. Update self-hosted runners before using it; GitHub-hosted runners are supported. The published `v0.4.0` examples below retain that release's dependencies.
-
-```yaml
-- uses: actions/checkout@v4
-- uses: chriswayneh/resilint@v0.4.0
-  with:
-    file: vendors.yaml
-    fail-on: high
-```
-
-For code-scanning annotations, copy the [complete SARIF workflow](examples/workflows/resilint-sarif.yml) into `.github/workflows/resilint.yml` and set the register path. It pins every Action to a full commit SHA, grants `security-events: write` only to the upload job, uploads reports after threshold findings, then restores the check's failing status. Invalid input skips upload and fails the final gate. The example currently pins the development commit that adds Action outputs; use the reviewed v1 release SHA when available.
-
-Uploading sends the report's vendor identifiers, finding messages and source locations to GitHub Code Scanning. Use it only for registers suitable for your repository's access policy. resilint itself still runs offline. Code-scanning availability and repository requirements are described in [GitHub's SARIF upload guide](https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/upload-sarif-file).
-
-Each SARIF result points at the line of the vendor's `id` in your register, so the annotation lands on the entry that needs fixing. The file path is relative to the working directory (with `uriBaseId: %SRCROOT%`); when the register is outside the working directory, the SARIF uri is just the file name.
-
-For GitLab, Azure Pipelines or another runner, see the [CI recipes](docs/ci.md).
-
-### Starter register
-
-Use `resilint explain RL004` for a rule's description, illustrative fix and draft regulation references. All RL001–RL009 IDs are supported without a register or configuration file. Unknown IDs return 2. Examples must be replaced with actual evidence; this development command is not in the v0.4.0 release.
-
-The development CLI can create a commented fictional starter with `resilint init` (default `vendors.yaml`) or `resilint init path/to/vendors.yaml`. The destination's parent directory must exist. It refuses to overwrite any existing file or symlink and respects `RESILINT_OUTPUT_ROOT`. Replace the example commitments before using it for real checks.
-
-Running `resilint check vendors.yaml` on the untouched starter intentionally reports RL004 (missing exit plan), RL005 (no resilience test date) and RL008 (unverified contacts), returning 1. Creation itself returns 0; a refused or failed write returns 2. The published v0.4.0 tag predates `init`.
-
-### pre-commit
-
-The development hook `resilint` checks every selected register without changing it. It defaults to files named `vendors.yaml`, `vendors.yml` or `vendors.csv`; override `files` in your hook configuration for other names. Thresholds and ignores come from the repository's `.resilint.yaml`. Hook arguments are filenames; configure thresholds in that file instead of adding CLI flags to `args`.
-
-From a resilint checkout, try the hook without installing a Git hook:
-
-```bash
-pip install pre-commit
-pre-commit try-repo . resilint --files examples/vendors.yaml
-```
-
-The fictional example intentionally has high findings, so this command runs successfully as a check and reports a failing hook. Clean registers pass; malformed registers fail. Multiple files are all checked, with errors taking precedence over threshold findings. pre-commit installs a Python environment on first use; subsequent checks run offline. See [pre-commit configuration](https://pre-commit.com/#pre-commit-configyaml---repos) to add this repository at a reviewed commit containing `.pre-commit-hooks.yaml`; the published v0.4.0 tag predates this hook.
-
-## Input schema
-
-YAML anchors and aliases (`&name` / `*name`) are refused (exit 2) to block alias-expansion attacks.
-
-YAML (`examples/vendors.yaml`):
-
-```yaml
-schema_version: 1               # optional; defaults to 1, unknown versions exit 2
-processes:
-  - id: order-fulfilment        # required
-    name: Order fulfilment
-    criticality: critical       # critical|high|medium|low (default critical)
-    rto_hours: 4                # recovery time objective
-vendors:
-  - id: example-cloud-wms       # required, unique
-    name: Example Cloud WMS Ltd
-    criticality: critical       # required: critical|high|medium|low
-    notification_sla_hours: 24
-    recovery_time_hours: 8
-    contacts:                   # at least one email or phone
-      - email: incidents@example.com
-      - phone: "+1-555-0100"
-    exit_plan: docs/exit/wms.md # true/false or a document reference
-    last_tested: 2024-11-12     # ISO date
-    contacts_verified: 2025-01-15  # ISO date the contacts were last confirmed working
-    lei: 9845000EXAMPLE000048   # optional ISO 17442 LEI (checksum validated), used by export-roi
-    country: IE                 # optional assigned ISO 3166-1 alpha-2 code (GB, GR; not UK, EL), used by export-roi
-    supports_processes: [order-fulfilment]
-```
-
-CSV (`examples/vendors.csv`), one row per record, header row required. UTF-8 BOM and CRLF line endings are supported; header names are trimmed and case-insensitive. Headers must be nonempty and unique, and each data row must match the header's field count. Invalid rows return exit 2 with a physical CSV line number (the ending line for multiline quoted records).
-
-Comma is the default separator. For semicolon-delimited spreadsheet exports, use `resilint check register.csv --csv-delimiter ';'`. The same option works with `export-roi` and `drill record`; YAML input ignores it. Semicolons still separate list values such as contacts and supported processes, so quote those cells when semicolon is also the field separator. Quoted separators and embedded newlines follow CSV quoting rules.
-
-| Column | Notes |
-|---|---|
-| `record_type` | `vendor` (default) or `process` |
-| `id`, `name`, `criticality` | as in YAML |
-| `notification_sla_hours`, `recovery_time_hours`, `exit_plan`, `last_tested`, `contacts_verified`, `lei`, `country` | vendor rows |
-| `contacts`, `supports_processes` | vendor rows; multiple values separated by `;` |
-| `rto_hours` | process rows |
-
-Only vendors marked `critical` or `high` are checked. Files are read with safe YAML loading, limited to 5 MiB (5,242,880 bytes), and never sent anywhere. YAML and CSV registers above that size are rejected before parsing with exit 2 and a `file larger than 5 MB` diagnostic.
-
-CI checks a fictional CSV register with 10,000 critical vendors linked to 2,000 critical processes in under 5 seconds. The timed interval includes file loading, normalization, rule checks and JSON reporting of 10,000 recovery-time findings; fixture creation, Python startup and verification are excluded. This is a regression budget for that workload, not a timing guarantee for every register or machine. Run `pytest -q tests/test_perf.py --durations=3` to check it locally.
-
-## Rules
-
-To adopt checks gradually, use `--write-baseline FILE` to snapshot existing finding identities and `--baseline FILE` to report only new findings. Successful snapshot creation returns 0 even when findings exist. See [baseline behavior and refresh guidance](docs/baseline.md).
-
-Per-project thresholds and expiring suppressions can be stored in `.resilint.yaml`; explicit CLI flags take precedence. See the [rule configuration guide](docs/config.md).
-
-CLI failures use `resilint: error: <file>:<line>: <message>` on stderr with exit 2. A known physical input line is one-based; `0` means no reliable line is available, and `<cli>` identifies argument errors. Output errors name the destination, and drill-log errors name the log. Control characters are escaped to keep each diagnostic on one line. Exit 0 means success without findings at the selected threshold; exit 1 means findings reached that threshold. Argument parsing may also print usage.
-
-For editor and CI validation, use the [register v1 JSON Schema](schema/register.v1.json) and [field reference and validation guide](docs/schema.md). The schema complements runtime validation and resilience checks.
-
-| ID | Severity | Finding |
-|---|---|---|
-| RL001 | high | No notification SLA |
-| RL002 | high | No recovery time |
-| RL003 | high | No email or phone contact |
-| RL004 | high | No exit plan |
-| RL005 | medium | Last test missing or older than `--stale-days` |
-| RL006 | high | Vendor recovery time exceeds the RTO of a process it supports |
-| RL007 | medium | Vendor supports more than `--max-critical` critical processes |
-| RL008 | medium | Contacts present but `contacts_verified` missing or older than `--contact-days` |
-| RL009 | medium | Most recent drill in the `--drills` log failed |
-
-## Regulatory mapping (draft)
-
-Each finding carries a `regulation` field and the label "draft mapping, not legal advice".
-
-| Rule | DORA (EU 2022/2554) | NIS2 (EU 2022/2555) | UK PRA SS2/21 |
-|---|---|---|---|
-| RL001 notification SLA | Art. 30(3)(b) notice periods and reporting obligations; Art. 30(2)(f) incident assistance | Art. 21(2)(d) supply chain security | Ch. 6 outsourcing agreements |
-| RL002 recovery time | Art. 30(2)(e), 30(3)(a) service level descriptions | Art. 21(2)(c) business continuity | Ch. 6 outsourcing agreements |
-| RL003 contact | Art. 30(2) contract terms | Art. 21(2)(d) | Ch. 6 outsourcing agreements |
-| RL004 exit plan | Art. 28(8) exit strategies; Art. 30(3)(f) | Art. 21(2)(d) | Ch. 10 business continuity and exit plans |
-| RL005 recent test | Art. 30(3)(c) contingency plan testing, 30(3)(d) TLPT participation | Art. 21(2)(f) effectiveness assessment | Ch. 10 business continuity and exit plans |
-| RL006 recovery vs. RTO | Art. 30(2)(e), 30(3)(a) | Art. 21(2)(c) | Ch. 10 business continuity and exit plans |
-| RL007 concentration | Art. 28(4)(c), Art. 29 concentration risk | Art. 21(2)(d) | Ch. 5 pre-outsourcing (materiality and risk assessment) |
-| RL008 contact verification | Art. 30(2) contract terms; Art. 28(3) register of information kept up to date | Art. 21(2)(d) | Ch. 6 outsourcing agreements |
-| RL009 failed drill | Art. 30(3)(c) contingency plan testing; Art. 11(6) testing of ICT business continuity plans | Art. 21(2)(c) business continuity, 21(2)(f) effectiveness assessment | Ch. 10 business continuity and exit plans |
-
-DORA Art. 30(3) applies to contracts supporting critical or important functions.
-
-Sources: [DORA, Regulation (EU) 2022/2554](https://eur-lex.europa.eu/eli/reg/2022/2554/oj) · [NIS2, Directive (EU) 2022/2555](https://eur-lex.europa.eu/eli/dir/2022/2555/oj) · [Bank of England PRA SS2/21, Outsourcing and third party risk management](https://www.bankofengland.co.uk/prudential-regulation/publication/2021/march/outsourcing-and-third-party-risk-management-ss).
-
-This mapping is a working aid, not legal advice. Confirm interpretations with your compliance and legal teams.
-
-## How it fits into a GRC program
+### How it fits into a GRC program
 
 resilint **complements, and does not replace,** third-party risk management (TPRM) and GRC platforms.
 
@@ -331,35 +181,39 @@ resilint **complements, and does not replace,** third-party risk management (TPR
 
 Because the register lives in Git, every change has an author, a review, and a history auditors can follow.
 
-## Roadmap
 
-**[v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0)** (2026-10-24). See the [changelog](CHANGELOG.md) for release notes.
+## Documentation
 
-| Version | Theme | Highlights |
-| --- | --- | --- |
-| **v0.1–v0.4** | Core checks and evidence ✅ | YAML/CSV registers, resilience rules, SARIF, regulation mapping, draft RoI export and drill records |
-| **v0.4.1** | Maintenance | Windows locking ✅ · dependency updates ✅ · version/docs checks ✅ · Action input checks ✅ |
-| **v0.5** | Real-world data | Test organization, coverage, fuzzing, performance, CSV robustness and register schema ✅ · Rule configuration, baselines and platform parity complete |
-| **v0.6** | CI integration | Action outputs and self-tests, SARIF examples, pre-commit, `init` and `explain` |
-| **v0.9** | Documentation and API freeze | Usage guides, output schemas, snapshots and a stability policy |
-| **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
-| **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
+| Guide | Contents |
+| --- | --- |
+| [Install](docs/install.md) | Supported Python/platforms, released and development installs |
+| [Use the CLI](docs/usage.md) | Every check flag, starter registers, diagnostics and exit codes |
+| [Rules](docs/rules.md) | All nine rules with illustrative fixes and draft references |
+| [Register schema](docs/schema.md) | Fields, examples and editor validation |
+| [CI](docs/ci.md) | GitHub, GitLab, Azure and generic pipelines |
+| [Drills](docs/drills.md) | Record and apply tabletop/test evidence |
+| [Draft RoI export](docs/roi.md) | Export flags, output tables and limitations |
+| [FAQ](docs/faq.md) | Common behavior and troubleshooting |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `P-2`, reviewed release automation and publisher setup.
+Project policy is covered in [configuration](docs/config.md) and [baselines](docs/baseline.md). These guides include development features planned for v1; the published v0.4.0 release is identified below.
 
-The [full roadmap](ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](roadmap/README.md).
+The [v1 stability policy](docs/stability.md) defines supported interfaces, additive changes and deprecation notice periods.
+| [Reference](docs/reference.md) | Input schema, rules, regulatory mapping, Action, pre-commit, drills, RoI and roadmap details moved from this README |
 
-## Security
+<!-- Compatibility anchors for sections moved to docs/reference.md -->
+<a id="regulation-mapping-report-and-draft-roi-export"></a><a id="drill-records"></a><a id="github-action"></a><a id="starter-register"></a><a id="pre-commit"></a><a id="input-schema"></a><a id="rules"></a><a id="regulatory-mapping-draft"></a><a id="roadmap"></a><a id="security"></a><a id="development-methodology"></a>
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation gates and the fictional-data-only rule.
+Moved sections: [GitHub Action](docs/reference.md#github-action) · [pre-commit](docs/reference.md#pre-commit) · [Input schema](docs/reference.md#input-schema) · [Rules](docs/reference.md#rules) · [Regulatory mapping](docs/reference.md#regulatory-mapping-draft) · [Drills](docs/reference.md#drill-records) · [RoI export](docs/reference.md#regulation-mapping-report-and-draft-roi-export) · [Starter register](docs/reference.md#starter-register) · [Roadmap](docs/reference.md#roadmap)
 
-See [SECURITY.md](SECURITY.md).
+## Contributing
 
-## Development methodology
+See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation gates (`ruff check .`, `mypy src`, `pytest -q`, `python scripts/check_links.py`, `git diff --check`) and the fictional-data-only rule. Report vulnerabilities privately as described in [SECURITY.md](SECURITY.md).
+
+## How this project is built
 
 This project uses an adapted [AWS AI-DLC](https://github.com/awslabs/aidlc-workflows) documentation workflow: inception before implementation, recorded stage decisions, comprehensive tests and security review, and one roadmap task per PR. See the [local workflow records](aidlc-docs/README.md) and [audit](aidlc-docs/audit.md). No native AWS runtime is installed by this adoption; GitHub approval, merges, tags, releases and settings remain user-controlled.
 
-## Built with
+### Built with
 
 - Python 3.10+ (standard library + PyYAML)
 - AI-assisted development with Grok Bot, Cursor, Codex, and Claude
