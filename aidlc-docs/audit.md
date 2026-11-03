@@ -200,3 +200,10 @@
 - Current scope/status: PR #49 remains a published draft. CodeQL is absent/deferred, P-4 remains planned and main remains 28/38 tasks complete. Local documentation head d6de70dd759de3ac82037f037b3737919dbee613 and this correction have not been pushed and have no remote exact-head checks. No final independent implementation/security approval is claimed.
 - Next permitted action: correct only docs/security-ci.md and append this audit correction, check documentation and create an immutable local review commit. Preserve executable code, locks, prior entries, other drafts, stash and artifacts. No push, PR creation, merge, tag, publication, settings/access changes, cleanup or denied-operation retry.
 - Documentation verification: complete two-file diff reviewed; relative Markdown links checked across 36 files with zero errors; git diff --check passed. No executable or lock changes, so executable tests were not rerun for this correction. Hosted results above are attributed to the published head only.
+
+## P-4 — delegated documentation refinement
+
+- Recorded: 2026-11-03T02:40:38.840361+00:00. Reviewer: dot, delegated documentation reviewer, not personal user or formal GitHub approval.
+- Decision: refine documentation at d926e6eddd02a1a74b082940b5ae4f5683f111e9 to bind cited hosted results to commit 0006e5b5d3a80b98769663f6d3c305a15adecc9a and require each subsequent commit to have its own checks. Remove current unpushed-status prose from reader-facing guidance; retain detailed approval chronology and its truthful correction in this audit.
+- Scope: docs/security-ci.md and appended audit entries only. Preserve scanner execution boundaries, all code and locks, previous records, other drafts and artifacts. Local review commit permitted; no push or other publication/action authorized.
+- Verification: complete documentation delta reviewed; relative links in 36 Markdown files passed with zero errors and git diff --check passed. No code/lock changes or new executable-test claims.

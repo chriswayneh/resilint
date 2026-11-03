@@ -1,8 +1,8 @@
 # Security CI draft: read-only scanners
 
-This P-4 implementation covers secret and runtime-dependency checks only. CodeQL is deferred, and P-4 remains planned. [PR #49](https://github.com/chriswayneh/resilint/pull/49) is a published draft at head `0006e5b5d3a80b98769663f6d3c305a15adecc9a`; main remains 28/38 tasks complete. The local documentation corrections have not been pushed and have no remote exact-head checks. The [audit correction](../aidlc-docs/audit.md#p-4--correction-unverified-approval-and-publication-authority-claims) supersedes the earlier unverified publication-authority claim. Subsequent approval of the scanner-only correction/validation does not retroactively authorize the earlier publication.
+This P-4 implementation covers secret and runtime-dependency checks only, tracked in [PR #49](https://github.com/chriswayneh/resilint/pull/49). CodeQL is deferred, and P-4 remains planned. Approval chronology and the correction of an unverified publication-authority claim are retained in the [audit correction](../aidlc-docs/audit.md#p-4--correction-unverified-approval-and-publication-authority-claims).
 
-At that published head, all three jobs in [Security run 41564699043](https://github.com/chriswayneh/resilint/actions/runs/41564699043), [CI run 41564699055](https://github.com/chriswayneh/resilint/actions/runs/41564699055) and [Action run 41564699077](https://github.com/chriswayneh/resilint/actions/runs/41564699077) passed. The [scanner-controls job](https://github.com/chriswayneh/resilint/actions/runs/41564699043/job/125683289153) ran on Ubuntu 24.04.5 with Python 3.12.15: six cases passed, including collection and every setup/call/teardown phase. These hosted results establish Linux execution for the published head, not approval to merge or checks of the unpushed documentation head.
+At commit `0006e5b5d3a80b98769663f6d3c305a15adecc9a`, all three jobs in [Security run 41564699043](https://github.com/chriswayneh/resilint/actions/runs/41564699043), [CI run 41564699055](https://github.com/chriswayneh/resilint/actions/runs/41564699055) and [Action run 41564699077](https://github.com/chriswayneh/resilint/actions/runs/41564699077) passed. The [scanner-controls job](https://github.com/chriswayneh/resilint/actions/runs/41564699043/job/125683289153) ran on Ubuntu 24.04.5 with Python 3.12.15: six cases passed, including collection and every setup/call/teardown phase. These hosted results establish Linux execution for that commit. Any subsequent commit requires its own checks; passing checks do not constitute approval to merge.
 
 ## Execution boundary
 
@@ -42,7 +42,7 @@ This separate test lane executes repository test code, conftest.py and the runne
 
 scripts/check_scanner_controls.py requires all three executable paths, selects six exact test IDs, and requires unique complete collection plus passed setup/call/teardown for every case. Any skip, xfail/xpass, failure, error, missing/duplicate ID, duplicate phase or incomplete outcome fails the job. The six cases cover history/redaction/suppression, clean/vulnerable/missing/outage advisory responses and checksum rejection. Normal matrix and production scanner jobs remain unchanged.
 
-The original 329-test local result applies only to the original P-4 head. Amended-head evidence is recorded separately. Cross-platform wheel installation and metadata checks did not prove Linux runtime execution. The published-head hosted results above provide that separate evidence; they do not apply to the unpushed local documentation head.
+The original 329-test local result applies only to the original P-4 head. Amended-head evidence is recorded separately. Cross-platform wheel installation and metadata checks did not prove Linux runtime execution. The commit-specific hosted results above provide separate Linux execution evidence.
 
 ## Repeatable local Linux/Python 3.12 verification
 
@@ -65,12 +65,6 @@ export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
 
 For local Windows verification, use the same three hash-locked requirements files in a fresh venv, the official Gitleaks 8.30.1 Windows archive verified against d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e before extraction, and absolute paths to gitleaks.exe, that venv's Scripts/python.exe and Git Bash. This does not replace the Linux/Python 3.12 hosted lane.
 
-## Historical local amendment compatibility blocker
+## Dependency compatibility correction
 
-Before the lock correction, the amended local verification installed 33 Linux-target wheels into a separate directory, then evaluated their dependency metadata for Linux/Python 3.12. It found one unresolved dependency: cyclonedx-python-lib 11.12.0 requires typing_extensions >=4.6,<5.0 when Python is below 3.13. The original scanner lock omitted it. Windows/Python 3.13 resolution and the earlier cross-platform dry-run did not establish complete Python 3.12 dependency closure. Both the production dependency job and the new test lane required that correction before hosted acceptance.
-
-At that stage, the lock was outside the approved seven-file amendment scope and was left unchanged. The proposed separate scope correction was typing-extensions==4.16.0, universal-wheel SHA-256 481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8, verified against PyPI metadata. It requires Python >=3.9 and satisfies the missing constraint. The seven-file amendment did not install or add that candidate. Actual Linux execution was unavailable locally at that stage; the local Linux engine was not running. No service was started or settings changed. A cross-target installation is not Linux execution.
-
-## Compatibility correction and subsequent approval
-
-Published head `0006e5b5d3a80b98769663f6d3c305a15adecc9a` includes the verified typing-extensions 4.16.0 wheel in the scanner lock for both production and test jobs. The authenticated user approval at 2026-11-03T02:27:10.264724Z covered the bounded correction/validation request and arrived after draft PR publication at 02:12:49Z; it did not retroactively authorize that publication. The earlier blocker and failed closure evidence remain historical evidence. Corrected dependency closure and the published-head hosted Linux results are recorded separately in the audit. Independent exact-head review remains required before merge.
+An earlier Linux/Python 3.12 dependency-closure check found that cyclonedx-python-lib 11.12.0 requires typing_extensions >=4.6,<5.0 below Python 3.13. Commit `0006e5b5d3a80b98769663f6d3c305a15adecc9a` adds the verified typing-extensions 4.16.0 wheel to the scanner lock for both production and control jobs. The earlier failure, corrected closure results and approval chronology remain in the [audit](../aidlc-docs/audit.md). Cross-target installation alone does not establish Linux runtime execution; the hosted evidence above is specific to its tested commit.
