@@ -62,3 +62,30 @@
 - Decision: approved conditionally on all exact-head hosted gates passing. Static review found no blocking defects and confirmed 16 explicit prior flags plus help, three original command paths, four newer flags plus init/explain, five report formats and RL001–RL009, and synthetic warning-free smoke tests across five paths. No runtime, dependency or permission changes.
 - Evidence limit: dot performed static review; author-reported local tests were not independently rerun by dot.
 - Next permitted action: append this approval only, push the resulting new head and verify all hosted gates on that new head. Existing code review does not prove new-head CI success. Any merge separately requires the user’s bounded authorization to remain valid at action time. No unrelated construction or reserved action is authorized by this review.
+
+## D-6 — delegated inception approval and construction entry
+
+- Received and recorded: 2026-11-03T00:07:30.877606+00:00.
+- Actual reviewer: dot, delegated routine inception/design reviewer, not the user or a formal GitHub reviewer.
+- Reviewed scope: d6-contributor-design.md and d6-contributor-plan.md; one documentation task covering CONTRIBUTING, bug/feature templates, PR template, README link, changelog and inception/audit records.
+- Decision: design approved for construction only. Reconcile policy with adopted guidance; preserve history, existing work and original product scope/counts. Require synthetic-only examples, private vulnerability reporting, accurate approval attribution and existing authority boundaries.
+- Conditions: validate frontmatter, links and required policy content; run all current repository gates and complete-diff security/privacy review. No runtime, workflow, dependency, network-behavior or access changes; no cleanup or denied-operation retry. R-2 remains blocked on R-1.
+- Next permitted action: reconcile the existing D-6 draft, record actual validation and present the exact-head diff for separate implementation-stage review. This is not merge clearance or publication/release authority. Branch integration relies separately on the existing user authorization and repository rules.
+
+## D-6 — construction verification and review handoff
+
+- Recorded: 2026-11-03T00:10:39.112195+00:00.
+- Actor: Codex, implementation author and manual documentation/security reviewer; not a dot or formal GitHub approval.
+- Artifact: PR #45, contributor guidance and templates plus D-6 inception/audit and prospective completion metadata. Original 38 product tasks and separate governance tracking are preserved.
+- Validation: Ruff passes; mypy passes for 11 source files; full pytest reports 300 passed and six local Windows privilege skips. Links in 30 tracked Markdown files pass. Issue YAML frontmatter, fictional-data/PHI/PII requirements and all five gate commands pass explicit content checks; whitespace checks pass.
+- Security/privacy review: complete feature diff reviewed. Templates direct vulnerability reports privately and exclude real vendor data, secrets, PHI and PII. No runtime execution, dependencies, network behavior, permission or SQL changes; corresponding runtime controls are inapplicable. Public additions contain no private paths, raw transcripts or internal coordination IDs.
+- Decision: present the final exact-head diff and hosted checks for separate implementation-stage review. That review remains pending; inception approval and passing tests alone do not approve implementation. Completion metadata becomes effective only on merge; any merge also requires valid user authorization at action time. R-2 remains blocked on R-1.
+
+## D-6 — delegated implementation-stage approval
+
+- Received and recorded: 2026-11-03T00:13:18.098034+00:00.
+- Actual reviewer: dot, under delegated routine-review authority; not personal user approval or formal GitHub PR approval.
+- Reviewed artifact: complete 11-file PR #45 diff from b51422353f4205f9e797bb3ac27bb9ee951efcc5 to 8125c1fbcce8bda23f25c14050f9937f640b1656.
+- Decision: implementation stage approved conditionally on all final exact-head hosted checks passing. No blocking security/privacy defect found; fictional-only submissions, private vulnerability reporting, required gates, offline documentation scope, truthful attribution/reserved actions and prospective 27/38 metadata match approved scope.
+- Evidence limit: dot reviewed the complete immutable diff but did not independently execute tests; local results remain author-reported.
+- Next permitted action: append only this decision, verify the resulting diff contains only this audit entry and require all hosted gates on the new head. Prior-head CI does not transfer. Any merge independently requires valid user scope and unexpired authorization at action time. No tags, releases, settings/access changes, cleanup, history rewriting or unrelated construction are authorized by this review. R-2 remains blocked on R-1; persistent publisher access requires specific action-time user confirmation.
