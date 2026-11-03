@@ -1,0 +1,45 @@
+name: Security
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened, ready_for_review]
+permissions:
+  contents: read
+jobs:
+  secrets:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Verify Gitleaks and scan fetched history
+        shell: bash
+        run: |
+          curl --fail --silent --show-error --location https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz --output "$RUNNER_TEMP/gitleaks.tar.gz"
+          echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $RUNNER_TEMP/gitleaks.tar.gz" | sha256sum --check --strict
+          mkdir "$RUNNER_TEMP/gitleaks"
+          tar -xzf "$RUNNER_TEMP/gitleaks.tar.gz" -C "$RUNNER_TEMP/gitleaks" gitleaks
+          printf '[extend]\nuseDefault = true\n' > "$RUNNER_TEMP/gitleaks-default.toml"
+          printf '' > "$RUNNER_TEMP/gitleaks-empty-ignore"
+          "$RUNNER_TEMP/gitleaks/gitleaks" git --config "$RUNNER_TEMP/gitleaks-default.toml" --gitleaks-ignore-path "$RUNNER_TEMP/gitleaks-empty-ignore" --ignore-gitleaks-allow --redact=100 --no-banner --log-opts=--all .
+
+  dependencies:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: "3.12"
+      - name: Validate lock and install hash-locked scanner tooling
+        run: |
+          python -I scripts/check_security_lock.py requirements-lock.txt
+          python -I -m pip --isolated install --only-binary=:all: --require-hashes --index-url https://pypi.org/simple/ -r requirements-security-lock.txt
+      - name: Audit explicit runtime requirements without resolution
+        run: python -I -m pip_audit --strict --require-hashes --disable-pip --no-deps --vulnerability-service pypi --timeout 15 -r requirements-lock.txt
