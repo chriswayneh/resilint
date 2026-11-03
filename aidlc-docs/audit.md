@@ -146,3 +146,10 @@
 - Evidence: reviewer independently verified all ten jobs in CI run 41556504350 and Action self-test run 41556504354 passed at the reviewed head. Review was static plus hosted evidence; local 300 tests and six Windows privilege skips remain author-reported and were not independently rerun.
 - Next permitted action: append only this P-5 decision, verify the audit-only delta, push only that update on the existing isolated PR #48 branch, and verify all hosted gates on the resulting new head. Old-head CI does not transfer. Keep PR #48 draft and unmerged.
 - Boundaries: no formal GitHub approval, merge, tags, publication, settings/access/workflow changes, cleanup, denied-action retry, PR #47 changes or other construction. Preserve all existing drafts/artifacts and scope. No deadline pressure or authority expansion.
+
+## P-5 — delegated local conflict-reconciliation decision
+
+- Recorded: 2026-11-03T10:21:53.115930+00:00. Actual reviewer: dot, delegated routine reviewer; not personal user or formal GitHub approval.
+- Decision: reconcile PR #48 only, locally, against verified main b58fd6fb5d3e0cf9b197ac21877e12408538e480, starting at b7d4abf16515aa056892c68d133702b73e75247a. Preserve the DataGrant-style presentation, move the Action-reference policy to the relocated reference section, preserve all audit entries, task definitions and prospective P-5 completion metadata.
+- Plan: isolated worktree, ordinary main merge without rebase/force-push, explicit README/audit resolution, full local gates and content/anchor/roadmap checks, complete diff/security/privacy review, immutable local merge commit and patch evidence.
+- Limits: return for independent review BEFORE PUSH. No remote mutation, formal approval, PR merge, tags, settings, publishing/trust changes, cleanup or denied-operation retry; preserve other branches, PRs and local work.
