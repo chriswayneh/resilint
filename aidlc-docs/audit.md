@@ -158,3 +158,11 @@
 - Evidence limit: dot did not execute the author-reported 311 local tests or verify live uploads, index installation or publisher trust.
 - Next permitted action: append only this decision, verify the delta is audit-only, push within existing narrow draft authorization and check all hosted gates on the resulting new head. Old-head CI does not transfer. Keep PR #47 draft for the requested code review.
 - Boundaries: no activating merge, formal GitHub approval, persistent publisher trust, settings/access changes, environment approvals, tags, releases or publication. P-2 remains planned until external acceptance is evidenced. P-4/P-5 remain read-only planning; no broad multi-task push, denied-action retry or cleanup. Preserve existing work and scope.
+
+## V1 — user-authorized integration of PRs 47, 48 and 49
+
+- Recorded: 2026-11-03T10:21:29.918085+00:00. Actor: user, directly in this project chat.
+- Decision: resolve conflicts in PRs #47, #48 and #49, preserve the new presentation, rerun checks and merge each when passing, then continue toward v1. This is new specific authorization, not reliance on expired permission or earlier disputed records.
+- Execution plan: isolated worktrees preserve existing local work; merge current main without rebasing or force-pushing; retain all audit entries and presentation content, relocating Action-policy text into the new reference section. Review each resolution and require local gates plus exact-final-head hosted checks before merging.
+- Scope limits: no formal GitHub review submission, tags, releases, publisher registration, settings/access changes or CodeQL activation. Publisher trust and protected-environment publication remain separate. No denied-operation retry, cleanup or unrelated history changes.
+- Next permitted action: integrate P-2 with current main, validate and push its existing branch, then merge if passing; repeat for P-5 and P-4 against updated main.
