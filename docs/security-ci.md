@@ -4,7 +4,7 @@ This P-4 implementation covers secret and runtime-dependency checks only. CodeQL
 
 ## Execution boundary
 
-The proposed workflow runs on pushes to main and pull requests targeting main (opened, synchronize, reopened and ready_for_review), with separate ten-minute Ubuntu jobs. It uses contents: read, SHA-pinned checkout/setup actions and disabled checkout credential persistence. It has no secrets, OIDC, environment credentials, write permissions, application installation/build/hooks, artifact uploads or PR comments. Existing platform/package/Action tests remain separate and unchanged. Fork approval restrictions remain in force; no pull_request_target or privileged follow-up event is used.
+The proposed workflow runs on pushes to main and pull requests targeting main (opened, synchronize, reopened and ready_for_review), with two separate ten-minute production scanner jobs and a fifteen-minute Linux/Python 3.12 scanner-control test job. It uses contents: read, SHA-pinned checkout/setup actions and disabled checkout credential persistence. It has no secrets, OIDC, environment credentials, write permissions, application installation/build/hooks, artifact uploads or PR comments. Existing platform/package/Action tests remain separate and unchanged. Fork approval restrictions remain in force; no pull_request_target or privileged follow-up event is used.
 
 PR files, workflow definitions and scanner tool-lock edits require review. Scanner parsers process untrusted content; read-only tokens and isolation reduce consequences but do not prove arbitrary PR code safe. A PR can change its own workflow, so self-reported green checks do not replace exact-diff review.
 
@@ -30,6 +30,41 @@ Any future CodeQL activation needs a separately reviewed change and specific use
 
 ## Verification
 
-Run the normal contributor gates and workflow syntax validation. Scanner acceptance additionally requires a verified Gitleaks executable for temporary clean/deleted-history/redaction fixtures and verified pip-audit for real advisory and controlled failure-path checks. Tests that lack a verified scanner path report a skip; that skip is not acceptance evidence. Review all actual findings. A green analysis process alone is not a security approval.
+Run the normal contributor gates and workflow syntax validation. Scanner acceptance additionally requires a verified Gitleaks executable for temporary clean/deleted-history/redaction fixtures and verified pip-audit for real advisory and controlled failure-path checks. Ordinary matrix tests that lack a verified scanner path report a skip; that skip is not acceptance evidence. The dedicated scanner-controls job provisions the verified paths and requires all six controls through the strict runner. Review all actual findings. A green analysis process alone is not a security approval.
 
 See the [P-4 design](../aidlc-docs/inception/p4-security-ci-design.md), [execution plan](../aidlc-docs/inception/p4-security-ci-plan.md), [pip-audit security model](https://github.com/pypa/pip-audit/blob/v2.10.1/README.md), and [Gitleaks options](https://github.com/gitleaks/gitleaks/blob/v8.30.1/README.md).
+
+## Mandatory scanner-control lane
+
+This separate test lane executes repository test code, conftest.py and the runner; it is not an inert scanner. It uses the same read-only ephemeral token and no-persisted-credentials boundary. Fork approval policy is unchanged. PR tests/workflows can be altered, so independent diff review remains necessary. It installs the existing scanner/runtime locks plus requirements-security-test-lock.txt as hashed wheels in a fresh venv, without installing/building the application. GitHub release storage and PyPI supply tools; controlled advisory cases mock transport. Logs go to GitHub, with no report/artifact uploads or privileged follow-up events.
+
+scripts/check_scanner_controls.py requires all three executable paths, selects six exact test IDs, and requires unique complete collection plus passed setup/call/teardown for every case. Any skip, xfail/xpass, failure, error, missing/duplicate ID, duplicate phase or incomplete outcome fails the job. The six cases cover history/redaction/suppression, clean/vulnerable/missing/outage advisory responses and checksum rejection. Normal matrix and production scanner jobs remain unchanged.
+
+The original 329-test local result applies only to the original P-4 head. Amended-head evidence is recorded separately. Cross-platform wheel installation and metadata checks do not prove Linux runtime execution; hosted results remain pending separate publication/execution authorization.
+
+## Repeatable local Linux/Python 3.12 verification
+
+Run from the repository root with Python 3.12, Git, Bash, curl, tar and sha256sum available. This creates a new temporary tool directory and retains it; it does not clean existing artifacts. No application install is performed.
+
+```bash
+SCANNER_CONTROL_ROOT="$(mktemp -d)"
+curl --fail --silent --show-error --location https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_linux_x64.tar.gz --output "$SCANNER_CONTROL_ROOT/gitleaks.tar.gz"
+echo "551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb  $SCANNER_CONTROL_ROOT/gitleaks.tar.gz" | sha256sum --check --strict || exit 1
+mkdir "$SCANNER_CONTROL_ROOT/bin"
+tar -xzf "$SCANNER_CONTROL_ROOT/gitleaks.tar.gz" -C "$SCANNER_CONTROL_ROOT/bin" gitleaks
+python3.12 -m venv "$SCANNER_CONTROL_ROOT/venv"
+"$SCANNER_CONTROL_ROOT/venv/bin/python" -I -m pip --isolated install --only-binary=:all: --require-hashes --index-url https://pypi.org/simple/ -r requirements-security-lock.txt -r requirements-security-test-lock.txt -r requirements-lock.txt || exit 1
+export RESILINT_TEST_GITLEAKS="$SCANNER_CONTROL_ROOT/bin/gitleaks"
+export RESILINT_TEST_AUDIT_PYTHON="$SCANNER_CONTROL_ROOT/venv/bin/python"
+export RESILINT_TEST_BASH="$(command -v bash)"
+export PYTEST_DISABLE_PLUGIN_AUTOLOAD=1
+"$RESILINT_TEST_AUDIT_PYTHON" -I scripts/check_scanner_controls.py
+```
+
+For local Windows verification, use the same three hash-locked requirements files in a fresh venv, the official Gitleaks 8.30.1 Windows archive verified against d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e before extraction, and absolute paths to gitleaks.exe, that venv's Scripts/python.exe and Git Bash. This does not replace the Linux/Python 3.12 hosted lane.
+
+## Local amendment compatibility blocker
+
+The amended local verification installed 33 Linux-target wheels into a separate directory, then evaluated their dependency metadata for Linux/Python 3.12. It found one unresolved dependency: cyclonedx-python-lib 11.12.0 requires typing_extensions >=4.6,<5.0 when Python is below 3.13. The original scanner lock omits it. Windows/Python 3.13 resolution and the earlier cross-platform dry-run did not establish complete Python 3.12 dependency closure. Both the production dependency job and the new test lane need the original scanner lock corrected before hosted acceptance can be claimed.
+
+That lock is outside the approved seven-file amendment scope, so it has not been changed. A proposed separate scope correction is typing-extensions==4.16.0, universal-wheel SHA-256 481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8, verified against PyPI metadata. It requires Python >=3.9 and satisfies the missing constraint. This candidate is not installed or added by this amendment. Actual Linux execution is also unavailable locally: only Docker Desktop WSL is registered and its Linux engine is not running. No service was started or settings changed. A cross-target installation is not Linux execution.

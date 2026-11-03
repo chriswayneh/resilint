@@ -52,10 +52,10 @@ def test_security_workflow_is_read_only_and_has_no_uploads():
                          "types": ["opened", "synchronize", "reopened", "ready_for_review"]},
     }
     assert workflow["permissions"] == {"contents": "read"}
-    assert set(workflow["jobs"]) == {"secrets", "dependencies"}
-    for job in workflow["jobs"].values():
+    assert set(workflow["jobs"]) == {"secrets", "dependencies", "scanner-controls"}
+    for name, job in workflow["jobs"].items():
         assert "permissions" not in job and "environment" not in job
-        assert job["timeout-minutes"] == "10"
+        assert job["timeout-minutes"] == ("15" if name == "scanner-controls" else "10")
         for step in job["steps"]:
             if "uses" in step:
                 assert re.fullmatch(r"actions/(checkout|setup-python)@[0-9a-f]{40}", step["uses"])
@@ -165,3 +165,141 @@ def test_checksum_failure_prevents_acceptance(tmp_path):
         result = subprocess.run([executable, "-c", command, "--", value, fixture.as_posix()],
                                 check=False, capture_output=True, text=True)
         assert result.returncode == expected, result.stdout + result.stderr
+
+
+CONTROLS = runpy.run_path(str(ROOT / "scripts/check_scanner_controls.py"))
+
+
+@pytest.mark.parametrize("missing", CONTROLS["TOOL_VARIABLES"])
+def test_controls_require_each_tool(missing):
+    import sys
+
+    environment = dict.fromkeys(CONTROLS["TOOL_VARIABLES"], sys.executable)
+    del environment[missing]
+    with pytest.raises(ValueError, match=missing):
+        CONTROLS["validate_tools"](environment)
+
+
+def test_controls_reject_invalid_and_nonexecutable_tool(tmp_path, monkeypatch):
+    import sys
+
+    environment = dict.fromkeys(CONTROLS["TOOL_VARIABLES"], sys.executable)
+    for bad in (str(tmp_path / "absent"), str(tmp_path), "relative-tool"):
+        environment["RESILINT_TEST_BASH"] = bad
+        with pytest.raises(ValueError):
+            CONTROLS["validate_tools"](environment)
+    environment["RESILINT_TEST_BASH"] = sys.executable
+    monkeypatch.setattr(os, "access", lambda *args: False)
+    with pytest.raises(ValueError):
+        CONTROLS["validate_tools"](environment)
+
+
+def test_controls_cli_fails_before_pytest_without_tools():
+    import sys
+
+    environment = {k: v for k, v in os.environ.items() if k not in CONTROLS["TOOL_VARIABLES"]}
+    result = subprocess.run([sys.executable, "-I", str(ROOT / "scripts/check_scanner_controls.py")],
+                            check=False, capture_output=True, text=True, env=environment)
+    assert result.returncode == 2
+    assert "RESILINT_TEST_GITLEAKS" in result.stderr
+    assert "passed" not in result.stdout
+
+
+@pytest.mark.parametrize("mode", ["pass", "call_fail", "call_skip", "xfail", "xpass",
+                                 "setup_skip", "setup_error", "teardown_skip", "teardown_error",
+                                 "collection_error", "collection_skip", "missing_test", "unexpected_node", "duplicate_selection",
+                                 "interrupted"])
+def test_controls_gate_real_pytest_outcomes(tmp_path, mode):
+    import sys
+
+    fixture = tmp_path / "test_synthetic_controls.py"
+    header = "import pytest\n"
+    if mode.startswith(("setup_", "teardown_")):
+        phase, outcome = mode.split("_")
+        failure = "pytest.skip('synthetic skip')" if outcome == "skip" else (
+            "raise RuntimeError('synthetic error')")
+        header += "@pytest.fixture(autouse=True)\ndef phase_fixture(request):\n"
+        if phase == "setup":
+            header += "    if request.node.name == 'test_case_0':\n        " + failure + "\n"
+        header += "    yield\n"
+        if phase == "teardown":
+            header += "    if request.node.name == 'test_case_0':\n        " + failure + "\n"
+    bodies = {"call_fail": "assert False", "call_skip": "pytest.skip('synthetic skip')",
+              "xfail": "pytest.xfail('synthetic expected failure')",
+              "interrupted": "raise KeyboardInterrupt()"}
+    count = 5 if mode == "missing_test" else 6
+    for i in range(count):
+        if i == 0 and mode == "xpass":
+            header += "@pytest.mark.xfail(reason='synthetic unexpected pass', strict=False)\n"
+        header += f"def test_case_{i}():\n    {bodies.get(mode, 'pass') if i == 0 else 'pass'}\n"
+    if mode == "collection_error":
+        header += "def invalid syntax\n"
+    if mode == "collection_skip":
+        header = "import pytest\npytest.skip('synthetic module skip', allow_module_level=True)\n"
+    if mode == "unexpected_node":
+        header = header.replace("test_case_5", "test_unexpected")
+    fixture.write_text(header, encoding="utf-8")
+    driver = tmp_path / "run_gate.py"
+    driver.write_text("""import os, runpy, sys
+os.environ['PYTEST_DISABLE_PLUGIN_AUTOLOAD'] = '1'
+import pytest
+Gate = runpy.run_path(sys.argv[1])['ScannerControlGate']
+name = 'test_synthetic_controls.py'
+nodes = [name + '::test_case_' + str(i) for i in range(6)]
+args = ['-q', '-p', 'no:cacheprovider', '--confcutdir', os.getcwd(), name]
+if sys.argv[2] == 'duplicate_selection':
+    args = ['-q', '-p', 'no:cacheprovider', '--keep-duplicates', '--confcutdir', os.getcwd(), name, name]
+gate = Gate(nodes)
+result = pytest.main(args, plugins=[gate])
+sys.exit(0 if result == 0 and gate.complete() else 1)
+""", encoding="utf-8")
+    result = subprocess.run([sys.executable, "-I", str(driver),
+                             str(ROOT / "scripts/check_scanner_controls.py"), mode],
+                            cwd=tmp_path, check=False, capture_output=True, text=True)
+    assert result.returncode == (0 if mode == "pass" else 1), result.stdout + result.stderr
+    if mode == "pass":
+        assert "6 passed" in result.stdout
+
+
+def test_controls_gate_rejects_duplicate_expected_ids_and_incomplete_reports():
+    from types import SimpleNamespace
+
+    nodes = CONTROLS["EXPECTED"]
+    assert len(nodes) == len(set(nodes)) == 6
+    gate = CONTROLS["ScannerControlGate"]()
+    gate.pytest_collection_finish(SimpleNamespace(items=[SimpleNamespace(nodeid=n) for n in nodes]))
+    for node in nodes:
+        for phase in ("setup", "call", "teardown"):
+            gate.pytest_runtest_logreport(SimpleNamespace(nodeid=node, when=phase,
+                                                         passed=True, outcome="passed"))
+    assert gate.complete()
+    session = SimpleNamespace(exitstatus=0)
+    gate.pytest_sessionfinish(session, 2)
+    assert session.exitstatus == 1
+    del gate.reports[(nodes[-1], "teardown")]
+    assert not gate.complete()
+    gate.reports[(nodes[-1], "teardown")] = "passed"
+    gate.pytest_runtest_logreport(SimpleNamespace(nodeid=nodes[-1], when="teardown",
+                                                 passed=True, outcome="passed"))
+    assert not gate.complete()
+    duplicate = CONTROLS["ScannerControlGate"]([nodes[0], nodes[0]])
+    duplicate.collected = [nodes[0], nodes[0]]
+    duplicate.reports = {(nodes[0], phase): "passed" for phase in ("setup", "call", "teardown")}
+    assert not duplicate.complete()
+
+
+def test_controls_job_provisions_and_runs_required_gate():
+    text = (ROOT / ".github/workflows/security.yml").read_text(encoding="utf-8")
+    jobs = yaml.load(text, Loader=yaml.BaseLoader)["jobs"]
+    controls = "\n".join(step.get("run", "") for step in jobs["scanner-controls"]["steps"])
+    for variable in CONTROLS["TOOL_VARIABLES"]:
+        assert "export " + variable + "=" in controls
+    for lock in ("requirements-security-lock.txt", "requirements-security-test-lock.txt",
+                 "requirements-lock.txt"):
+        assert "-r " + lock in controls
+    assert "scripts/check_scanner_controls.py" in controls
+    assert "PYTEST_DISABLE_PLUGIN_AUTOLOAD=1" in controls
+    for name in ("secrets", "dependencies"):
+        production = "\n".join(step.get("run", "") for step in jobs[name]["steps"])
+        assert "requirements-security-test-lock.txt" not in production
+        assert "check_scanner_controls.py" not in production
