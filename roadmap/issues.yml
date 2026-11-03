@@ -399,7 +399,7 @@ issues:
   - id: P-1
     title: Build sdist/wheel in CI
     milestone: M4
-    status: planned
+    status: complete
     why: Verify packaging
     files: '`ci.yml`'
     acceptance: '`python -m build` + `twine check dist/*` pass; wheel install in a fresh venv runs `resilint
@@ -407,6 +407,8 @@ issues:
     size: S
     depends_on:
       - M0-1
+    completed_in:
+      - 46
 
   - id: P-2
     title: Release workflow (PyPI Trusted Publishing)

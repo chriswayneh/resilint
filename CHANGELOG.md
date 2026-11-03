@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- CI builds source/wheel distributions, validates metadata with Twine and smoke-tests an installed wheel outside the checkout, including the packaged starter template.
 - Contributor guidance and issue/PR templates include validation gates, exact-head review expectations and the fictional-data-only rule.
 - Documented an adapted AI-DLC workflow with inception plans, truthful stage audits, existing test/security gates, user-owned publication actions and consolidated notification guidance.
 - A JSON report schema and five deterministic report snapshots cover all rule IDs, repeated process findings, escaping and the stable output contract.
@@ -27,6 +28,7 @@
 - `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
 ### Changed
+- Package metadata uses an SPDX MIT license expression and includes the license file, with setuptools 77.0.3 or newer for build support.
 - The v1 interface audit retains all existing commands, flags, formats and rule IDs; no interfaces are removed or deprecated, and supported command paths are checked for unexpected warnings.
 - README, Markdown/regulation reports and draft RoI notes share the explicit label “Draft, not legal advice”; structured regulation-note fields retain their existing wording.
 - CI now tests Linux, Windows and macOS on Python 3.10, 3.12 and 3.13 independently; concurrent drill-write failures include each child process's diagnostic.
