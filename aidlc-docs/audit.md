@@ -71,3 +71,12 @@
 - Decision: design approved for construction only. Reconcile policy with adopted guidance; preserve history, existing work and original product scope/counts. Require synthetic-only examples, private vulnerability reporting, accurate approval attribution and existing authority boundaries.
 - Conditions: validate frontmatter, links and required policy content; run all current repository gates and complete-diff security/privacy review. No runtime, workflow, dependency, network-behavior or access changes; no cleanup or denied-operation retry. R-2 remains blocked on R-1.
 - Next permitted action: reconcile the existing D-6 draft, record actual validation and present the exact-head diff for separate implementation-stage review. This is not merge clearance or publication/release authority. Branch integration relies separately on the existing user authorization and repository rules.
+
+## D-6 — construction verification and review handoff
+
+- Recorded: 2026-11-03T00:10:39.112195+00:00.
+- Actor: Codex, implementation author and manual documentation/security reviewer; not a dot or formal GitHub approval.
+- Artifact: PR #45, contributor guidance and templates plus D-6 inception/audit and prospective completion metadata. Original 38 product tasks and separate governance tracking are preserved.
+- Validation: Ruff passes; mypy passes for 11 source files; full pytest reports 300 passed and six local Windows privilege skips. Links in 30 tracked Markdown files pass. Issue YAML frontmatter, fictional-data/PHI/PII requirements and all five gate commands pass explicit content checks; whitespace checks pass.
+- Security/privacy review: complete feature diff reviewed. Templates direct vulnerability reports privately and exclude real vendor data, secrets, PHI and PII. No runtime execution, dependencies, network behavior, permission or SQL changes; corresponding runtime controls are inapplicable. Public additions contain no private paths, raw transcripts or internal coordination IDs.
+- Decision: present the final exact-head diff and hosted checks for separate implementation-stage review. That review remains pending; inception approval and passing tests alone do not approve implementation. Completion metadata becomes effective only on merge; any merge also requires valid user authorization at action time. R-2 remains blocked on R-1.

@@ -387,12 +387,14 @@ issues:
   - id: D-6
     title: CONTRIBUTING + issue/PR templates
     milestone: M3
-    status: planned
+    status: complete
     why: Outside users
     files: '`CONTRIBUTING.md`, `.github/ISSUE_TEMPLATE/*`, `PULL_REQUEST_TEMPLATE.md`'
     acceptance: Templates include the gate commands and the "fictional data only" rule
     size: S
     depends_on: []
+    completed_in:
+      - 45
 
   - id: P-1
     title: Build sdist/wheel in CI
