@@ -16,7 +16,7 @@ The scan covers all reachable history fetched by the full-depth checkout, includ
 
 ## Runtime dependencies and scanner supply chain
 
-requirements-lock.txt remains the runtime audit input, separate from requirements-security-lock.txt. The latter pins 28 scanner-tool packages, including pip-audit 2.10.1, with hashes verified against PyPI metadata for wheel-only Python 3.12 Linux resolution and local Windows verification. Python/runner tooling itself is not made immutable by these pins. A dependency/tool update needs renewed review and hash verification.
+requirements-lock.txt remains the runtime audit input, separate from requirements-security-lock.txt. The latter pins 29 scanner-tool packages, including pip-audit 2.10.1, with hashes verified against PyPI metadata for wheel-only Python 3.12 Linux resolution and local Windows verification. Python/runner tooling itself is not made immutable by these pins. A dependency/tool update needs renewed review and hash verification.
 
 The lock validator permits exact named versions and SHA-256 hashes only, rejecting URLs, editable/VCS/local paths, nested requirement files, index directives, other options, duplicates, malformed hashes, symlinks and oversized files. Scanner installation permits hashed wheels only. The audit uses --strict --require-hashes --disable-pip --no-deps with the PyPI advisory service and a 15-second request timeout; it does not resolve or install the audited packages. No --fix or extra index is used. PyPI receives package names, versions and ordinary network metadata. GitHub hosts job logs. No vendor register data is submitted.
 
@@ -68,3 +68,7 @@ For local Windows verification, use the same three hash-locked requirements file
 The amended local verification installed 33 Linux-target wheels into a separate directory, then evaluated their dependency metadata for Linux/Python 3.12. It found one unresolved dependency: cyclonedx-python-lib 11.12.0 requires typing_extensions >=4.6,<5.0 when Python is below 3.13. The original scanner lock omits it. Windows/Python 3.13 resolution and the earlier cross-platform dry-run did not establish complete Python 3.12 dependency closure. Both the production dependency job and the new test lane need the original scanner lock corrected before hosted acceptance can be claimed.
 
 That lock is outside the approved seven-file amendment scope, so it has not been changed. A proposed separate scope correction is typing-extensions==4.16.0, universal-wheel SHA-256 481caa481374e813c1b176ada14e97f1f67a4539ce9cfeb3f350d78d6370c2e8, verified against PyPI metadata. It requires Python >=3.9 and satisfies the missing constraint. This candidate is not installed or added by this amendment. Actual Linux execution is also unavailable locally: only Docker Desktop WSL is registered and its Linux engine is not running. No service was started or settings changed. A cross-target installation is not Linux execution.
+
+## Approved compatibility correction
+
+The subsequent user-approved correction adds the verified typing-extensions 4.16.0 wheel to the scanner lock for both production and test jobs. The earlier blocker and failed closure evidence above are retained as history. Updated validation is recorded in the audit; hosted Linux execution must pass before merge.

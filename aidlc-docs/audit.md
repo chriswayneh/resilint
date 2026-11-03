@@ -163,3 +163,20 @@
 - Runtime limitation: only Docker Desktop WSL was listed; Docker's Linux engine connection failed because its named pipe was absent. No service was started, setting changed or workaround attempted. Actual Linux/Python 3.12 execution remains unverified.
 - Security/privacy: review confirms read-only token, no persisted credentials, secrets, writes, uploads or privileged events. The new lane explicitly executes repository tests/conftest/runner; it is not represented as an inert scanner. Provisioning reaches GitHub release storage/PyPI; controlled advisory tests mock transport, and logs remain a data destination. Scanner/PR-code supply-chain risks still require independent review. No CodeQL or permission expansion. All other work is preserved.
 - Next permitted action: create and return immutable local amendment/full patches with checksums and this blocker. No push or PR creation; no out-of-scope lock modification without a new concrete approval.
+
+## P-4 — user authorization after correction rejection
+
+- Recorded: 2026-11-03T02:10:20.266539+00:00.
+- Actor: user. The user approved the presented work and requested that it be pushed; separately confirmed merging passing v1 PRs until midnight Chicago time (2026-11-03T06:00:00Z).
+- Prior correction command was rejected before execution with only "blocked by policy" reported. No change or validation from that command occurred. This new user approval authorizes the described typing-extensions lock correction, relevant validation, commit and publication for review. It does not bypass checks or claim independent review.
+- Scope: correct the missing Linux/Python 3.12 scanner dependency, update its documentation and verification evidence, and push the isolated P-4 branch for hosted validation. Preserve other drafts and private artifacts; no CodeQL, settings, cleanup, tags or package publication.
+- Next action: verify official wheel metadata, add the previously reviewed exact pin/hash, validate and publish only when local checks pass. Merge requires passing exact-head checks and review.
+
+## P-4 — approved correction verification
+
+- Recorded: 2026-11-03T02:12:32.418192+00:00. Actor: Codex, author verification; independent implementation review remains pending.
+- Official PyPI metadata reverified the exact typing-extensions 4.16.0 wheel SHA-256 before hash-checked installation. Separate fresh Linux/Python 3.12 target installations passed: 29 production scanner packages and 34 combined control packages, with zero unsatisfied dependencies under explicit Linux/Python 3.12 markers. This is cross-target installation on Windows, not Linux execution.
+- Verified Windows scanner environment installed the corrected lock; strict runner passed all six controls without skips (11.83 seconds). Full suite: 351 passed, six existing Windows privilege skips (62.37 seconds). Ruff, mypy (11 files), Markdown links (36 files) and whitespace checks passed. Workflow unchanged since prior successful Actionlint verification.
+- Full fetched-history Gitleaks scan: 104 commits, no leaks. Real online runtime audit: no known vulnerabilities. Controlled adverse outcomes remain simulated and are not claimed as live incidents.
+- Reviewed the correction diff and retained complete branch security review evidence: read-only tokens, verified wheel/hash installation, no application install in production audit, no privileged events, report uploads, credentials or vendor records. No blocking author finding; independent exact-head review is still required before merge.
+- Next authorized action: commit these three explicit files, push the isolated P-4 branch and create a draft PR for actual hosted checks. Keep other drafts and preserved work unchanged; P-4 remains planned with CodeQL deferred.
