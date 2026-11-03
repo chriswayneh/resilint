@@ -2,7 +2,7 @@
 
 Task ID:
 
-Describe the concrete trigger, resulting behavior and any compatibility effect. Use fictional data only; exclude real vendor contracts, contacts, credentials PHI, PII and personal data.
+Describe the concrete trigger, resulting behavior and any compatibility effect. Use fictional data only; exclude real vendor contracts, contacts, credentials, PHI, PII and personal data.
 
 ## Validation
 
