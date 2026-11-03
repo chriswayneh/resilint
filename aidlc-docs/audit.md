@@ -207,3 +207,10 @@
 - Decision: refine documentation at d926e6eddd02a1a74b082940b5ae4f5683f111e9 to bind cited hosted results to commit 0006e5b5d3a80b98769663f6d3c305a15adecc9a and require each subsequent commit to have its own checks. Remove current unpushed-status prose from reader-facing guidance; retain detailed approval chronology and its truthful correction in this audit.
 - Scope: docs/security-ci.md and appended audit entries only. Preserve scanner execution boundaries, all code and locks, previous records, other drafts and artifacts. Local review commit permitted; no push or other publication/action authorized.
 - Verification: complete documentation delta reviewed; relative links in 36 Markdown files passed with zero errors and git diff --check passed. No code/lock changes or new executable-test claims.
+
+## P-4 — delegated local reconciliation approval
+
+- Recorded: 2026-11-03T10:24:24.412515+00:00. Actual reviewer: dot, delegated routine reviewer; not personal user or formal GitHub approval.
+- Decision: approve local-only reconciliation of PR #49 starting at 66bce75668243e311631fdde0c2203e92a11cad5 against reverified main b58fd6fb5d3e0cf9b197ac21877e12408538e480. Prioritize functional scanner integration; preserve presentation and all other partial work.
+- Plan: separate worktree; ordinary merge; resolve only the expected audit conflict by retaining both histories, including the publication-approval correction. Keep scanner code/locks and README/presentation unchanged. Run all required local gates and six real scanner controls; inspect full merged task diff and return immutable head/parents/patches/checksums for independent review BEFORE PUSH.
+- Boundaries: no remote mutation, formal GitHub approval, merge into main, tags, settings, CodeQL, release/trust registration, cleanup or denied-action retry. Unexpected base, scope or conflict requires reporting before dependent work. Preserve all existing worktrees, branches, private records and artifacts.
