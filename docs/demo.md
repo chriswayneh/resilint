@@ -8,7 +8,7 @@ The README GIF replays actual output captured from the published `resilint==1.0.
 2. Check the starter: RL004 flags the missing exit plan, RL005 the missing resilience-test date and RL008 the missing contact-verification date.
 3. Explain RL004 to see its meaning, an illustrative fix and draft regulation references.
 
-The version, creation and explanation commands return 0. The default check deliberately returns **1**, because the starter has a high finding. The GIF leaves the gaps visible; it does not claim they have been fixed.
+The version, creation and explanation commands return 0. The default check returns **1**, because the starter has a high finding. The animation ends with RL004's explanation and draft references.
 
 ## Run it yourself
 
@@ -30,4 +30,4 @@ Installation can access PyPI; the checks and explanation run locally and offline
 
 The [written README demo](../README.md#demo) provides another fictional register and captured text output. [Rule descriptions](rules.md) cover RL001–RL009. Regulation references remain draft mapping, not legal advice.
 
-The GIF is a presentation replay of real commands and output, with captions outside the terminal output. It is not a browser recording or a claim that this capture came from CI. The existing written examples and this guide remain available without animation.
+The captions describe each stage; commands and output come from a local capture of the published package. The existing written examples and this guide provide a text alternative to the animation.
