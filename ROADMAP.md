@@ -26,9 +26,9 @@ Where resilint is going, and what is ready to work on.
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; included in v1.0.0) | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | ✅ Complete (6/6 merged; included in v1.0.0) | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | ✅ Complete (6/6 merged; included in v1.0.0) | 6 |
-| [v1.0](#v10-stable-release) | Stable release | In progress (4/5 merged) | 5 |
+| [v1.0](#v10-stable-release) | Stable release | ✅ Released (5/5 complete) | 5 |
 
-**38 tasks: 37 complete, 1 planned.** Completed work is included in v1.0.0; intermediate milestone labels were not separate releases.
+**38 tasks: 38 complete, 0 planned.** Completed work is included in v1.0.0; intermediate milestone labels were not separate releases.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -130,7 +130,7 @@ Stable [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is 
 | `R-2` | [Dogfood on a realistic synthetic register](examples/large/README.md) ✅ — [#58](https://github.com/chriswayneh/resilint/pull/58) |
 | `R-3` | Fresh-machine install test ✅ — [#60](https://github.com/chriswayneh/resilint/pull/60) |
 | `R-4` | [Final full-diff and security review](aidlc-docs/reviews/r4-final-candidate-review.md) ✅ — [#61](https://github.com/chriswayneh/resilint/pull/61) |
-| `R-5` | Tag `v1.0.0` + release (maintainer only) |
+| `R-5` | [v1.0.0 release and verified publication](aidlc-docs/reviews/v1-release-verification.md) ✅ — [#62](https://github.com/chriswayneh/resilint/pull/62), [#63](https://github.com/chriswayneh/resilint/pull/63) |
 
 **Maintainer only:** tags and releases are created by the maintainer (`R-5`), after the [release checklist](roadmap/README.md#release-checklist) is complete.
 

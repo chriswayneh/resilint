@@ -532,12 +532,15 @@ issues:
   - id: R-5
     title: Tag `v1.0.0` + release (maintainer only)
     milestone: M5
-    status: planned
+    status: complete
     why: Ship
     acceptance: Release checklist below completed
     size: S
     depends_on:
       - R-4
+    completed_in:
+      - 62
+      - 63
 
 # Governance work is outside the original 38-task v1 product denominator.
 governance_tasks:
