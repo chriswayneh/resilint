@@ -446,3 +446,34 @@
 - Final gates: Ruff and mypy (11 source files) passed; full suite 382 passed, six existing Windows privilege skips in 44.60 seconds with configured real scanner controls. Link/whitespace checks are required before commit.
 - Complete exact-diff review: the sidecar is validated before opening; log root/input/symlink checks and log reads/replacement are serialized under the same existing lock; the final target check and finally-based lock release remain. Invalid requests cannot modify the register/log, though a persistent sidecar may be created as documented. Diagnostics preserve the actual failed destination. No dependency, permission, network, SQL or settings change. No blocking author finding.
 - Next permitted action: commit/push one M0-1 follow-up PR, require every final-head platform/coverage/scanner/CodeQL/evidence/Action gate, inspect findings and merge only if passing. Then reconcile P-6 and continue R-1. Do not bypass the failed Windows gate or count old-head tests as new-head evidence.
+
+## P-6 — inception and documentation construction decision
+
+- Recorded: 2026-11-05T02:56:50.359679+00:00. Actor: Codex, choosing the scoped implementation plan under the user's actual standing authorization to complete v1; no individual-document user review or independent review is claimed.
+- Artifact: inception/p6-install-design.md, based on main 2a172190e8d0678d06b412008d340b63f913ccec. P-2 and its specifically authorized publisher setup are complete.
+- Decision: document pinned PyPI and pipx installation after stable-v1 publication, retain the usable Git-release alternative, preserve current README layout and truthful availability. No runtime, workflow, dependency, account or settings change.
+- Next permitted action: implement only P-6 documentation/changelog/roadmap records, run gates and complete diff review, open one task PR and merge only with passing final-head checks. R-3 retains actual index-install validation.
+
+## P-6 — documentation verification and delivery
+
+- Recorded: 2026-11-05T02:58:53.776167+00:00. Actor: Codex, author review under the user's actual standing v1 authorization; no independent document review is claimed.
+- Behavior: the existing README layout is preserved with one installation paragraph. The installation guide documents pinned PyPI and pipx commands after stable-v1 publication, virtual-environment/PowerShell usage and the current reviewed Git-release alternative. Current production PyPI unavailability and the latest published Git release remain explicit. No token, mixed-index install or invented index-success claim is introduced.
+- Gates: Ruff and mypy (11 source files) passed; full suite 364 passed, six existing Windows privilege skips in 62.42 seconds, with configured scanner tools. Complete three-document/changelog diff reviewed for correctness, version drift, privacy, unsafe copy/paste and misleading availability; no blocking finding. Runtime code, dependencies and workflows are unchanged.
+- Next permitted action: link/whitespace validation, commit/push one P-6 PR and require all immutable-head hosted checks. Reconcile with P-3 when merged, record prospective P-6 completion in this same task and merge only if passing. R-3 retains actual TestPyPI installation acceptance; no package publication is claimed.
+
+## P-6 — final packaging integration and prospective completion
+
+- Recorded: 2026-11-05T03:02:07.696765+00:00. Actor: Codex under actual standing v1 integration authorization.
+- Evidence: PR #52 merged at aeb14f94c4ee222075b03eee4afa557f78ea4c09 after all 28 checks passed; accepted current CodeQL analysis 2100275202 returned zero results. P-3's actual protected signing/publishing/attachment remains release-stage validation, not an already performed upload.
+- Decision: normally merge that main into PR #53. Retain both audit histories and changelog entries; preserve the exact reviewed install guidance and current README layout. Prospectively mark P-6 complete on merge (33/38, all packaging implementations merged), retaining original acceptance and dependent R-3 install verification.
+- Next permitted action: required combined-head local checks, complete resolution/metadata security/privacy review and final hosted gates; merge only if passing. No version tag, account permission, release publication or settings change follows from this documentation merge.
+
+- Combined-head verification recorded 2026-11-05T03:03:34.209662+00:00: Ruff, mypy (11 source files), links across 48 Markdown files and whitespace passed; full suite 380 passed, six existing Windows privilege skips in 44.13 seconds with verified scanner tools configured. README and installation guide match the previously reviewed P-6 head exactly. Complete resolution/status delta reviewed; no blocking security/privacy finding, no executable change. Every final-head hosted gate remains required before merge.
+
+## P-6 — integration after Windows preflight fix
+
+- Recorded: 2026-11-05T03:17:03.487067+00:00. Actor: Codex under actual standing v1 integration authorization. PR #54 merged at a075e5431f6cffd1a605ed128c104392dbd8ffc1 after all 28 checks, including both Windows/Python 3.10 runs, passed; CodeQL analysis 2100342138 returned zero results.
+- Decision: preserve the original failed P-6 gate as evidence and incorporate the separately reviewed M0-1 fix through an ordinary merge. Retain both audit tails, unchanged P-6 install guidance and prospective completion metadata. Only the audit conflict requires resolution.
+- Next permitted action: rerun all required local/hosted checks on the combined head, inspect the complete resolution and merge P-6 only if passing. Do not rerun the old failure to hide it or weaken the original concurrency assertion. No new permission, settings, tag or publication.
+
+- Final post-fix local verification recorded 2026-11-05T03:18:47.651286+00:00: Ruff, mypy (11 source files), links in 49 Markdown files and whitespace passed. Full combined suite 382 passed, six existing Windows privilege skips with real scanner controls configured. The reviewed P-6 README/install guidance is unchanged; only inherited M0-1 code/tests and combined audit differ. Complete resolution and prospective metadata delta reviewed with no blocking new security/privacy finding. Final hosted checks on this new head remain required.

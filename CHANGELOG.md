@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Installation guidance covers pinned PyPI packages and isolated pipx use after stable-v1 publication, retaining the current Git-release alternative and explicit availability limits.
 - Release preparation adds a minimal runtime CycloneDX SBOM, exact artifact checksums, isolated build provenance and verified GitHub release attachment; a read-only Linux self-test exercises evidence generation before release.
 - Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
 - The planned Action tag policy describes the future stable-v1 alias, immutable version references and deliberate full-SHA pinning with its limits.
