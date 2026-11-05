@@ -1,10 +1,10 @@
 # Roadmap
 
-Where resilint is going, and what is ready to work on.
+resilint is frozen at v1.0.0; no further milestones are planned.
 
-**Current release:** [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0), available on [PyPI](https://pypi.org/project/resilint/1.0.0/). v2/v3 are deferred.
+**Current release:** [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0), available on [PyPI](https://pypi.org/project/resilint/1.0.0/). The sections below are past history only.
 
-- [Milestones](#milestones)
+- [Past milestones](#past-milestones)
 - [v0.4.1: Maintenance](#v041-maintenance)
 - [v0.5: Real-world data](#v05-real-world-data)
 - [v0.6: CI integration and developer experience](#v06-ci-integration-and-developer-experience)
@@ -16,7 +16,7 @@ Where resilint is going, and what is ready to work on.
 
 ---
 
-## Milestones
+## Past milestones
 
 | Milestone | Theme | Status | Tasks |
 | --- | --- | --- | :---: |
@@ -28,7 +28,7 @@ Where resilint is going, and what is ready to work on.
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | ✅ Complete (6/6 merged; included in v1.0.0) | 6 |
 | [v1.0](#v10-stable-release) | Stable release | ✅ Released (5/5 complete) | 5 |
 
-**38 tasks: 38 complete, 0 planned.** Completed work is included in v1.0.0; intermediate milestone labels were not separate releases.
+**38 tasks: 38 complete.** Completed work is included in v1.0.0; intermediate milestone labels were not separate releases. No further milestones are planned.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -36,7 +36,7 @@ Full task details, including acceptance criteria and dependencies, are in [`road
 
 ## v0.4.1: Maintenance
 
-Finish the maintenance work before the next release.
+Finished the maintenance work that landed before v1.0.0.
 
 **Status: complete (4/4 merged).** Windows locking, dependency updates, metadata checks and Action input self-tests are on `main`. This maintenance work is included in v1.0.0; no separate v0.4.1 release was published.
 
