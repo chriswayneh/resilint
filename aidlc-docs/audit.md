@@ -580,6 +580,22 @@
 - Decision/conditions: preserve all original task acceptance/dependencies and other task definitions, the accepted DataGrant format, runtime and permissions fix. Validate the metadata-only delta, links and whitespace; earlier full combined test results are retained, not claimed as a rerun.
 - Next permitted action: publish the final metadata head, require every hosted check on that exact head and inspect full diff before ordinary accepted merge. Candidate/index/release work remains a separate stage.
 
+## R-1 follow-up — final candidate notes before first publication
+
+- Recorded: 2026-11-05 04:13:05 UTC. Actor: Codex, designer under actual user continuation authority toward v1 tonight; not personal user design/GitHub approval or an independent review.
+- Evidence: R-2 PR #58 at d588d982537dde9ec1af90a1e312b79b192b851e passed all 28 checks and Codex merged it normally as 4ccd82ed1d4e0f97c4161ffcc9e23c2e5c8f1d8d at 2026-11-05T04:12:16Z. Main roadmap is now 35/38 complete; R-3/R-4/R-5 remain.
+- Artifact/decision: [candidate notes design](inception/r1-candidate-notes-design.md). Move only the existing three Unreleased entries (presentation, private output and R-2 validation) into matching dated rc1 sections, retaining all text and a fresh empty Unreleased section.
+- Conditions: no source/runtime/version/workflow/permission/settings changes or publication in this PR. The main full CodeQL acceptance of the prior permission fix remains recorded separately; no new runtime claim.
+- Next permitted action: apply the bounded notes move, verify all bullets and release metadata, run required gates and exact diff review, then publish one R-1 follow-up PR and merge only if passing. Candidate tagging/publication needs its separate exact-commit execution record and normal release gates.
+
+## R-1 follow-up — notes verification and author review
+
+- Recorded: 2026-11-05 04:15:21 UTC. Actor: Codex, author and complete exact-diff reviewer; not an independent dot or formal GitHub approval.
+- Evidence: every historical changelog bullet, including duplicates, is preserved as a multiset; only three existing entries move into matching rc1 categories and Unreleased is empty. Strict metadata helper returns version=1.0.0rc1 and stable=false. Source/runtime/version, README layout and task definitions/counts are unchanged.
+- Local gates: Ruff passes; mypy passes for 11 files; full pytest 391 passed, 17 documented Windows/POSIX skips in 79.23 seconds with scanner-control tooling; links pass for all 55 tracked Markdown files; whitespace passes.
+- Security/privacy: exact three-file documentation diff reviewed, no runtime, workflow, dependency, access, settings, secret or data change. No blocking author finding. Earlier main runtime CodeQL acceptance is retained; new main full scan and all exact-head hosted checks remain required before the separate candidate execution stage.
+- Next permitted action: commit/push one notes-only R-1 follow-up PR, require every exact-head check, merge only if passing, then record the actual authorized tag execution against the passing main commit. No tag or package publication has occurred.
+
 ## R-3 — release validation inception plan
 
 - Recorded: 2026-11-05T03:14:20.804597+00:00. Actor: Codex preparing the user's authorized v1 validation work; no individual-document user review or independent review is claimed.

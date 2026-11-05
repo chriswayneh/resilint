@@ -3,15 +3,13 @@
 ## [Unreleased]
 ### Added
 - Read-only Linux/Windows/macOS TestPyPI install validation checks the exact wheel against canonical Git source before installation, then runs the documented installed quick start.
-- A visibly fictional 500-vendor register exercises all report formats, schema/SARIF parity, configuration, baselines, drill overlays and draft RoI export in the existing platform CI matrix, preserving input bytes.
 ### Changed
-- README presentation follows the DataGrant layout, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
 ### Security
-- New reports, baselines, exports, starters and lock sidecars use private POSIX creation modes; atomic drill-log replacement retains owner-only access instead of widening it to world-readable. Existing ordinary output-file permissions and Windows ACL limitations are documented.
 ### Fixed
 
 ## [1.0.0-rc1] - 2026-11-04
 ### Added
+- A visibly fictional 500-vendor register exercises all report formats, schema/SARIF parity, configuration, baselines, drill overlays and draft RoI export in the existing platform CI matrix, preserving input bytes.
 - Installation guidance covers pinned PyPI packages and isolated pipx use after stable-v1 publication, retaining the current Git-release alternative and explicit availability limits.
 - Release preparation adds a minimal runtime CycloneDX SBOM, exact artifact checksums, isolated build provenance and verified GitHub release attachment; a read-only Linux self-test exercises evidence generation before release.
 - Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
@@ -39,8 +37,10 @@
 - Reproducible Hypothesis tests exercise bounded YAML/CSV bytes, text, structured fields and valid registers through both the loader and CLI.
 - Repository metadata checks keep package/runtime versions, the latest released changelog entry, and README release references synchronized.
 ### Changed
+- README presentation follows the DataGrant layout, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
 - Prepared the v1 candidate metadata and compatibility freeze while preserving truthful latest-stable documentation and the historical demo.
 ### Security
+- New reports, baselines, exports, starters and lock sidecars use private POSIX creation modes; atomic drill-log replacement retains owner-only access instead of widening it to world-readable. Existing ordinary output-file permissions and Windows ACL limitations are documented.
 - Candidate checks include read-only secret/dependency scanners, isolated Python CodeQL, safe input/output protections and source-bound release evidence; actual publication is verified through protected environments.
 ### Fixed
 - Drill writers validate log targets while holding the existing sidecar lock, preventing cooperating Windows writers from inspecting a log during another writer's atomic replacement.
