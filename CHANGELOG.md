@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- A visibly fictional 500-vendor register exercises all report formats, schema/SARIF parity, configuration, baselines, drill overlays and draft RoI export in the existing platform CI matrix, preserving input bytes.
 ### Changed
 - README presentation follows the DataGrant layout, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
 ### Security
