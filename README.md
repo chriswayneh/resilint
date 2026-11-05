@@ -227,7 +227,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation gates (`ruff check 
 
 ## How this project is built
 
-This project uses an adapted [AWS AI-DLC](https://github.com/awslabs/aidlc-workflows) documentation workflow: inception before implementation, recorded stage decisions, comprehensive tests and security review, and one roadmap task per PR. GitHub approval, merges, tags, releases and settings remain user-controlled.
+Contributor workflow is documented in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Built with
 
