@@ -35,3 +35,17 @@ If a job fails, inspect its logs and rerun failed jobs after correcting the exte
 The first end-to-end run needs both publisher registrations and environment setup. A merged workflow alone is not evidence that publication works. See the [stability policy](stability.md) for compatibility expectations.
 
 Publisher registration and protected-environment configuration are recorded in the [audit](../aidlc-docs/audit.md). A pending publisher does not reserve a project name. Configuration and workflow validation do not prove a successful OIDC upload or installation from an index; verify those during the candidate release.
+
+## SBOM, provenance and artifact identity
+
+The build prepares one wheel and one sdist, then generates a CycloneDX 1.6 runtime SBOM from a fresh environment containing the installed wheel and hash-locked runtime dependencies. SBOM tooling has its own hash-locked requirements, separate from that environment and the CLI's dependencies. The public inventory contains the project, locked runtime package names/versions, PURLs and dependency edges. Bootstrap installers are excluded; unexpected packages or unlocked runtime edges fail. Local paths, environment properties and tool inventory are omitted. This minimal inventory does not claim component-license completeness or absence of vulnerabilities.
+
+The release evidence self-test runs the same preparation step on Linux/Python 3.12 for PRs and main pushes. It builds real distributions, generates and validates the SBOM, and has only a read-only token. It executes repository workflow code like the existing tests, and does not attest, publish, upload artifacts or use protected environments. Hosted evidence must be checked on the final PR commit.
+
+`SHA256SUMS` covers the wheel, sdist, SBOM and release notes. Subsequent jobs reject missing/extra files or byte changes before using downloaded build artifacts. A separate job with `id-token: write` and `attestations: write` signs the wheel, sdist and SBOM using the pinned GitHub provenance action. It preserves the Sigstore bundle; no distribution is rebuilt for publication.
+
+After protected TestPyPI verification, and production PyPI success for stable versions, a separate release-attachment job verifies each subject against the bundle, repository, exact source ref, source commit and workflow identity before creating the GitHub release. It has contents-write and attestation-read permissions, with no OIDC grant. Candidate releases are marked prerelease. Existing tags, package versions and GitHub releases are never replaced automatically.
+
+Release assets include both distributions, `resilint.cdx.json`, `SHA256SUMS`, `release-notes.md` and `provenance.sigstore.json`. The bundle is generated after the checksum manifest and is verified cryptographically rather than included in that manifest. Attestation identity and provenance metadata are published through GitHub/Sigstore; all attached evidence is public. No register data is included. Package-index and GitHub environment approval gates remain in place.
+
+Local SBOM/schema/checksum tests and PR self-tests demonstrate preparation readiness. Real hosted signing, protected index upload, clean index installation and final release attachment must additionally be verified during the candidate/stable release sequence. Do not treat readiness evidence as a completed publication or skip those release checks.

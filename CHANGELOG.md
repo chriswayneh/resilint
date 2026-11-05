@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Release preparation adds a minimal runtime CycloneDX SBOM, exact artifact checksums, isolated build provenance and verified GitHub release attachment; a read-only Linux self-test exercises evidence generation before release.
 - Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
 - The planned Action tag policy describes the future stable-v1 alias, immutable version references and deliberate full-SHA pinning with its limits.
 - Secret-history and runtime-dependency CI checks use verified scanner tooling and constrained inputs; a separate pinned Python CodeQL job submits SARIF to GitHub with database uploads disabled.

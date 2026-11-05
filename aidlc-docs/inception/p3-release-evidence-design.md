@@ -27,3 +27,9 @@ One P-3 PR adds a CycloneDX SBOM and SHA-pinned GitHub build provenance for the 
 ## Release dependencies and rollback
 
 P-2 still needs verified PyPI/TestPyPI publisher coordinates and protected-environment configuration. P-4 still needs its separately reviewed CodeQL continuation. P-6 follows genuinely satisfied P-2; R-1 follows all prerequisite milestones. Do not bypass those dependencies by changing their acceptance criteria. Roll back with ordinary commits; preserve existing branches, worktrees, packages, version tags and build artifacts.
+
+## Construction-stage clarification
+
+P-2 publisher configuration and P-4 CodeQL are now verified and merged. Prerequisite readiness is demonstrated by the reviewed workflow, real SBOM/schema/checksum checks and read-only Linux self-test; actual tag-triggered signing and attachment occur in the candidate/stable release sequence. Keep that operational evidence explicitly pending rather than claim it exists before the first release run. This distinguishes implementation completion from release execution, preserving the original requirement to attach and verify SBOM/provenance before shipping v1. No version, acceptance criterion, protected gate or final publication check is removed.
+
+The self-test intentionally executes the exact evidence-preparation block from the release workflow with ordinary PR test permissions. Add a bounded helper for runtime inventory and exact artifact membership/checksums, and verify downloaded artifacts again before attestation and attachment. The final attachment job must verify the Sigstore bundle's source repository, workflow, ref and commit for every signed subject. These construction refinements remain within P-3.
