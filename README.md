@@ -12,7 +12,7 @@
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML or CSV file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Version: v1.0.0.** [Published builds](https://github.com/chriswayneh/resilint/releases) · [PyPI availability](https://pypi.org/project/resilint/) · [v1 stability policy](docs/stability.md) · [Roadmap](ROADMAP.md).
+**Status:** [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is released and available on [PyPI](https://pypi.org/project/resilint/1.0.0/). See the [v1 stability policy](docs/stability.md) and [roadmap](ROADMAP.md).
 
 > **A note on this repo:** This GitHub account is my personal playground, where I experiment, learn, and build security tools in the open. Projects here are personal work, not a product or company offering.
 

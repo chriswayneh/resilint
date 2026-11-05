@@ -22,7 +22,7 @@ jobs:
           persist-credentials: false
       - name: Check register
         id: resilience
-        uses: chriswayneh/resilint@0f0f6d5ab9ea14546bbc475fb9f38c9e3e1fedeb # Development commit with Action outputs
+        uses: chriswayneh/resilint@d5aa0b6223ed930adc753fe94aa212a9ba686c43 # v1.0.0
         continue-on-error: true # Upload findings before enforcing the threshold.
         with:
           file: vendors.yaml

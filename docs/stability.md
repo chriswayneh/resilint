@@ -1,6 +1,6 @@
 # Stability policy for v1
 
-This policy takes effect with v1.0.0. Development commits and release candidates can change before that release; the current package version does not imply unreleased features are already stable.
+This policy applies to v1.0.0 and later stable v1 releases. Development commits and release candidates can change before stable publication; their version identifiers do not imply that unreleased changes are stable.
 
 ## Supported interfaces
 
@@ -33,17 +33,17 @@ There are no active deprecations or planned removals for v1. Python internals an
 
 ## Action version tags
 
-The `@v1` alias and `@v1.0.0` release reference are planned and are not available yet. After v1.0.0 is successfully published and the [release checklist](../roadmap/README.md#release-checklist) is complete, the intended `v1` alias will track reviewed stable v1 releases only. It must never point to a release candidate or a different major version. Until then, use an existing release reference or a reviewed development commit.
+The `@v1` alias and immutable `@v1.0.0` reference are available and currently point to reviewed stable source `d5aa0b6223ed930adc753fe94aa212a9ba686c43`. The `v1` alias tracks reviewed stable v1 releases only, after the [release checklist](../roadmap/README.md#release-checklist) is complete. It must never point to a release candidate or a different major version.
 
 | Reference | Update behavior |
 | --- | --- |
-| `@v1` (future) | Moving major alias; receives reviewed stable v1 fixes and additions without a workflow edit |
-| `@v1.0.0` (future example) | Exact release name; project policy keeps version tags immutable |
+| `@v1` | Moving major alias; receives reviewed stable v1 fixes and additions without a workflow edit |
+| `@v1.0.0` | Exact release name; project policy keeps version tags immutable |
 | Full 40-character commit SHA | Pins this repository's code for controlled adoption; update deliberately after reviewing release notes |
 
 Resolve a chosen published version reference to its commit and record the readable version in a comment beside the SHA. A SHA does not make the runner, network services or every transitive dependency immutable. New minor-version rules can produce new findings even within v1; review the changelog before updating a pinned reference when findings changes need controlled adoption.
 
-This policy describes intended reference behavior and grants no operational authorization. Creating or moving any tag requires actual user authorization and the applicable release gates. The planned moving major alias is distinct from immutable version tags; this document does not authorize rewriting version tags or branch history.
+This policy describes reference behavior and grants no operational authorization. Creating or moving any tag requires actual user authorization and the applicable release gates. The moving major alias is distinct from immutable version tags; this document does not authorize rewriting version tags or branch history.
 
 ## v1 freeze audit
 

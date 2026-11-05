@@ -2,7 +2,7 @@
 
 Where resilint is going, and what is ready to work on.
 
-**Current release:** [v0.4.0](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0). **Next release:** v1.0.0, including the completed maintenance and hardening work. v2/v3 are deferred.
+**Current release:** [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0), available on [PyPI](https://pypi.org/project/resilint/1.0.0/). v2/v3 are deferred.
 
 - [Milestones](#milestones)
 - [v0.4.1: Maintenance](#v041-maintenance)
@@ -21,14 +21,14 @@ Where resilint is going, and what is ready to work on.
 | Milestone | Theme | Status | Tasks |
 | --- | --- | --- | :---: |
 | v0.1–v0.4 | Core checks, reporting and drill records | ✅ Released | — |
-| [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; unreleased) | 4 |
-| [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; unreleased) | 10 |
-| [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
-| [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | ✅ Complete (6/6 merged; unreleased) | 6 |
-| [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | ✅ Complete (6/6 merged; unreleased) | 6 |
+| [v0.4.1](#v041-maintenance) | Maintenance | ✅ Complete (4/4 merged; included in v1.0.0) | 4 |
+| [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; included in v1.0.0) | 10 |
+| [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; included in v1.0.0) | 7 |
+| [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | ✅ Complete (6/6 merged; included in v1.0.0) | 6 |
+| [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | ✅ Complete (6/6 merged; included in v1.0.0) | 6 |
 | [v1.0](#v10-stable-release) | Stable release | In progress (4/5 merged) | 5 |
 
-**38 tasks: 37 complete, 1 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 37 complete, 1 planned.** Completed work is included in v1.0.0; intermediate milestone labels were not separate releases.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -38,7 +38,7 @@ Full task details, including acceptance criteria and dependencies, are in [`road
 
 Finish the maintenance work before the next release.
 
-**Status: complete (4/4 merged).** Windows locking, dependency updates, metadata checks and Action input self-tests are on `main`. v0.4.1 remains unreleased.
+**Status: complete (4/4 merged).** Windows locking, dependency updates, metadata checks and Action input self-tests are on `main`. This maintenance work is included in v1.0.0; no separate v0.4.1 release was published.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -53,7 +53,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `R-5`**, stable release.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. All v1 implementation milestones are complete; actual publication is documented below.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -120,9 +120,9 @@ Build, verify and publish reproducible release artifacts before v1.0.
 
 ## v1.0: Stable release
 
-Prove the release candidate works from a fresh install, then complete the final reviews.
+Stable v1 is published after actual candidate installs, synthetic dogfooding and final reviews.
 
-Candidate [v1.0.0-rc1](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0-rc1) is published for validation on TestPyPI, with signed provenance, SBOM and checksums attached to its GitHub prerelease. Actual release-stage execution and install evidence are recorded in the [audit](aidlc-docs/audit.md).
+Stable [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is available on PyPI with signed provenance, SBOM and checksums. The `v1` Action alias points to the same stable commit. See the [completed release verification](aidlc-docs/reviews/v1-release-verification.md) and [audit](aidlc-docs/audit.md). The rc1 prerelease remains available for validation reproduction.
 
 | ID | Task |
 | --- | --- |

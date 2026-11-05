@@ -1,13 +1,13 @@
 # CI integration
 
-Run resilint in a trusted project checkout with Python 3.10 or newer. The examples below use Python 3.12 and a pinned development commit; package-index installation will replace this source install once the v1 package is published. Installing dependencies needs network access. Checking registers is offline.
+Run resilint in a trusted project checkout with Python 3.10 or newer. The examples below use Python 3.12 and the published, pinned 1.0.0 PyPI package. Installing dependencies needs network access. Checking registers is offline.
 
 ## Generic CI
 
 Install in your CI environment, then use the check's status directly:
 
 ```bash
-python -m pip install "resilint @ https://github.com/chriswayneh/resilint/archive/0f0f6d5ab9ea14546bbc475fb9f38c9e3e1fedeb.tar.gz"
+python -m pip install "resilint==1.0.0"
 resilint check vendors.yaml --fail-on high --format json --output resilint.json
 ```
 
@@ -23,7 +23,7 @@ Add this job to `.gitlab-ci.yml`:
 resilience:
   image: python:3.12
   script:
-    - python -m pip install "resilint @ https://github.com/chriswayneh/resilint/archive/0f0f6d5ab9ea14546bbc475fb9f38c9e3e1fedeb.tar.gz"
+    - python -m pip install "resilint==1.0.0"
     - resilint check vendors.yaml --fail-on high --format json --output resilint.json
   artifacts:
     when: always
@@ -47,7 +47,7 @@ steps:
   - task: UsePythonVersion@0
     inputs:
       versionSpec: '3.12'
-  - script: python -m pip install "resilint @ https://github.com/chriswayneh/resilint/archive/0f0f6d5ab9ea14546bbc475fb9f38c9e3e1fedeb.tar.gz"
+  - script: python -m pip install "resilint==1.0.0"
     displayName: Install resilint
   - script: resilint check vendors.yaml --fail-on high --format json --output resilint.json
     displayName: Check vendor resilience
