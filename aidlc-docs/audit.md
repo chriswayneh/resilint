@@ -431,6 +431,22 @@
 - Decision: prospectively record P-3 implementation complete in PR #52, effective only when all final-head gates pass and it merges (32/38). Original task acceptance/dependency fields and all other tasks are unchanged. The reviewed design separates preparation readiness from the actual tag-triggered signing/upload/attachment sequence, whose evidence remains mandatory before v1 shipment. No live attestation, package publication or release attachment is claimed.
 - Next permitted action: validate the completion-only delta, push and require every hosted gate, Linux evidence and accepted CodeQL on the new immutable commit. Inspect any findings and merge only if passing. Continue P-6 and the release-candidate checklist under existing authorization; do not weaken protected environment approvals or substitute local tests for live release evidence.
 
+## M0-1 — Windows concurrent-writer follow-up design decision
+
+- Recorded: 2026-11-05T03:08:58.027624+00:00. Actor: Codex selecting a bounded correctness fix under the user's actual standing authorization to complete v1; no individual user design review or independent review is claimed.
+- Evidence: PR #53 head 6626452adc8adc2e45462a65c5a6aa3881a43178 passed 27 checks but Windows/Python 3.10 job 127021167368 in run 41959175566 failed tests/test_drills.py::test_drill_concurrent_records_lose_nothing. A writer returned a drill-log Access is denied error; accepting/ignoring that error would weaken the existing gate. Full logs are retained privately, not copied into public records.
+- Artifact and decision: inception/m0-drill-preflight-design.md. Move log-target inspection inside its existing sidecar critical section, preserve guards and atomic writes, add a deterministic lock-boundary regression and retain real concurrency acceptance unchanged. One M0-1 follow-up PR; original product task denominator and acceptance criteria remain unchanged.
+- Next permitted action: construct the scoped fix, prove the new regression fails before it and passes after it, run meaningful Windows concurrency plus all local/hosted gates, review the complete diff and merge only if passing. P-6/R-1 integration remains pending this correctness fix. No settings, access expansion, release or cleanup.
+
+## M0-1 — writer-lock boundary verification and delivery
+
+- Recorded: 2026-11-05T03:13:34.820156+00:00. Actor: Codex, author implementation/security review under actual standing v1 authorization; no independent review is claimed.
+- Regression evidence: the new real-lock boundary test failed on unchanged source because the log was inspected before the sidecar existed, then passed after moving validation into the critical section. The drill suite passed 26 cases with one existing Windows privilege skip, and five additional real Windows six-writer runs passed the original strict assertion.
+- An initial full run exposed one diagnostic fixture whose global check_target fault injection assumed the log was checked before the sidecar. The fixture now injects errors at the stated destination and separately covers the sidecar; the destination assertion is preserved. Focused diagnostic/drill coverage passed 46 cases with one existing privilege skip.
+- Final gates: Ruff and mypy (11 source files) passed; full suite 382 passed, six existing Windows privilege skips in 44.60 seconds with configured real scanner controls. Link/whitespace checks are required before commit.
+- Complete exact-diff review: the sidecar is validated before opening; log root/input/symlink checks and log reads/replacement are serialized under the same existing lock; the final target check and finally-based lock release remain. Invalid requests cannot modify the register/log, though a persistent sidecar may be created as documented. Diagnostics preserve the actual failed destination. No dependency, permission, network, SQL or settings change. No blocking author finding.
+- Next permitted action: commit/push one M0-1 follow-up PR, require every final-head platform/coverage/scanner/CodeQL/evidence/Action gate, inspect findings and merge only if passing. Then reconcile P-6 and continue R-1. Do not bypass the failed Windows gate or count old-head tests as new-head evidence.
+
 ## P-6 — inception and documentation construction decision
 
 - Recorded: 2026-11-05T02:56:50.359679+00:00. Actor: Codex, choosing the scoped implementation plan under the user's actual standing authorization to complete v1; no individual-document user review or independent review is claimed.
@@ -453,3 +469,11 @@
 - Next permitted action: required combined-head local checks, complete resolution/metadata security/privacy review and final hosted gates; merge only if passing. No version tag, account permission, release publication or settings change follows from this documentation merge.
 
 - Combined-head verification recorded 2026-11-05T03:03:34.209662+00:00: Ruff, mypy (11 source files), links across 48 Markdown files and whitespace passed; full suite 380 passed, six existing Windows privilege skips in 44.13 seconds with verified scanner tools configured. README and installation guide match the previously reviewed P-6 head exactly. Complete resolution/status delta reviewed; no blocking security/privacy finding, no executable change. Every final-head hosted gate remains required before merge.
+
+## P-6 — integration after Windows preflight fix
+
+- Recorded: 2026-11-05T03:17:03.487067+00:00. Actor: Codex under actual standing v1 integration authorization. PR #54 merged at a075e5431f6cffd1a605ed128c104392dbd8ffc1 after all 28 checks, including both Windows/Python 3.10 runs, passed; CodeQL analysis 2100342138 returned zero results.
+- Decision: preserve the original failed P-6 gate as evidence and incorporate the separately reviewed M0-1 fix through an ordinary merge. Retain both audit tails, unchanged P-6 install guidance and prospective completion metadata. Only the audit conflict requires resolution.
+- Next permitted action: rerun all required local/hosted checks on the combined head, inspect the complete resolution and merge P-6 only if passing. Do not rerun the old failure to hide it or weaken the original concurrency assertion. No new permission, settings, tag or publication.
+
+- Final post-fix local verification recorded 2026-11-05T03:18:47.651286+00:00: Ruff, mypy (11 source files), links in 49 Markdown files and whitespace passed. Full combined suite 382 passed, six existing Windows privilege skips with real scanner controls configured. The reviewed P-6 README/install guidance is unchanged; only inherited M0-1 code/tests and combined audit differ. Complete resolution and prospective metadata delta reviewed with no blocking new security/privacy finding. Final hosted checks on this new head remain required.
