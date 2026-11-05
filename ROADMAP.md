@@ -25,10 +25,10 @@ Where resilint is going, and what is ready to work on.
 | [v0.5](#v05-real-world-data) | Real-world data | ✅ Complete (10/10 merged; unreleased) | 10 |
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | ✅ Complete (6/6 merged; unreleased) | 6 |
-| [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | In progress (4/6 merged) | 6 |
+| [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | In progress (5/6 merged) | 6 |
 | [v1.0](#v10-stable-release) | Stable release | Planned | 5 |
 
-**38 tasks: 31 complete, 7 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 32 complete, 6 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -53,7 +53,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `P-3`**, release provenance and SBOM.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `P-6`**, PyPI installation guidance.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -109,7 +109,7 @@ Build, verify and publish reproducible release artifacts before v1.0.
 | --- | --- |
 | `P-1` | Build sdist/wheel in CI ✅ — [#46](https://github.com/chriswayneh/resilint/pull/46) |
 | `P-2` | Release workflow (PyPI Trusted Publishing) ✅ — [#47](https://github.com/chriswayneh/resilint/pull/47) |
-| `P-3` | Provenance + SBOM |
+| `P-3` | Provenance + SBOM ✅ — [#52](https://github.com/chriswayneh/resilint/pull/52) |
 | `P-4` | Security scanning in CI ✅ — [#49](https://github.com/chriswayneh/resilint/pull/49), [#51](https://github.com/chriswayneh/resilint/pull/51) |
 | `P-5` | Action version tags policy ✅ — [#48](https://github.com/chriswayneh/resilint/pull/48) |
 | `P-6` | Install docs switch to PyPI |
