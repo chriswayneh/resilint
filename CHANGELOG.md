@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 ### Changed
+- README presentation follows the DataGrant layout, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
 ### Security
 ### Fixed
 
