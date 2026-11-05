@@ -2,10 +2,21 @@
 
 ## [Unreleased]
 ### Added
-- Read-only Linux/Windows/macOS TestPyPI install validation checks the exact wheel against canonical Git source before installation, then runs the documented installed quick start.
 ### Changed
 ### Security
 ### Fixed
+
+## [1.0.0] - 2026-11-04
+### Added
+- Stable v1 promotes the reviewed candidate's configuration, baselines, starter/explain commands, CI integrations and documented compatibility policy; the candidate entry below records the full changes since v0.4.0.
+- Read-only Linux/Windows/macOS TestPyPI install validation checks the exact wheel against canonical Git source before installation, then runs the documented installed quick start.
+### Changed
+- Package/runtime metadata and installation examples target 1.0.0; the fictional README demo was recaptured from stable source while preserving the DataGrant presentation.
+- The v1 compatibility commitment covers documented CLI, schema, JSON/SARIF, baseline, configuration and integration interfaces. Python internals, exact human-readable prose and experimental draft RoI mappings retain their documented limits.
+### Security
+- Includes the candidate's private POSIX output creation, bounded safe parsing, report/export protections, Windows drill locking and reviewed source-bound release evidence. Filesystem trust/ACL limits and optional SARIF disclosure remain documented.
+### Fixed
+- Includes candidate fixes for controlled malformed-input errors and cooperating concurrent drill writers; no runtime behavior changes were introduced between the reviewed candidate and stable promotion beyond the version identifier.
 
 ## [1.0.0-rc1] - 2026-11-04
 ### Added
