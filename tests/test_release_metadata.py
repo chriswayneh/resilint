@@ -49,7 +49,7 @@ def test_release_workflow_preserves_publication_gates():
                                / ".github/workflows/release.yml").read_text())
     jobs = workflow["jobs"]
     assert workflow["permissions"] == {"contents": "read"}
-    assert jobs["testpypi"]["needs"] == "build"
+    assert jobs["testpypi"]["needs"] == ["build", "attest"]
     assert jobs["verify-testpypi"]["needs"] == ["build", "testpypi"]
     assert jobs["pypi"]["needs"] == ["build", "verify-testpypi"]
     assert jobs["pypi"]["if"] == "needs.build.outputs.stable == 'true'"
