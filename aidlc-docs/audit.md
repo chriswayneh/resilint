@@ -409,3 +409,10 @@
 - Artifact: inception/p6-install-design.md, based on main 2a172190e8d0678d06b412008d340b63f913ccec. P-2 and its specifically authorized publisher setup are complete.
 - Decision: document pinned PyPI and pipx installation after stable-v1 publication, retain the usable Git-release alternative, preserve current README layout and truthful availability. No runtime, workflow, dependency, account or settings change.
 - Next permitted action: implement only P-6 documentation/changelog/roadmap records, run gates and complete diff review, open one task PR and merge only with passing final-head checks. R-3 retains actual index-install validation.
+
+## P-6 — documentation verification and delivery
+
+- Recorded: 2026-11-05T02:58:53.776167+00:00. Actor: Codex, author review under the user's actual standing v1 authorization; no independent document review is claimed.
+- Behavior: the existing README layout is preserved with one installation paragraph. The installation guide documents pinned PyPI and pipx commands after stable-v1 publication, virtual-environment/PowerShell usage and the current reviewed Git-release alternative. Current production PyPI unavailability and the latest published Git release remain explicit. No token, mixed-index install or invented index-success claim is introduced.
+- Gates: Ruff and mypy (11 source files) passed; full suite 364 passed, six existing Windows privilege skips in 62.42 seconds, with configured scanner tools. Complete three-document/changelog diff reviewed for correctness, version drift, privacy, unsafe copy/paste and misleading availability; no blocking finding. Runtime code, dependencies and workflows are unchanged.
+- Next permitted action: link/whitespace validation, commit/push one P-6 PR and require all immutable-head hosted checks. Reconcile with P-3 when merged, record prospective P-6 completion in this same task and merge only if passing. R-3 retains actual TestPyPI installation acceptance; no package publication is claimed.
