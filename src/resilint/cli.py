@@ -69,7 +69,7 @@ def write_file(path: str, content: str, input_file: str | None = None,
         flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | getattr(os, "O_NOFOLLOW", 0)
         if exclusive:
             flags |= os.O_EXCL
-        fd = os.open(path, flags, 0o644)
+        fd = os.open(path, flags, 0o600)
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
             fh.write(content)
     except (OSError, ValueError) as e:
@@ -122,7 +122,7 @@ def _lock(path: str) -> int | str:
     """Exclusive non-blocking lock on a sidecar file; waits up to ~2 s. fd or error string."""
     flags = os.O_RDWR | os.O_CREAT | getattr(os, "O_NOFOLLOW", 0)
     try:
-        fd = os.open(path, flags, 0o644)
+        fd = os.open(path, flags, 0o600)
     except OSError as e:
         return f"cannot open lock {path} ({e.strerror})"
     for _ in range(20):
@@ -146,7 +146,7 @@ def _replace(path: str, content: str) -> str | None:
         fd, tmp = tempfile.mkstemp(prefix=".drills-", suffix=".tmp", dir=d)
         with os.fdopen(fd, "w", encoding="utf-8", newline="") as fh:
             fh.write(content)
-        os.chmod(tmp, 0o644)
+        os.chmod(tmp, 0o600)
         os.replace(tmp, path)
         tmp = None
     except OSError as e:
