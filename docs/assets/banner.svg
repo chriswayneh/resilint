@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="320" viewBox="0 0 1280 320" role="img" aria-label="resilint: offline vendor resilience checks for DORA, NIS2 and PRA SS2/21, run from your vendor register in Git">
+  <title>resilint: offline vendor resilience checks for DORA, NIS2 and PRA SS2/21</title>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0b1020"/><stop offset="1" stop-color="#151d3b"/></linearGradient>
+    <linearGradient id="ac" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5b8cff"/><stop offset="1" stop-color="#34d1b6"/></linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0" r="0.7"><stop offset="0" stop-color="#34d1b6" stop-opacity="0.22"/><stop offset="1" stop-color="#34d1b6" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1280" height="320" rx="20" fill="url(#bg)"/>
+  <rect width="1280" height="320" rx="20" fill="url(#glow)"/>
+  <rect x="0.5" y="0.5" width="1279" height="319" rx="20" fill="none" stroke="#26305a"/>
+  <g transform="translate(500 78)">
+    <rect width="56" height="56" rx="14" fill="url(#ac)"/>
+    <path d="M28 12 l14 6 v10 c0 9 -6 15 -14 18 c-8 -3 -14 -9 -14 -18 v-10 z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/>
+    <path d="M22 29 l5 5 l9 -10" fill="none" stroke="#fff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="76" y="44" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="52" font-weight="800" fill="#e7eaf6">resilint</text>
+  </g>
+  <text x="640" y="196" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="28" font-weight="600" fill="#e7eaf6">Offline vendor resilience checks for your vendor register in Git,</text>
+  <text x="640" y="234" text-anchor="middle" font-family="system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif" font-size="28" font-weight="600" fill="url(#ac)">mapped to DORA, NIS2 and PRA SS2/21 (draft)</text>
+  <text x="640" y="280" text-anchor="middle" font-family="ui-monospace,SFMono-Regular,Menlo,Consolas,monospace" font-size="16" fill="#9aa3c7">register · check · map · report · drill</text>
+</svg>

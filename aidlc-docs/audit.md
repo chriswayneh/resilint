@@ -119,6 +119,15 @@
 - Evidence: dot independently verified all nine platform jobs and package job in run 41552026107 and Action self-test run 41552026163 passed at the reviewed head. Local 300-test result and archive/license/resource byte checks remain author-reported, not independently executed by dot. No hermetic/reproducible-build claim.
 - Next permitted action: append only this decision, inspect that audit-only delta and require all hosted gates on the resulting new head. Old-head results do not transfer. Any merge independently requires actual user scope and unexpired authorization; this review grants no reserved-action permission. Preserve other drafts/artifacts; no cleanup, denied-action bypass, history rewriting or access/settings changes. R-2 remains blocked on R-1, and publisher registration requires specific action-time user confirmation.
 
+## DOCS-README — presentation alignment inception and construction
+
+- Recorded: 2026-11-03T06:26:58+00:00.
+- Actor: Grok Bot (AI), author, acting on the user's request for this documentation task. Stage review is by Grok Bot (AI), not personal user approval or formal GitHub approval.
+- Artifact: inception/readme-presentation-design.md and inception/readme-presentation-plan.md; branch docs/readme-presentation.
+- Decision: proceed with documentation-only construction as designed. No code, dependency, workflow, setting, visibility, tag or release change.
+- Evidence: demo output re-run against tag v0.4.0 matched the README; local gate results are reported in the draft PR.
+- Next permitted action: open one draft PR for the user's review. Merge and other reserved actions remain with the user.
+
 ## P-2 — user inception and push approval
 
 - Received and recorded: 2026-11-03T00:29:03.242777+00:00.
@@ -166,3 +175,12 @@
 - Execution plan: isolated worktrees preserve existing local work; merge current main without rebasing or force-pushing; retain all audit entries and presentation content, relocating Action-policy text into the new reference section. Review each resolution and require local gates plus exact-final-head hosted checks before merging.
 - Scope limits: no formal GitHub review submission, tags, releases, publisher registration, settings/access changes or CodeQL activation. Publisher trust and protected-environment publication remain separate. No denied-operation retry, cleanup or unrelated history changes.
 - Next permitted action: integrate P-2 with current main, validate and push its existing branch, then merge if passing; repeat for P-5 and P-4 against updated main.
+
+## P-2 — renewed user approval and conflict reconciliation
+
+- Recorded: 2026-11-05T02:08:17.002632+00:00. Actor: user, actual approval of all waiting work in the working chat; recorded by Codex.
+- Decision: continue toward v1 and apply waiting changes, including the reviewed PR #47 implementation and reconciliation with main b58fd6fb5d3e0cf9b197ac21877e12408538e480. Preserve presentation and previous decisions.
+- Resolution: retain main's complete audit plus the P-2 audit history. README and presentation files are inherited from main; workflow, helper, tests and releasing guide remain identical to reviewed PR head c1d2e530141b0e0ca89b47ded2670ff9a4004a13. No new feature or permission change.
+- Next permitted action: run required local gates, review the complete final diff, create an ordinary merge commit, push only PR #47 and require hosted checks. The GitHub integration denied marking PR #49 ready; do not retry that action through another interface. Persistent publisher trust and external setup are still unverified.
+
+- Verification recorded 2026-11-05T02:09:21.115656+00:00: Ruff and mypy (11 source files) passed; links in 38 Markdown files passed; whitespace passed; full suite 311 passed, 6 existing Windows skips in 39.11 seconds. Complete task delta checked; executable workflow/helper/tests and publishing documentation match the previously reviewed PR head exactly. Inherited presentation matches main. Static review confirms quoted tag handling, strict release identity, read-only defaults, OIDC confined to protected publishers and build-once artifact reuse. No new blocking security/privacy finding; no SQL or runtime network change. Live publisher registration and publication remain untested and P-2 remains planned.
