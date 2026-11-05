@@ -18,6 +18,10 @@ An open-source command-line tool and GitHub Action that reads your critical-vend
 
 ## Demo
 
+<p align="center"><img src="docs/assets/demo.gif" alt="resilint v1.0.0 demo: create a fictional register, find RL004, RL005 and RL008, then explain the missing exit plan" width="100%"></p>
+
+The GIF replays real v1.0.0 output using the fictional starter register. [Run the demo](docs/demo.md).
+
 **The decision it supports:** which critical vendors to escalate, re-contract, or re-test before an auditor or regulator asks.
 
 Run it against the fictional register below:
