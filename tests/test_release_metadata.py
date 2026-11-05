@@ -49,18 +49,25 @@ def test_release_workflow_preserves_publication_gates():
                                / ".github/workflows/release.yml").read_text())
     jobs = workflow["jobs"]
     assert workflow["permissions"] == {"contents": "read"}
+    assert jobs["build"]["needs"] == "test"
+    assert jobs["evidence"]["needs"] == ["test", "build"]
+    assert jobs["attest"]["needs"] == ["test", "build", "evidence"]
     assert jobs["testpypi"]["needs"] == ["build", "attest"]
-    assert jobs["verify-testpypi"]["needs"] == ["build", "testpypi"]
-    assert jobs["pypi"]["needs"] == ["build", "verify-testpypi"]
-    assert jobs["pypi"]["if"] == "needs.build.outputs.stable == 'true'"
+    assert jobs["verify-testpypi"]["needs"] == ["test", "build", "testpypi"]
+    assert jobs["pypi"]["needs"] == ["test", "build", "verify-testpypi"]
+    assert jobs["pypi"]["if"] == "needs.test.outputs.stable == 'true'"
     for name in ("testpypi", "pypi"):
         assert jobs[name]["permissions"] == {"id-token": "write"}
         assert jobs[name]["environment"] == name
         steps = jobs[name]["steps"]
         assert len(steps) == 2  # download existing build, then publish; no rebuild
         assert steps[0]["with"]["name"] == "distributions"
-    for name in ("build", "verify-testpypi"):
+    for name in ("test", "build", "evidence", "verify-testpypi"):
         assert "id-token" not in jobs[name].get("permissions", {})
+    build_runs = "\n".join(step.get("run", "") for step in jobs["build"]["steps"])
+    assert "requirements-build-lock.txt" in build_runs
+    assert "requirements-lock.txt" not in build_runs
+    assert "upgrade pip" not in build_runs
     verification = jobs["verify-testpypi"]["steps"][-1]["run"]
     assert "--no-deps --index-url https://test.pypi.org/simple/" in verification
     assert "--extra-index-url" not in verification
