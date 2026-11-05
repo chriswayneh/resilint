@@ -71,7 +71,8 @@ def test_bad_log_names_log(tmp_path, capsys, command):
 
 @pytest.mark.parametrize("failure", ["output", "export-dir", "export-existing",
                                     "export-target", "export-write", "drill-target",
-                                    "drill-lock", "drill-record", "drill-write"])
+                                    "drill-sidecar-target", "drill-lock", "drill-record",
+                                    "drill-write"])
 def test_output_failures_identify_destination(tmp_path, capsys, monkeypatch, failure):
     register = tmp_path / "register.yaml"
     register.write_text("vendors: [{id: v1, criticality: low}]")
@@ -100,8 +101,16 @@ def test_output_failures_identify_destination(tmp_path, capsys, monkeypatch, fai
     else:
         args = ["drill", "record", str(register), "--log", str(log), "--vendor", "v1",
                 "--kind", "test", "--result", "pass"]
-        if failure == "drill-target":
-            monkeypatch.setattr(cli, "check_target", lambda *a, **kw: "simulated failure")
+        if failure in ("drill-target", "drill-sidecar-target"):
+            if failure == "drill-sidecar-target":
+                target = str(log) + ".lock"
+            original = cli.check_target
+
+            def fail_target(path, *args, **kwargs):
+                return "simulated failure" if path == str(target) else original(
+                    path, *args, **kwargs)
+
+            monkeypatch.setattr(cli, "check_target", fail_target)
         elif failure == "drill-lock":
             target = str(log) + ".lock"
             monkeypatch.setattr(cli, "_lock", lambda *a: "simulated failure")

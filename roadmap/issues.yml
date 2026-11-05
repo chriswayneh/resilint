@@ -467,7 +467,7 @@ issues:
   - id: P-6
     title: Install docs switch to PyPI
     milestone: M4
-    status: planned
+    status: complete
     why: Real-world install
     files: README, docs
     acceptance: '`pip install resilint==X` and `pipx install resilint` are documented; the git install
@@ -475,16 +475,20 @@ issues:
     size: S
     depends_on:
       - P-2
+    completed_in:
+      - 53
 
   - id: R-1
     title: v1.0.0-rc1 PR (version bump + CHANGELOG)
     milestone: M5
-    status: planned
+    status: complete
     why: Freeze
     acceptance: Versions synced (M0-3 test green), CHANGELOG `[1.0.0-rc1]`, ROADMAP marks v1
     size: S
     depends_on:
       - all M1–M4
+    completed_in:
+      - 55
 
   - id: R-2
     title: Dogfood on a realistic synthetic register
