@@ -548,7 +548,7 @@ governance_tasks:
     title: Adopt the documented AI-DLC workflow
     status: complete
     why: Make design, stage decisions and security evidence reviewable
-    files: AGENTS.md, README.md, ROADMAP.md, roadmap guidance, aidlc-docs public records
+    files: README.md, ROADMAP.md, roadmap guidance
     acceptance: Preserve product scope and existing work; document inception before implementation, actual approval attribution, one task per PR, comprehensive tests and security review; validate links and existing gates; exclude private data; user owns GitHub approval, merges, tags, releases and settings
     size: S
     depends_on: []

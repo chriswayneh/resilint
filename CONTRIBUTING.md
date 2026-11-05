@@ -4,7 +4,7 @@ Use fictional data only in examples, tests, screenshots, issues and pull request
 
 resilint runs locally and offline. Keep changes focused on recorded commitments; vendor contact, scraping, telemetry and hosted services are outside scope. The active release target is v1.0; later major versions are deferred.
 
-Read [AGENTS.md](AGENTS.md), the [roadmap](ROADMAP.md) and [workflow records](aidlc-docs/README.md) before substantive work. Establish a technical design and execution plan before implementation; record actual stage decisions in the audit before advancing. Dot’s delegated routine review must be attributed to dot, never represented as personal user approval.
+Read the [roadmap](ROADMAP.md) and [contributor working guide](roadmap/README.md) before substantive work. Delegated routine review must never be represented as personal user approval.
 
 ## Development setup
 

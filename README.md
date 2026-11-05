@@ -14,8 +14,6 @@ An open-source command-line tool and GitHub Action that reads your critical-vend
 
 **Status:** [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is released and available on [PyPI](https://pypi.org/project/resilint/1.0.0/). See the [v1 stability policy](docs/stability.md) and [roadmap](ROADMAP.md).
 
-> **A note on this repo:** This GitHub account is my personal playground, where I experiment, learn, and build security tools in the open. Projects here are personal work, not a product or company offering.
-
 ## Demo
 
 <p align="center"><img src="docs/assets/demo.gif" alt="resilint v1.0.0 demo: create a fictional register, find RL004, RL005 and RL008, then explain the missing exit plan" width="100%"></p>
@@ -229,7 +227,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for setup, validation gates (`ruff check 
 
 ## How this project is built
 
-This project uses an adapted [AWS AI-DLC](https://github.com/awslabs/aidlc-workflows) documentation workflow: inception before implementation, recorded stage decisions, comprehensive tests and security review, and one roadmap task per PR. See the [local workflow records](aidlc-docs/README.md) and [audit](aidlc-docs/audit.md). No native AWS runtime is installed by this adoption; GitHub approval, merges, tags, releases and settings remain user-controlled.
+Contributor workflow is documented in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ### Built with
 

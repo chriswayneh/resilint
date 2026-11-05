@@ -1,6 +1,6 @@
 # Security CI draft: read-only scanners
 
-The read-only scanner workflow was introduced in [PR #49](https://github.com/chriswayneh/resilint/pull/49). A separate [Python CodeQL workflow](codeql.md) adds source analysis with its own permission and transmission boundary. Task completion is tracked in the [roadmap](../ROADMAP.md). Approval chronology and the correction of an unverified publication-authority claim are retained in the [audit correction](../aidlc-docs/audit.md#p-4--correction-unverified-approval-and-publication-authority-claims).
+The read-only scanner workflow was introduced in [PR #49](https://github.com/chriswayneh/resilint/pull/49). A separate [Python CodeQL workflow](codeql.md) adds source analysis with its own permission and transmission boundary. Task completion is tracked in the [roadmap](../ROADMAP.md).
 
 At commit `0006e5b5d3a80b98769663f6d3c305a15adecc9a`, all three jobs in [Security run 41564699043](https://github.com/chriswayneh/resilint/actions/runs/41564699043), [CI run 41564699055](https://github.com/chriswayneh/resilint/actions/runs/41564699055) and [Action run 41564699077](https://github.com/chriswayneh/resilint/actions/runs/41564699077) passed. The [scanner-controls job](https://github.com/chriswayneh/resilint/actions/runs/41564699043/job/125683289153) ran on Ubuntu 24.04.5 with Python 3.12.15: six cases passed, including collection and every setup/call/teardown phase. These hosted results establish Linux execution for that commit. Any subsequent commit requires its own checks; passing checks do not constitute approval to merge.
 
@@ -32,7 +32,7 @@ The [CodeQL guide](codeql.md) documents the separately approved workflow, pinned
 
 Run the normal contributor gates and workflow syntax validation. Scanner acceptance additionally requires a verified Gitleaks executable for temporary clean/deleted-history/redaction fixtures and verified pip-audit for real advisory and controlled failure-path checks. Ordinary matrix tests that lack a verified scanner path report a skip; that skip is not acceptance evidence. The dedicated scanner-controls job provisions the verified paths and requires all six controls through the strict runner. Review all actual findings. A green analysis process alone is not a security approval.
 
-See the [P-4 design](../aidlc-docs/inception/p4-security-ci-design.md), [execution plan](../aidlc-docs/inception/p4-security-ci-plan.md), [pip-audit security model](https://github.com/pypa/pip-audit/blob/v2.10.1/README.md), and [Gitleaks options](https://github.com/gitleaks/gitleaks/blob/v8.30.1/README.md).
+See the [pip-audit security model](https://github.com/pypa/pip-audit/blob/v2.10.1/README.md) and [Gitleaks options](https://github.com/gitleaks/gitleaks/blob/v8.30.1/README.md).
 
 ## Mandatory scanner-control lane
 
@@ -65,4 +65,4 @@ For local Windows verification, use the same three hash-locked requirements file
 
 ## Dependency compatibility correction
 
-An earlier Linux/Python 3.12 dependency-closure check found that cyclonedx-python-lib 11.12.0 requires typing_extensions >=4.6,<5.0 below Python 3.13. Commit `0006e5b5d3a80b98769663f6d3c305a15adecc9a` adds the verified typing-extensions 4.16.0 wheel to the scanner lock for both production and control jobs. The earlier failure, corrected closure results and approval chronology remain in the [audit](../aidlc-docs/audit.md). Cross-target installation alone does not establish Linux runtime execution; the hosted evidence above is specific to its tested commit.
+An earlier Linux/Python 3.12 dependency-closure check found that cyclonedx-python-lib 11.12.0 requires typing_extensions >=4.6,<5.0 below Python 3.13. Commit `0006e5b5d3a80b98769663f6d3c305a15adecc9a` adds the verified typing-extensions 4.16.0 wheel to the scanner lock for both production and control jobs. Cross-target installation alone does not establish Linux runtime execution; the hosted evidence above is specific to its tested commit.

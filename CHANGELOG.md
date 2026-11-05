@@ -5,15 +5,14 @@
 - README terminal GIF replays actual v1.0.0 output for the fictional starter, with a rule explanation and a text reproduction guide.
 ### Changed
 - Release documentation records actual v1.0.0 publication, verified artifacts and stable Action references.
-### Security
-### Fixed
+- README layout refreshed; removed the personal-playground note and internal Codex workflow leftovers (`aidlc-docs/`, `AGENTS.md`).
 
 ## [1.0.0] - 2026-11-04
 ### Added
 - Stable v1 promotes the reviewed candidate's configuration, baselines, starter/explain commands, CI integrations and documented compatibility policy; the candidate entry below records the full changes since v0.4.0.
 - Read-only Linux/Windows/macOS TestPyPI install validation checks the exact wheel against canonical Git source before installation, then runs the documented installed quick start.
 ### Changed
-- Package/runtime metadata and installation examples target 1.0.0; the fictional README demo was recaptured from stable source while preserving the DataGrant presentation.
+- Package/runtime metadata and installation examples target 1.0.0; the fictional README demo was recaptured from stable source with the README layout refreshed.
 - The v1 compatibility commitment covers documented CLI, schema, JSON/SARIF, baseline, configuration and integration interfaces. Python internals, exact human-readable prose and experimental draft RoI mappings retain their documented limits.
 ### Security
 - Includes the candidate's private POSIX output creation, bounded safe parsing, report/export protections, Windows drill locking and reviewed source-bound release evidence. Filesystem trust/ACL limits and optional SARIF disclosure remain documented.
@@ -50,7 +49,7 @@
 - Reproducible Hypothesis tests exercise bounded YAML/CSV bytes, text, structured fields and valid registers through both the loader and CLI.
 - Repository metadata checks keep package/runtime versions, the latest released changelog entry, and README release references synchronized.
 ### Changed
-- README presentation follows the DataGrant layout, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
+- README layout refreshed, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
 - Prepared the v1 candidate metadata and compatibility freeze while preserving truthful latest-stable documentation and the historical demo.
 ### Security
 - New reports, baselines, exports, starters and lock sidecars use private POSIX creation modes; atomic drill-log replacement retains owner-only access instead of widening it to world-readable. Existing ordinary output-file permissions and Windows ACL limitations are documented.
