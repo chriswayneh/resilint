@@ -60,8 +60,16 @@ def test_readme_release_references_are_current():
         r"[Pp]ublished\s+`v([\w.+-]+)`",
     )
     versions = {version for pattern in patterns for version in re.findall(pattern, readme)}
-    assert not versions - {_project_version()}, (
-        f"README resilint release references {sorted(versions)} must match {_project_version()}"
+    allowed = {_project_version()}
+    if re.fullmatch(r"[0-9]+\.[0-9]+\.[0-9]+-rc[1-9][0-9]*", _project_version()):
+        # A candidate source tree still documents its latest published stable demo.
+        # Permit only the newest stable entry, not arbitrary historical versions.
+        stable = re.findall(r"^## \[([0-9]+\.[0-9]+\.[0-9]+)\] - \d{4}-\d{2}-\d{2}$",
+                            _read("CHANGELOG.md"), re.MULTILINE)
+        assert stable, "Candidate changelog must retain the latest stable release"
+        allowed.add(stable[0])
+    assert not versions - allowed, (
+        f"README release references {sorted(versions)} must be in {sorted(allowed)}"
     )
 
 

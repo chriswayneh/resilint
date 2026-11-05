@@ -2,6 +2,12 @@
 
 ## [Unreleased]
 ### Added
+### Changed
+### Security
+### Fixed
+
+## [1.0.0-rc1] - 2026-11-04
+### Added
 - Installation guidance covers pinned PyPI packages and isolated pipx use after stable-v1 publication, retaining the current Git-release alternative and explicit availability limits.
 - Release preparation adds a minimal runtime CycloneDX SBOM, exact artifact checksums, isolated build provenance and verified GitHub release attachment; a read-only Linux self-test exercises evidence generation before release.
 - Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
@@ -28,6 +34,10 @@
 - A CI performance regression checks 10,000 vendors and 2,000 processes from CSV, including JSON reporting, within five seconds; CLI tests verify clear errors above the documented 5 MiB input cap.
 - Reproducible Hypothesis tests exercise bounded YAML/CSV bytes, text, structured fields and valid registers through both the loader and CLI.
 - Repository metadata checks keep package/runtime versions, the latest released changelog entry, and README release references synchronized.
+### Changed
+- Prepared the v1 candidate metadata and compatibility freeze while preserving truthful latest-stable documentation and the historical demo.
+### Security
+- Candidate checks include read-only secret/dependency scanners, isolated Python CodeQL, safe input/output protections and source-bound release evidence; actual publication is verified through protected environments.
 ### Fixed
 - Drill writers validate log targets while holding the existing sidecar lock, preventing cooperating Windows writers from inspecting a log during another writer's atomic replacement.
 - Invalid YAML scalar dates and oversized numeric values, unsupported schema-version strings, and CSV parser/field-limit errors now return a diagnostic with exit 2 instead of an uncaught exception.
