@@ -1,6 +1,6 @@
 # Security CI draft: read-only scanners
 
-This P-4 implementation covers secret and runtime-dependency checks only, tracked in [PR #49](https://github.com/chriswayneh/resilint/pull/49). CodeQL is deferred, and P-4 remains planned. Approval chronology and the correction of an unverified publication-authority claim are retained in the [audit correction](../aidlc-docs/audit.md#p-4--correction-unverified-approval-and-publication-authority-claims).
+The read-only scanner workflow was introduced in [PR #49](https://github.com/chriswayneh/resilint/pull/49). A separate [Python CodeQL workflow](codeql.md) adds source analysis with its own permission and transmission boundary. Task completion is tracked in the [roadmap](../ROADMAP.md). Approval chronology and the correction of an unverified publication-authority claim are retained in the [audit correction](../aidlc-docs/audit.md#p-4--correction-unverified-approval-and-publication-authority-claims).
 
 At commit `0006e5b5d3a80b98769663f6d3c305a15adecc9a`, all three jobs in [Security run 41564699043](https://github.com/chriswayneh/resilint/actions/runs/41564699043), [CI run 41564699055](https://github.com/chriswayneh/resilint/actions/runs/41564699055) and [Action run 41564699077](https://github.com/chriswayneh/resilint/actions/runs/41564699077) passed. The [scanner-controls job](https://github.com/chriswayneh/resilint/actions/runs/41564699043/job/125683289153) ran on Ubuntu 24.04.5 with Python 3.12.15: six cases passed, including collection and every setup/call/teardown phase. These hosted results establish Linux execution for that commit. Any subsequent commit requires its own checks; passing checks do not constitute approval to merge.
 
@@ -24,11 +24,9 @@ The lock validator permits exact named versions and SHA-256 hashes only, rejecti
 
 Coverage is known advisories for explicitly locked runtime packages, not every development/build dependency, malicious package behavior or unknown vulnerability. pip-audit normally can execute code during dependency resolution; the no-resolution options and constrained input are essential. Hashes identify expected bytes, not trustworthy behavior. Missing hashes/wheels, vulnerable dependencies and advisory failures must fail rather than silently skip. Real online results and simulated failure tests are reported separately.
 
-## Deferred CodeQL
+## Separate CodeQL analysis
 
-No executable CodeQL job, SARIF/database upload or security-events write permission is included. Exact CodeQL bundle/query provenance, residual payload behavior and fork/upload support still need evidence. Default CodeQL setup was observed not-configured; no analysis was returned. A read-only workflow-permissions query warned about missing admin:repo_hook scope; no scope expansion or retry is authorized.
-
-Any future CodeQL activation needs a separately reviewed change and specific user confirmation of job-scoped security-events write and SARIF transmission to GitHub code scanning, including possible public PR annotations. Database uploads must be explicitly disabled. No skipped/deferred CodeQL check counts toward P-4 completion. No service/default-setup/fork/access changes are granted here.
+The [CodeQL guide](codeql.md) documents the separately approved workflow, pinned action/bundle selection, job-scoped security-events write and SARIF transmission. Database uploads are explicitly disabled. These permissions and uploads are confined to that separate workflow; the three scanner jobs described here retain their original read-only boundary. No default-setup, fork-policy, account-access or repository-setting change is included.
 
 ## Verification
 

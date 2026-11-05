@@ -439,13 +439,15 @@ issues:
   - id: P-4
     title: Security scanning in CI
     milestone: M4
-    status: planned
+    status: complete
     why: Gate secrets/vulns
     files: '`.github/workflows/security.yml`'
     acceptance: gitleaks (or `trufflehog --only-verified`) on PRs, `pip-audit -r requirements-lock.txt`,
       CodeQL python; all pinned by SHA, least-privilege permissions
     size: S
     depends_on: []
+    completed_in:
+      - 51
 
   - id: P-5
     title: Action version tags policy
