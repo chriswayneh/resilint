@@ -154,6 +154,35 @@ def test_drill_concurrent_records_lose_nothing(tmp_path):
     assert {d["notes"] for d in records} == expected
 
 
+def test_drill_log_target_checks_hold_the_exclusive_lock(tmp_path, monkeypatch):
+    import errno
+    import os
+
+    from resilint import cli
+
+    reg, log = _reg(tmp_path), tmp_path / "d.yaml"
+    lock_path = str(log) + ".lock"
+    original = cli.check_target
+    checked = []
+
+    def inspect_under_lock(path, *args, **kwargs):
+        if path == str(log):
+            assert os.path.exists(lock_path), "log inspected before acquiring its lock"
+            probe = os.open(lock_path, os.O_RDWR)
+            try:
+                with pytest.raises(OSError) as error:
+                    cli._try_lock(probe)
+                assert error.value.errno in (errno.EACCES, errno.EAGAIN, errno.EDEADLK)
+            finally:
+                os.close(probe)
+            checked.append(path)
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(cli, "check_target", inspect_under_lock)
+    assert _rec(reg, log, "--kind", "test", "--result", "pass") == 0
+    assert checked
+
+
 def test_drill_lock_held_fails_cleanly(tmp_path, capsys):
     import os
     reg, log = _reg(tmp_path), tmp_path / "d.yaml"
