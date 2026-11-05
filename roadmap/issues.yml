@@ -493,13 +493,15 @@ issues:
   - id: R-2
     title: Dogfood on a realistic synthetic register
     milestone: M5
-    status: planned
+    status: complete
     why: Real-world proof
     acceptance: '`examples/large/` (fictional, 500 vendors) runs every format plus baseline/config/drills/export-roi
       in CI'
     size: M
     depends_on:
       - R-1
+    completed_in:
+      - 58
 
   - id: R-3
     title: Fresh-machine install test

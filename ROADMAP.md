@@ -26,9 +26,9 @@ Where resilint is going, and what is ready to work on.
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | ✅ Complete (6/6 merged; unreleased) | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | ✅ Complete (6/6 merged; unreleased) | 6 |
-| [v1.0](#v10-stable-release) | Stable release | In progress (1/5 merged) | 5 |
+| [v1.0](#v10-stable-release) | Stable release | In progress (2/5 merged) | 5 |
 
-**38 tasks: 34 complete, 4 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 35 complete, 3 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -127,7 +127,7 @@ Candidate source `v1.0.0-rc1` is prepared for validation. Published builds and r
 | ID | Task |
 | --- | --- |
 | `R-1` | v1.0.0-rc1 PR (version bump + CHANGELOG) ✅ — [#55](https://github.com/chriswayneh/resilint/pull/55) |
-| `R-2` | Dogfood on a realistic synthetic register |
+| `R-2` | [Dogfood on a realistic synthetic register](examples/large/README.md) ✅ — [#58](https://github.com/chriswayneh/resilint/pull/58) |
 | `R-3` | Fresh-machine install test |
 | `R-4` | Final review and security review of the full diff since v0.4.0 |
 | `R-5` | Tag `v1.0.0` + release (maintainer only) |

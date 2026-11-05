@@ -543,6 +543,43 @@
 - Security boundaries: no network, SQL, dependency, workflow/token privilege, account/settings or version changes. Safe parsing, bounds, path/symlink/input guards, atomic replacement and cooperating writer locks remain intact. Existing ordinary files are not retroactively privatized; deliberate sharing and Windows ACL limits are explicit. No blocking finding in this exact diff; hosted main full CodeQL remains the acceptance evidence for the earlier alerts.
 - Next permitted action: commit/push one P-4 follow-up PR, inspect all exact-head hosted gates including actual POSIX regression execution, merge only if passing, then verify main code-scanning results. Keep tags/releases gated; proceed with separately scoped R-2 work while checks run.
 
+## R-2 — release validation inception plan
+
+- Recorded: 2026-11-05T03:14:20.776951+00:00. Actor: Codex preparing the user's authorized v1 validation work; no individual-document user review or independent review is claimed.
+- Artifact: inception/r2-large-register-design.md. Decision: preserve the original roadmap acceptance, use fictional/test-owned data and existing gates, and distinguish source/readiness tests from actual release/index evidence.
+- Boundary: R-1 is not yet complete. This record authorizes planning only; record the satisfied prerequisite and construction decision before implementation. No fixture/installer/workflow construction, release, account access, settings or cleanup is performed here.
+
+## R-2 — satisfied candidate prerequisite and construction decision
+
+- Recorded: 2026-11-05T03:34:07.119108+00:00. Actor: Codex choosing the scoped plan under actual standing user authorization to complete v1; no individual user document review or independent review is claimed.
+- Evidence: R-1 merged at ed501a9ddc9f8e55f3a045ccad6a9aee733a1dd9 after all 28 checks; accepted PR CodeQL analysis 2100404407 returned zero results. Main contains synchronized 1.0.0-rc1 metadata and 34/38 completed tasks. P-2's confirmed publisher configuration is also merged. This is genuine prerequisite completion, not an unmerged local candidate.
+- Decision: normally incorporate main, retain both audit tails, and implement only the reviewed R-2 validation scope in its own PR. Runtime features remain frozen. A discovered runtime defect must receive a separate scoped fix/review.
+- Next permitted action: construct the task, run local/hosted gates and exact-diff security review. R-3 actual index-install execution/publication claims must wait for the candidate's real TestPyPI upload; local fixtures or mocked transport cannot count as that evidence. No tag, package publication, new account trust, settings or cleanup is included in these validation tasks.
+
+## R-2 — resumed completion after presentation
+
+- Recorded: 2026-11-05 04:03:51 UTC. Actor: Codex under the user's actual instruction to keep going toward v1 tonight after the format fixes.
+- Evidence: PR #56 is merged with all 28 exact-head checks; main 07d90c5f8c380b2aff9cddee64c26e4dd0616414 was ordinarily merged here, preserving both complete audit tails. Original source checkout and uncommitted R-2 fixtures remain preserved.
+- Decision: complete the existing nine acceptance scenarios and visibly fictional 500-vendor fixtures under the established R-2 design. P-4 permissions PR #57 remains separate; incorporate its accepted main changes before final combined gates and task acceptance. Do not treat its pending PR or zero-new-result scan as completed runtime remediation.
+- Next permitted action: validate fixture/source correspondence and targeted CLI scenarios, then run all final gates, publish one R-2 PR and record prospective 35/38 completion effective only on accepted merge. No candidate publication follows until the separate security/full-main release hold is cleared.
+
+## R-2 — combined validation and exact-diff review
+
+- Recorded: 2026-11-05 04:07:00 UTC. Actor: Codex, author and complete-diff reviewer; no independent dot or formal GitHub approval is claimed.
+- Prerequisite/fix evidence: accepted permissions PR #57 at daf3f7bbe6f4140fa9730cd1b3785230cdbb5c55 passed all 28 checks and merged as 4f4558c9eeef2cc2f856c5f042818eb331614094. Linux/macOS Python 3.12 jobs ran 393 passed/6 scanner skips with 95% coverage, including the eleven POSIX regressions. Main full CodeQL analysis 2100550943 reports zero results across 50 rules, no analysis error, and the open-alert endpoint returns an empty list. No manual dismissals or tags occurred.
+- Integration: normally merged current accepted main and preserved both complete append-only audit tails; the DataGrant presentation and private-output fix are in this validation tree. No cleanup/history rewrite.
+- Gates: Ruff passes; mypy passes for 11 files; full local pytest 391 passed, 17 documented Windows/POSIX skips in 69.68 seconds with scanner controls configured. Nine targeted R-2 scenarios also passed in 17.17 seconds. Links pass for all 54 tracked Markdown files and staged whitespace passes.
+- Acceptance evidence: exactly 500 synthetic unique vendors, four process references, all criticalities and reserved contacts; all formats and nine rules; local JSON schema and SARIF parity; explicit config/concentration and baseline/new identities; historical failed-to-passing drill transition; RoI table/link counts and draft disclaimer; original and copied inputs preserved.
+- Security/privacy review: all new fixture bytes, including comments, were checked against an independently regenerated copy from the fully reviewed generator (only platform newlines normalized), and parsed records exactly match its deterministic register. Full remaining diff reviewed: bounded synthetic data, temporary outputs, no network/vendor contact/credentials, new dependencies, SQL or runtime/workflow/permission change. Existing 10,000-vendor performance and all original acceptance gates remain. No blocking author finding.
+- Next permitted action: commit/push this R-2 implementation and open its one PR, then add the actual PR number to prospective completion records and inspect that metadata-only delta. Require all final exact-head hosted gates before merge; 35/38 completion is effective only on accepted R-2 merge.
+
+## R-2 — prospective completion for PR #58
+
+- Recorded: 2026-11-05 04:07:38 UTC. Actor: Codex, author; actual user v1 continuation/merge authority is recorded above. No independent or formal GitHub approval is claimed.
+- Artifact: PR #58. Only R-2 status/completed_in and the matching overview change: 35/38 complete, three planned, M5 2/5. These are prospective branch records effective only when this PR passes all final-head gates and merges; main remains 34/38 until then.
+- Decision/conditions: preserve all original task acceptance/dependencies and other task definitions, the accepted DataGrant format, runtime and permissions fix. Validate the metadata-only delta, links and whitespace; earlier full combined test results are retained, not claimed as a rerun.
+- Next permitted action: publish the final metadata head, require every hosted check on that exact head and inspect full diff before ordinary accepted merge. Candidate/index/release work remains a separate stage.
+
 ## R-3 — release validation inception plan
 
 - Recorded: 2026-11-05T03:14:20.804597+00:00. Actor: Codex preparing the user's authorized v1 validation work; no individual-document user review or independent review is claimed.
