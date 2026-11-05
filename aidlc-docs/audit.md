@@ -284,6 +284,84 @@
 
 - Verification recorded 2026-11-05T02:20:36.132652+00:00: Ruff, mypy (11 source files), links and whitespace passed. Full suite: 345 passed, 12 skipped in 66.87 seconds; six skips require Windows privileges and six scanner cases require external tool configuration. Separately configured strict scanner lane: all six real cases passed all phases without skips in 10.27 seconds. All task files except combined changelog/audit match the prior reviewed head; scanner code/locks and presentation are inherited unchanged from main. Complete final delta reviewed for security and privacy; no blocking new finding. Hosted results on this new merge commit are required before integration.
 
+## P-2 — user inception and push approval
+
+- Received and recorded: 2026-11-03T00:29:03.242777+00:00.
+- Actual approver: user, explicitly approving the full P-2 design and execution plan and requesting it be pushed.
+- Decision: authorize scoped repository construction, verification and one draft PR. This approval follows presentation of both complete documents; it is not implementation-stage review.
+- Scope: release workflow/helper/tests/docs and audit, preserving runtime behavior, existing work and all gates. P-1 is merged. Keep P-2 planned until external acceptance is evidenced.
+- Boundaries: publisher registration requires separate specific action-time confirmation after account/target verification. No account/access setup, settings changes, publication, tags, cleanup or history rewriting is included. Actual releases and merges retain their separate gates and authorization boundaries.
+- Next permitted action: integrate current main normally into the existing P-2 branch, reconcile approved scope, verify locally and through hosted CI, push a draft PR and present the immutable diff for implementation review.
+
+## P-2 — delegated inception review
+
+- Received and recorded: 2026-11-03T00:29:15.700551+00:00.
+- Actual reviewer: dot, delegated routine design reviewer, not personal user or formal GitHub/implementation approval.
+- Decision: approve the supplied P-2 design and plan for repository-only construction and one draft PR. User construction/push approval is recorded separately above.
+- Conditions: strict tag/version/dated-changelog/main-ancestry checks, safe quoted environment inputs, pinned actions, read-only default and isolated publisher OIDC permission. Preserve protected environments; same build artifact goes to TestPyPI and then stable-only PyPI after exact-version external-venv verification. No extra-index dependency resolution; bounded retries, immutable versions and duplicate-upload failure.
+- Validation: metadata failure/normalization tests, locally testable ancestry rejection, static workflow permission/dependency assertions, full local/hosted gates, syntax and complete-diff security review. No publication or live trust setup for tests.
+- Boundaries: no persistent access, publisher registration, settings/environment changes, tags/releases or release triggering. Any activating merge or security-permission expansion requires separate assessment under actual user scope and tool policy. Keep P-2 planned; external acceptance and R-1 prerequisites cannot be inferred from a workflow PR. Preserve other work and artifacts; no cleanup or denial bypass.
+- Next permitted action: construct the reviewed repository draft and return the immutable full patch and actual evidence for independent implementation/security review.
+
+## P-2 — repository draft verification
+
+- Recorded: 2026-11-03T00:30:27.907352+00:00.
+- Actor: Codex, author and manual complete-diff security reviewer; independent implementation review remains pending.
+- Scope: release workflow/helper/tests/docs and inception/audit only. Runtime, package version/dependencies and original roadmap definitions/counts are unchanged; P-2 remains planned.
+- Local gates: Ruff passes; mypy passes for 11 source files; pytest 311 passed and six local Windows privilege skips in 42.64 seconds; relative Markdown links in 35 tracked files and whitespace pass. Actionlint 1.7.12 passes with optional shellcheck/pyflakes integrations disabled.
+- Acceptance evidence: synthetic stable/candidate normalization, malformed/injection tags, mismatched versions and undated changelog tests pass. A temporary Git repository proves the exact ancestry command accepts a merged base and rejects an unmerged commit. Static tests verify isolated publisher OIDC permissions, protected environment names, same-artifact dependency ordering, stable-only production gating, safe index selection and explicit installed-version assertion. Current 0.4.0 source rejects a premature v1.0.0-rc1 identity with exit 2.
+- Security/privacy review: complete eight-file feature diff reviewed; no blocking author findings. Tag/ref values enter quoted commands through environment variables; strict tag validation constrains generated outputs. Read-only default, pinned actions, no checkout credential persistence, OIDC only in isolated protected publisher jobs, same-run distribution artifacts and bounded index retry preserve the intended boundary. No PR expression is interpolated directly into shell code. Tests use temporary fictional repositories/data; public records exclude private paths and internal identifiers. SQL controls are inapplicable.
+- Limits: static and local verification do not demonstrate live OIDC trust, index upload or installation. Publisher/account/ownership/2FA configuration remains unverified and needs specific action-time user confirmation before persistent trust registration. No tag, release, publication, settings/access change or cleanup occurred. Hosted exact-head checks and independent implementation/security review remain required; activating merge authority must be separately assessed.
+- Next permitted action: push one draft PR with complete immutable diff and actual validation evidence. No P-2 completion claim; R-2 remains blocked on genuinely satisfied R-1.
+
+## P-2 — delegated implementation review of repository draft
+
+- Received and recorded: 2026-11-03T00:34:14.642500+00:00.
+- Actual reviewer: dot, delegated routine implementation reviewer; not personal user approval or formal GitHub approval.
+- Reviewed artifact: complete eight-file PR #47 diff at 2efdbaa080c697059a2c4c8fecd0f012074b0ce6.
+- Decision: approve repository draft only, conditional on all final-head hosted gates passing. Independent static review found no blocking issue in quoted strict tag/version/changelog/main-ancestry validation, read-only default, isolated protected publisher OIDC, same-artifact TestPyPI verification followed by stable-only PyPI, hash-locked runtime dependencies and absence of extra-index dependency resolution.
+- Evidence limit: dot did not execute the author-reported 311 local tests or verify live uploads, index installation or publisher trust.
+- Next permitted action: append only this decision, verify the delta is audit-only, push within existing narrow draft authorization and check all hosted gates on the resulting new head. Old-head CI does not transfer. Keep PR #47 draft for the requested code review.
+- Boundaries: no activating merge, formal GitHub approval, persistent publisher trust, settings/access changes, environment approvals, tags, releases or publication. P-2 remains planned until external acceptance is evidenced. P-4/P-5 remain read-only planning; no broad multi-task push, denied-action retry or cleanup. Preserve existing work and scope.
+
+## V1 — user-authorized integration of PRs 47, 48 and 49
+
+- Recorded: 2026-11-03T10:21:29.918085+00:00. Actor: user, directly in this project chat.
+- Decision: resolve conflicts in PRs #47, #48 and #49, preserve the new presentation, rerun checks and merge each when passing, then continue toward v1. This is new specific authorization, not reliance on expired permission or earlier disputed records.
+- Execution plan: isolated worktrees preserve existing local work; merge current main without rebasing or force-pushing; retain all audit entries and presentation content, relocating Action-policy text into the new reference section. Review each resolution and require local gates plus exact-final-head hosted checks before merging.
+- Scope limits: no formal GitHub review submission, tags, releases, publisher registration, settings/access changes or CodeQL activation. Publisher trust and protected-environment publication remain separate. No denied-operation retry, cleanup or unrelated history changes.
+- Next permitted action: integrate P-2 with current main, validate and push its existing branch, then merge if passing; repeat for P-5 and P-4 against updated main.
+
+## P-2 — renewed user approval and conflict reconciliation
+
+- Recorded: 2026-11-05T02:08:17.002632+00:00. Actor: user, actual approval of all waiting work in the working chat; recorded by Codex.
+- Decision: continue toward v1 and apply waiting changes, including the reviewed PR #47 implementation and reconciliation with main b58fd6fb5d3e0cf9b197ac21877e12408538e480. Preserve presentation and previous decisions.
+- Resolution: retain main's complete audit plus the P-2 audit history. README and presentation files are inherited from main; workflow, helper, tests and releasing guide remain identical to reviewed PR head c1d2e530141b0e0ca89b47ded2670ff9a4004a13. No new feature or permission change.
+- Next permitted action: run required local gates, review the complete final diff, create an ordinary merge commit, push only PR #47 and require hosted checks. The GitHub integration denied marking PR #49 ready; do not retry that action through another interface. Persistent publisher trust and external setup are still unverified.
+
+- Verification recorded 2026-11-05T02:09:21.115656+00:00: Ruff and mypy (11 source files) passed; links in 38 Markdown files passed; whitespace passed; full suite 311 passed, 6 existing Windows skips in 39.11 seconds. Complete task delta checked; executable workflow/helper/tests and publishing documentation match the previously reviewed PR head exactly. Inherited presentation matches main. Static review confirms quoted tag handling, strict release identity, read-only defaults, OIDC confined to protected publishers and build-once artifact reuse. No new blocking security/privacy finding; no SQL or runtime network change. Live publisher registration and publication remain untested and P-2 remains planned.
+
+## P-2 — integration after security merge
+
+- Recorded: 2026-11-05T02:18:47.287177+00:00. Actor: Codex under the user's actual renewed approval to apply waiting work and continue through v1, including the explicitly requested signed-in browser route after connector limitations were explained. No new account permission or repository setting is needed for these ordinary owner actions.
+- Evidence: PR #49 merged at f1d9da663740235fcb370d15f49fc8194f60277f after 28 successful checks on its reviewed head. Preserve all prior P-4 audit records, including the correction of unverified approval claims.
+- Decision and resolution: ordinary merge of that main commit into PR #47; retain both audit histories and both changelog bullets. Preserve current presentation and prior task behavior. Run full local gates and require current hosted checks before merge. No publisher registration, environment approval, tag, package publication, settings change or history rewrite is inferred.
+
+- Verification recorded 2026-11-05T02:20:37.161457+00:00: Ruff, mypy (11 source files), links and whitespace passed. Full suite: 356 passed, 12 skipped in 66.34 seconds; six skips require Windows privileges and six scanner cases require external tool configuration. Separately configured strict scanner lane: all six real cases passed all phases without skips in 10.23 seconds. All task files except combined changelog/audit match the prior reviewed head; scanner code/locks and presentation are inherited unchanged from main. Complete final delta reviewed for security and privacy; no blocking new finding. Hosted results on this new merge commit are required before integration.
+
+## P-2 — final integration after Action-policy merge
+
+- Recorded: 2026-11-05T02:25:28.484411+00:00. Actor: Codex under the user's actual v1 continuation and merge authorization. PR #48 merged at b2ab62c15ff47ecb9dc8eb5d950e0ee74201e60e after 25 successful checks; P-5 is complete on main.
+- Decision: reconcile PR #47 with that main through an ordinary merge. Retain both audit tails and both added changelog entries; inherit the reviewed Action policy and current presentation. Release workflow/helper/tests remain unchanged from the reviewed P-2 head. Rerun required local and hosted checks, review the complete final delta, then merge only if passing. P-2 external setup remains unverified; no account trust, tag, publication or settings action follows from this merge.
+
+## P-2 — actual publisher authorization, configuration and completion evidence
+
+- Recorded: 2026-11-05T02:38:49.441025+00:00. Actor: user, approving the concrete registration question for both package indexes at action time; executed and verified by Codex. This specific approval is distinct from broad release permission and earlier superseded authority assertions.
+- Approved coordinates: project resilint, GitHub owner chriswayneh, repository resilint, workflow release.yml; environment pypi on PyPI and testpypi on TestPyPI. Both signed-in accounts showed verified email and authenticator-based 2FA. Both services confirmed successful pending publisher registration with exactly those coordinates. No API token was created. Pending registration does not reserve a package name or prove an upload.
+- GitHub evidence: read-only inspection verified both existing named environments require the maintainer reviewer, permit only v* tags through custom deployment policy and have no allowed branches. No protection, repository setting or permission was changed.
+- Verification: final combined suite 362 passed, six existing Windows privilege skips in 49.19 seconds, including the configured real scanner cases. Ruff, mypy (11 source files), links and whitespace passed before the documentation-only completion update. Task YAML comparison preserves every original acceptance criterion/dependency and every non-P-2 task; P-2 is prospectively complete in PR #47 (30/38 only on merge).
+- Review and limits: exact-head P-2 executable files still match the reviewed implementation. Complete resolution/status/documentation delta reviewed for secrets, injection, least privilege and privacy; no blocking new finding. No live OIDC upload, index install, tag or release is claimed. Next permitted action under the user's standing v1 approval: commit, push PR #47, require final-head hosted gates, and merge when passing. Release validation remains required before publishing a candidate or v1.
+
 ## P-4 — user approval of waiting reconciliation
 
 - Recorded: 2026-11-05T02:07:36.643454+00:00. Actor: user, actual approval in the working chat; recorded by Codex.
@@ -310,3 +388,17 @@
 - Next permitted action: update the related documentation/changelog, run required gates, inspect the full final diff, push one P-4 task PR and require real hosted analysis plus all existing gates. P-4 remains planned until actual acceptance evidence is obtained; final completion metadata must land in that same task PR.
 
 - Activation-head local verification recorded 2026-11-05T02:40:52.289755+00:00: Ruff, mypy (11 source files), links in 43 Markdown files and whitespace passed; full suite 347 passed, 12 documented skips in 38.12 seconds. Existing scanner controls/locks are unchanged. Full task diff reviewed, including the exact separate workflow and associated transmission documentation; no blocking author finding. No hosted CodeQL execution is claimed yet.
+
+## P-4 — integration with completed publisher workflow
+
+- Recorded: 2026-11-05T02:42:12.903194+00:00. Actor: Codex under the user's standing v1 integration authorization and specific CodeQL activation approval.
+- Decision: normally merge main e9132ab09dedb10993a0419d452dbb99ca133db1 after PR #47 passed 25 checks and merged. Resolve only the audit conflict by retaining both complete tails. Existing CodeQL and scanner workflow code/locks are unchanged; the newly merged publisher helper/tests remain intact.
+- Next permitted action: require complete local/hosted verification on the combined head, inspect actual CodeQL findings and complete P-4 metadata only when accepted. No tag, release or package upload has occurred.
+
+## P-4 — hosted CodeQL evidence and prospective completion
+
+- Recorded: 2026-11-05T02:44:20.656523+00:00. Actor: Codex, author verification under actual specific CodeQL approval and standing v1 merge authorization.
+- Evidence: CodeQL run 41956829233 completed successfully for PR #51's initial published head ca52bda86e659d7308c68216c2b1559b9dbc24b5. GitHub code-scanning analysis 2100209165 analyzed PR merge commit 84d784d49cdb6121e460f88454cdff7b08fd4154, reported 50 rules and zero results with no analysis error. This is actual hosted execution and accepted SARIF, not a local simulation or proof of no vulnerabilities.
+- Combined-head local gates: Ruff, mypy (11 source files), links across 46 Markdown files and whitespace passed; full suite 364 passed, six existing Windows privilege skips in 43.39 seconds, with verified scanner tools configured.
+- Decision: preserve the complete workflow/query and data-boundary review; prospectively mark P-4 complete in PR #51, preserving all acceptance criteria and dependencies. Counts become 31/38 only on merge. The existing secret, advisory and mandatory scanner controls remain required and unchanged.
+- Next permitted action: commit and push this reconciliation/completion update, require all hosted gates and accepted analysis on the resulting immutable head, inspect any actual findings and merge only if passing. Earlier hosted results do not transfer to a new commit. No separate account/access setting or database upload is authorized.

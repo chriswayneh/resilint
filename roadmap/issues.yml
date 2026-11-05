@@ -413,7 +413,7 @@ issues:
   - id: P-2
     title: Release workflow (PyPI Trusted Publishing)
     milestone: M4
-    status: planned
+    status: complete
     why: '`pip install resilint`'
     files: '`.github/workflows/release.yml`'
     acceptance: Triggered on `v*` tag only; OIDC trusted publisher (no API token secret); environment
@@ -421,6 +421,8 @@ issues:
     size: M
     depends_on:
       - P-1
+    completed_in:
+      - 47
 
   - id: P-3
     title: Provenance + SBOM
@@ -437,13 +439,15 @@ issues:
   - id: P-4
     title: Security scanning in CI
     milestone: M4
-    status: planned
+    status: complete
     why: Gate secrets/vulns
     files: '`.github/workflows/security.yml`'
     acceptance: gitleaks (or `trufflehog --only-verified`) on PRs, `pip-audit -r requirements-lock.txt`,
       CodeQL python; all pinned by SHA, least-privilege permissions
     size: S
     depends_on: []
+    completed_in:
+      - 51
 
   - id: P-5
     title: Action version tags policy

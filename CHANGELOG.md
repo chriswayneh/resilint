@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
 - The planned Action tag policy describes the future stable-v1 alias, immutable version references and deliberate full-SHA pinning with its limits.
 - Secret-history and runtime-dependency CI checks use verified scanner tooling and constrained inputs; a separate pinned Python CodeQL job submits SARIF to GitHub with database uploads disabled.
 - CI builds source/wheel distributions, validates metadata with Twine and smoke-tests an installed wheel outside the checkout, including the packaged starter template.
