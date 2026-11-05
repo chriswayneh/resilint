@@ -10,11 +10,9 @@
 
 </div>
 
-> **Status: frozen at v1.0.0.** resilint is no longer under active development. The v1.0.0 release on PyPI still works as documented; issues and PRs may not get a response.
+> **Status: frozen at v1.0.0.** resilint is no longer under active development. The [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) release on [PyPI](https://pypi.org/project/resilint/1.0.0/) still works as documented; issues and PRs may not get a response. See the [v1 stability policy](docs/stability.md).
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML or CSV file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
-
-**Status:** [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is released and available on [PyPI](https://pypi.org/project/resilint/1.0.0/). See the [v1 stability policy](docs/stability.md) and [roadmap](ROADMAP.md).
 
 ## Demo
 

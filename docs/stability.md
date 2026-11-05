@@ -21,9 +21,7 @@ The Python import API, private modules/adapters, dataclass constructors, interna
 
 ## Version changes
 
-Patch releases fix defects without intentionally removing supported interfaces. Correcting a false positive/negative or rejecting unsafe malformed input may change findings; release notes must describe that effect. Critical security fixes can tighten accepted input when retaining it would be unsafe.
-
-Minor releases may add commands, flags, optional fields or rules. New rules can introduce findings and fail an existing CI threshold, so review the changelog and pin an exact version when updates need controlled adoption. Existing default thresholds and severity meanings remain stable unless a documented defect is corrected. Removing supported interfaces, renaming fields or repurposing rule IDs requires a major release.
+No further releases are planned while resilint is frozen at v1.0.0.
 
 ## Deprecation
 
