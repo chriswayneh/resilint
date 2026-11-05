@@ -1,6 +1,6 @@
 # Python CodeQL analysis
 
-The proposed [CodeQL workflow](../.github/workflows/codeql.yml) completes the Python-analysis part of P-4 alongside the separate [secret/dependency scanners](security-ci.md). Activation requires the specific SARIF-transmission approval recorded in its [design](../aidlc-docs/inception/p4-codeql-design.md). Local tests alone do not establish hosted analysis or task completion.
+The [CodeQL workflow](../.github/workflows/codeql.yml) completes the Python-analysis part of P-4 alongside the separate [secret/dependency scanners](security-ci.md). The specific SARIF-transmission approval is recorded in the [audit](../aidlc-docs/audit.md), with scope defined in its [design](../aidlc-docs/inception/p4-codeql-design.md). Local tests alone do not establish hosted analysis or task completion.
 
 ## Analysis and transmission boundary
 

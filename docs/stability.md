@@ -31,6 +31,20 @@ Deprecations are announced in the changelog and affected guide with a replacemen
 
 There are no active deprecations or planned removals for v1. Python internals and the experimental draft RoI mapping are explicitly outside the stable interface above. See [CLI usage](usage.md), [schema](schema.md), [baseline format](baseline.md), [configuration](config.md) and the [changelog](../CHANGELOG.md).
 
+## Action version tags
+
+The `@v1` alias and `@v1.0.0` release reference are planned and are not available yet. After v1.0.0 is successfully published and the [release checklist](../roadmap/README.md#release-checklist) is complete, the intended `v1` alias will track reviewed stable v1 releases only. It must never point to a release candidate or a different major version. Until then, use an existing release reference or a reviewed development commit.
+
+| Reference | Update behavior |
+| --- | --- |
+| `@v1` (future) | Moving major alias; receives reviewed stable v1 fixes and additions without a workflow edit |
+| `@v1.0.0` (future example) | Exact release name; project policy keeps version tags immutable |
+| Full 40-character commit SHA | Pins this repository's code for controlled adoption; update deliberately after reviewing release notes |
+
+Resolve a chosen published version reference to its commit and record the readable version in a comment beside the SHA. A SHA does not make the runner, network services or every transitive dependency immutable. New minor-version rules can produce new findings even within v1; review the changelog before updating a pinned reference when findings changes need controlled adoption.
+
+This policy describes intended reference behavior and grants no operational authorization. Creating or moving any tag requires actual user authorization and the applicable release gates. The planned moving major alias is distinct from immutable version tags; this document does not authorize rewriting version tags or branch history.
+
 ## v1 freeze audit
 
 The v0.4.0 CLI was compared with the proposed v1 interface. All 17 existing long flags, the five report formats, the three existing command paths and RL001–RL009 are retained. The additions are `init`, `explain`, `--config`, `--baseline`, `--write-baseline` and `--csv-delimiter`.

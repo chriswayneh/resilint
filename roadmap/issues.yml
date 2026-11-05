@@ -448,13 +448,15 @@ issues:
   - id: P-5
     title: Action version tags policy
     milestone: M4
-    status: planned
+    status: complete
     why: Users pin `@v1`
     files: '`docs/stability.md`, README'
     acceptance: Documents `@v1` moving tag + `@v1.0.0` + SHA pinning advice
     size: S
     depends_on:
       - D-2
+    completed_in:
+      - 48
 
   - id: P-6
     title: Install docs switch to PyPI

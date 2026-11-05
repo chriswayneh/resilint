@@ -36,6 +36,8 @@ resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
 
 ## GitHub Action
 
+For controlled Action adoption, use a full reviewed commit SHA and update deliberately after reviewing release notes. The future `@v1` alias and `@v1.0.0` release reference are planned and unavailable until v1 publication. See the [Action tag policy](stability.md#action-version-tags) for update behavior and pinning limits.
+
 The `format` input accepts `text`, `json`, `md`, `sarif`, or `regmap`; `fail-on` accepts `low`, `medium`, `high`, or `critical`. These inputs are passed to the CLI for validation. Unknown values exit with code 2 and fail the Action before any report is written.
 
 The development Action exposes three string outputs from the same check that creates the report:
