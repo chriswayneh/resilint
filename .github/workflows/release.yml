@@ -31,13 +31,18 @@ jobs:
           git merge-base --is-ancestor HEAD origin/main
           python scripts/release_metadata.py "$RELEASE_TAG" >> "$GITHUB_OUTPUT"
       - run: python -m pip install --require-hashes -r requirements-lock.txt
-      - run: python -m pip install -e ".[dev]" build twine
+      - run: python -m pip install -e ".[dev]"
       - run: ruff check .
       - run: mypy src
       - run: python scripts/check_links.py
       - run: pytest -q --cov=src/resilint --cov-fail-under=90
-      - run: python -m build
-      - run: python -m twine check dist/*
+      - name: Build distributions with hash-locked packaging tools
+        run: |
+          python -m venv "$RUNNER_TEMP/build-tools"
+          "$RUNNER_TEMP/build-tools/bin/python" -m pip install --upgrade pip
+          "$RUNNER_TEMP/build-tools/bin/python" -m pip install --require-hashes --only-binary=:all: -r requirements-build-lock.txt
+          "$RUNNER_TEMP/build-tools/bin/python" -m build --no-isolation
+          "$RUNNER_TEMP/build-tools/bin/python" -m twine check dist/*
       - name: Generate and validate runtime-only release evidence
         env:
           RELEASE_TAG: ${{ github.ref_name }}

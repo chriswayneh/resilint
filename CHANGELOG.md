@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Changed
+- Release and package CI install packaging tools from hash-locked `requirements-build-lock.txt` and build with `python -m build --no-isolation`.
 ### Added
 - README terminal GIF replays actual v1.0.0 output for the fictional starter, with a rule explanation and a text reproduction guide.
 ### Changed
