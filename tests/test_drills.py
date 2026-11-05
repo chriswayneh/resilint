@@ -186,7 +186,7 @@ def test_drill_log_target_checks_hold_the_exclusive_lock(tmp_path, monkeypatch):
 def test_drill_lock_held_fails_cleanly(tmp_path, capsys):
     import os
     reg, log = _reg(tmp_path), tmp_path / "d.yaml"
-    fd = os.open(str(log) + ".lock", os.O_RDWR | os.O_CREAT, 0o644)
+    fd = os.open(str(log) + ".lock", os.O_RDWR | os.O_CREAT, 0o600)
     if os.name == "nt":
         import msvcrt
         msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)

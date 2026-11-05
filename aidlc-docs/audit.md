@@ -526,6 +526,23 @@
 - Next permitted action: inspect the final staged exact diff, verify staged links, metadata and whitespace, commit/push one task PR, require all exact-head hosted gates, then merge under the actual v1 delegation only if passing. After formatting is in place, resume the separately designed permission fix; do not tag a release with unresolved confirmed findings.
 - Final staged verification recorded 2026-11-05 03:54:17 UTC: links pass for all 51 tracked Markdown files; four metadata tests pass; full staged diff and privacy/security review are complete; whitespace passes after removing the new task record's extra final blank line. No blocking presentation-task finding; pre-existing runtime alerts remain pending.
 
+## P-4 follow-up — private output design and construction decision
+
+- Recorded: 2026-11-05 04:00:07 UTC. Actor: Codex, designer/implementer under the user's actual direction to continue v1 after the format fix and prior v1 fix/merge delegation. This is not an independent or personal user design/GitHub approval.
+- Evidence/prerequisite: presentation PR #56 at 0c9566e8ba7d21ba0921360952d129490ff4373c passed all 28 exact-head hosted checks, then Codex merged it normally under delegation at 2026-11-05T03:58:18Z. Main is 07d90c5f8c380b2aff9cddee64c26e4dd0616414; history, settings and original task counts remain.
+- Artifact: [private output technical design and plan](inception/p4-private-output-design.md). Completed static triage found conditional POSIX disclosure in CodeQL #3/#1; empty sidecars #2/#4 carry no sensitive payload. No remote alert dismissal occurred.
+- Decision: one P-4 follow-up PR uses 0600 for newly created report/export/baseline/starter/lock files and replacement drill logs, with documented existing-output and Windows ACL semantics, synthetic POSIX regressions and existing platform/concurrency gates.
+- Conditions: preserve path/input/symlink protections, safe bounded parsing and offline operation; no dependency/workflow/version/account/settings/tag/release changes. This task does not advance R-2/R-3 or expand the 38-task denominator.
+- Next permitted action: implement this bounded fix, verify required gates and exact diff, publish one task PR, and merge only if all hosted checks pass. Inspect main full CodeQL afterward before candidate tagging.
+
+## P-4 follow-up — implementation evidence and exact-diff review
+
+- Recorded: 2026-11-05 04:01:56 UTC. Actor: Codex, author and complete exact-diff security reviewer; not an independent dot or formal GitHub approval.
+- Verification: Ruff passes after import-order correction; mypy passes for 11 files; full local pytest 382 passed, 17 skipped in 61.38 seconds. Skips are the six existing Windows privilege cases and eleven new POSIX-only permission cases; Linux/macOS execution of those new regressions remains required. Links pass for all 52 tracked Markdown files; staged whitespace passes.
+- Changes reviewed: three runtime mode changes (new ordinary output, new lock and replacement-log chmod), matching synthetic empty-lock fixture, eleven real-filesystem POSIX scenarios, usage/drill documentation and task records/changelog. Tests restore umask on every path, verify preserved register bytes, exercise all public writers, retain existing ordinary-output modes and make new/private/shared drill destinations private.
+- Security boundaries: no network, SQL, dependency, workflow/token privilege, account/settings or version changes. Safe parsing, bounds, path/symlink/input guards, atomic replacement and cooperating writer locks remain intact. Existing ordinary files are not retroactively privatized; deliberate sharing and Windows ACL limits are explicit. No blocking finding in this exact diff; hosted main full CodeQL remains the acceptance evidence for the earlier alerts.
+- Next permitted action: commit/push one P-4 follow-up PR, inspect all exact-head hosted gates including actual POSIX regression execution, merge only if passing, then verify main code-scanning results. Keep tags/releases gated; proceed with separately scoped R-2 work while checks run.
+
 ## R-2 — release validation inception plan
 
 - Recorded: 2026-11-05T03:14:20.776951+00:00. Actor: Codex preparing the user's authorized v1 validation work; no individual-document user review or independent review is claimed.
