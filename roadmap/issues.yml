@@ -413,7 +413,7 @@ issues:
   - id: P-2
     title: Release workflow (PyPI Trusted Publishing)
     milestone: M4
-    status: planned
+    status: complete
     why: '`pip install resilint`'
     files: '`.github/workflows/release.yml`'
     acceptance: Triggered on `v*` tag only; OIDC trusted publisher (no API token secret); environment
@@ -421,6 +421,8 @@ issues:
     size: M
     depends_on:
       - P-1
+    completed_in:
+      - 47
 
   - id: P-3
     title: Provenance + SBOM
