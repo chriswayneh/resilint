@@ -34,7 +34,7 @@ If a job fails, inspect its logs and rerun failed jobs after correcting the exte
 
 The first end-to-end run needs both publisher registrations and environment setup. A merged workflow alone is not evidence that publication works. See the [stability policy](stability.md) for compatibility expectations.
 
-Publisher registration and protected-environment configuration are recorded in the [audit](../aidlc-docs/audit.md). A pending publisher does not reserve a project name. Configuration and workflow validation do not prove a successful OIDC upload or installation from an index; verify those during the candidate release.
+Publisher registration and protected-environment configuration are maintainer-owned. A pending publisher does not reserve a project name. Configuration and workflow validation do not prove a successful OIDC upload or installation from an index; verify those during the candidate release.
 
 ## SBOM, provenance and artifact identity
 

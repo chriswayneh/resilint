@@ -28,4 +28,4 @@ Record the exact reviewed head, acceptance results and any material limitations.
 
 See [CONTRIBUTING.md](https://github.com/chriswayneh/resilint/blob/main/CONTRIBUTING.md) and the [working guide](https://github.com/chriswayneh/resilint/blob/main/roadmap/README.md).
 
-Follow [AGENTS.md](https://github.com/chriswayneh/resilint/blob/main/AGENTS.md) and the [workflow records](https://github.com/chriswayneh/resilint/blob/main/aidlc-docs/README.md). Stage review does not grant user-owned GitHub approval, merge, release or settings authority.
+Follow the [roadmap working guide](https://github.com/chriswayneh/resilint/blob/main/roadmap/README.md). Stage review does not grant user-owned GitHub approval, merge, release or settings authority.

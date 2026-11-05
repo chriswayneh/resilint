@@ -122,15 +122,15 @@ Build, verify and publish reproducible release artifacts before v1.0.
 
 Stable v1 is published after actual candidate installs, synthetic dogfooding and final reviews.
 
-Stable [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is available on PyPI with signed provenance, SBOM and checksums. The `v1` Action alias points to the same stable commit. See the [completed release verification](aidlc-docs/reviews/v1-release-verification.md) and [audit](aidlc-docs/audit.md). The rc1 prerelease remains available for validation reproduction.
+Stable [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is available on PyPI with signed provenance, SBOM and checksums. The `v1` Action alias points to the same stable commit. The rc1 prerelease remains available for validation reproduction.
 
 | ID | Task |
 | --- | --- |
 | `R-1` | v1.0.0-rc1 PR (version bump + CHANGELOG) ✅ — [#55](https://github.com/chriswayneh/resilint/pull/55) |
 | `R-2` | [Dogfood on a realistic synthetic register](examples/large/README.md) ✅ — [#58](https://github.com/chriswayneh/resilint/pull/58) |
 | `R-3` | Fresh-machine install test ✅ — [#60](https://github.com/chriswayneh/resilint/pull/60) |
-| `R-4` | [Final full-diff and security review](aidlc-docs/reviews/r4-final-candidate-review.md) ✅ — [#61](https://github.com/chriswayneh/resilint/pull/61) |
-| `R-5` | [v1.0.0 release and verified publication](aidlc-docs/reviews/v1-release-verification.md) ✅ — [#62](https://github.com/chriswayneh/resilint/pull/62), [#63](https://github.com/chriswayneh/resilint/pull/63) |
+| `R-4` | Final full-diff and security review ✅ — [#61](https://github.com/chriswayneh/resilint/pull/61) |
+| `R-5` | v1.0.0 release and verified publication ✅ — [#62](https://github.com/chriswayneh/resilint/pull/62), [#63](https://github.com/chriswayneh/resilint/pull/63) |
 
 **Maintainer only:** tags and releases are created by the maintainer (`R-5`), after the [release checklist](roadmap/README.md#release-checklist) is complete.
 
@@ -144,7 +144,7 @@ This governance task is tracked separately from the original 38 v1 product tasks
 | --- | --- | --- |
 | `ADOPT-01` | Adopt the documented AI-DLC workflow and truthful stage audit | ✅ Complete on merge — [#43](https://github.com/chriswayneh/resilint/pull/43) |
 
-See the [design](aidlc-docs/inception/adopt-01-design.md), [execution plan](aidlc-docs/inception/adopt-01-plan.md) and [audit](aidlc-docs/audit.md).
+See pull requests linked above for design and execution history.
 
 ---
 

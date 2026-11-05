@@ -21,7 +21,7 @@ Include final task status, completion PRs in `issues.yml`, and overview updates 
 6. The PR body includes the task id, what changed, the acceptance results, and a CHANGELOG `[Unreleased]` entry for any user-visible change.
 7. Keep these non-goals: no network calls, no vendor contact or scraping, no SaaS, no telemetry. Use fictional data only in examples and tests.
 8. Update docs in the same PR when behavior, flags, or schema change.
-9. Follow [AGENTS.md](../AGENTS.md) and the [workflow records](../aidlc-docs/README.md): design before implementation, real stage decisions recorded before advancement, and security review before presentation.
+9. Follow design-before-implementation: record real stage decisions before advancement, and complete security review before presentation.
 
 ## Coverage gate
 
@@ -69,7 +69,7 @@ Apply this checklist to each release from v0.4.1 through v1.0.0.
 - Published on [PyPI](https://pypi.org/project/resilint/1.0.0/) and [GitHub](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0), with wheel, sdist, SBOM, checksums, release notes and signed provenance.
 - Includes the completed maintenance, data hardening, integrations, documentation/freeze and packaging milestones; intermediate milestone labels were not separate releases.
 - Actual source-bound TestPyPI installs passed Linux, Windows and macOS before protected production publication. Public artifacts and an actual production PyPI install were verified.
-- The initial `v1` Action alias points to the same reviewed stable commit. See the [completed release checklist and identities](../aidlc-docs/reviews/v1-release-verification.md) and [stability policy](../docs/stability.md).
+- The initial `v1` Action alias points to the same reviewed stable commit. See the [stability policy](../docs/stability.md).
 
 ### v0.1 - Core checks (released 2026-10-24)
 
