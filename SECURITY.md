@@ -1,8 +1,8 @@
 # Security Policy
 
-resilint [v0.4.0](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) was released on 2026-10-24.
+See [Releases](https://github.com/chriswayneh/resilint/releases) for published versions and the [v1 stability policy](docs/stability.md) for supported interfaces.
 
-Candidate source `v1.0.0-rc1` is undergoing release validation; the stable v1 release is not yet published. Report candidate issues against the exact version and commit.
+Report issues against the exact version and commit, including whether the build is a release candidate. Stable source version is `1.0.0`; publication status is recorded in Releases.
 
 resilint runs offline and makes no network calls. Checks read your local YAML or CSV register without modifying it. Report and export commands write local output files, and `drill record` writes a local drill log.
 

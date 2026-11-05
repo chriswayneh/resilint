@@ -1,12 +1,12 @@
 # Installation
 
-Candidate `v1.0.0-rc1` is available on [TestPyPI](https://test.pypi.org/project/resilint/1.0.0rc1/) for release validation. See [Releases](https://github.com/chriswayneh/resilint/releases) for GitHub publication status. The latest published stable release is v0.4.0; `init`, `explain`, configuration, baselines and Action outputs are included in the candidate and remain unavailable in that older stable release.
+The commands below target `1.0.0`. Published-version availability is listed on [PyPI](https://pypi.org/project/resilint/) and [Releases](https://github.com/chriswayneh/resilint/releases). The separately published [rc1 candidate on TestPyPI](https://test.pypi.org/project/resilint/1.0.0rc1/) is retained for release-validation reproduction.
 
 Use Python 3.10 or newer. CI covers Python 3.10, 3.12 and 3.13 on Linux, Windows and macOS. Installation can access package indexes; checks and exports run offline.
 
-## PyPI installation after stable v1 publication
+## PyPI installation
 
-The first production PyPI release is planned as `1.0.0`. These commands become usable after that version is published; until then, use the Git-release alternative below. The release candidate is tested separately through TestPyPI and is not a production PyPI release.
+Use the exact published stable version for a controlled install. TestPyPI candidates are separate from production PyPI releases.
 
 For a pinned install in your virtual environment:
 
@@ -37,15 +37,15 @@ On Windows PowerShell, use `.venv\Scripts\Activate.ps1` or run `.venv\Scripts\py
 ## Git-release alternative
 
 ```bash
-python -m pip install "git+https://github.com/chriswayneh/resilint.git@v0.4.0"
+python -m pip install "git+https://github.com/chriswayneh/resilint.git@v1.0.0"
 resilint --version
 ```
 
-This source installation needs Git and currently installs the published v0.4.0 release. It remains an alternative when you need a reviewed tag or commit from the source repository; it does not include development-only features until a new tag is published.
+This source installation needs Git and selects the immutable stable version tag once published. You can also pin its full reviewed commit SHA for controlled adoption.
 
-## Installed candidate quick start
+## Installed quick start
 
-After installing the exact candidate in an isolated environment, run these commands in an empty directory outside the source checkout:
+After installing the selected release in an isolated environment, run these commands in an empty directory outside the source checkout:
 
 ```bash
 resilint --version
@@ -67,4 +67,4 @@ python -m pip install -e ".[dev]"
 resilint --help
 ```
 
-The version number remains the latest release until the release-candidate bump; the working tree includes unreleased changes. Pin a reviewed commit for CI rather than relying on a moving branch. See [CI recipes](ci.md), [usage](usage.md) and the [contributor working guide](../roadmap/README.md).
+Development checkouts may contain unreleased changes beyond the version identifier. Pin a reviewed commit for CI rather than relying on a moving branch. See [CI recipes](ci.md), [usage](usage.md) and the [contributor working guide](../roadmap/README.md).
