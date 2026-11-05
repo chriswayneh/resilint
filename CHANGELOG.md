@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 ### Changed
+- Release documentation records actual v1.0.0 publication, verified artifacts and stable Action references.
 ### Security
 ### Fixed
 

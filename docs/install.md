@@ -1,6 +1,6 @@
 # Installation
 
-The commands below target `1.0.0`. Published-version availability is listed on [PyPI](https://pypi.org/project/resilint/) and [Releases](https://github.com/chriswayneh/resilint/releases). The separately published [rc1 candidate on TestPyPI](https://test.pypi.org/project/resilint/1.0.0rc1/) is retained for release-validation reproduction.
+Stable [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0) is available on [PyPI](https://pypi.org/project/resilint/1.0.0/). The separately published [rc1 candidate on TestPyPI](https://test.pypi.org/project/resilint/1.0.0rc1/) is retained for release-validation reproduction.
 
 Use Python 3.10 or newer. CI covers Python 3.10, 3.12 and 3.13 on Linux, Windows and macOS. Installation can access package indexes; checks and exports run offline.
 
@@ -41,7 +41,7 @@ python -m pip install "git+https://github.com/chriswayneh/resilint.git@v1.0.0"
 resilint --version
 ```
 
-This source installation needs Git and selects the immutable stable version tag once published. You can also pin its full reviewed commit SHA for controlled adoption.
+This source installation needs Git and selects the immutable stable version tag. Its reviewed commit is `d5aa0b6223ed930adc753fe94aa212a9ba686c43`; pin that full SHA for controlled adoption.
 
 ## Installed quick start
 

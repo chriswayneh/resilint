@@ -64,6 +64,13 @@ Apply this checklist to each release from v0.4.1 through v1.0.0.
 
 ## Released versions
 
+### v1.0.0 - Stable release (released 2026-11-04 Chicago)
+
+- Published on [PyPI](https://pypi.org/project/resilint/1.0.0/) and [GitHub](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0), with wheel, sdist, SBOM, checksums, release notes and signed provenance.
+- Includes the completed maintenance, data hardening, integrations, documentation/freeze and packaging milestones; intermediate milestone labels were not separate releases.
+- Actual source-bound TestPyPI installs passed Linux, Windows and macOS before protected production publication. Public artifacts and an actual production PyPI install were verified.
+- The initial `v1` Action alias points to the same reviewed stable commit. See the [completed release checklist and identities](../aidlc-docs/reviews/v1-release-verification.md) and [stability policy](../docs/stability.md).
+
 ### v0.1 - Core checks (released 2026-10-24)
 
 - YAML schema for vendors and business processes, plus CSV import from spreadsheet exports

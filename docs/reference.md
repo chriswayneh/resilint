@@ -1,12 +1,12 @@
 # resilint reference
 
-Detailed reference material moved from the README. Released v0.4.0 behavior is the default; items on `main` that are not in the [v0.4.0 tag](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) are labeled development-only inline (for example Action outputs, `init`, `explain`, pre-commit, rule configuration and baselines).
+Detailed reference for published [v1.0.0](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0), including Action outputs, `init`, `explain`, pre-commit, rule configuration and baselines. See the [stability policy](stability.md) for compatibility commitments and limits.
 
 - [Regulation mapping report and draft RoI export](#regulation-mapping-report-and-draft-roi-export)
 - [Drill records](#drill-records)
 - [GitHub Action](#github-action)
-- [Starter register (development-only)](#starter-register)
-- [pre-commit (development-only)](#pre-commit)
+- [Starter register](#starter-register)
+- [pre-commit](#pre-commit)
 - [Input schema](#input-schema)
 - [Rules](#rules)
 - [Regulatory mapping (draft)](#regulatory-mapping-draft)
@@ -36,11 +36,11 @@ resilint drill record examples/vendors.yaml --vendor example-cloud-wms \
 
 ## GitHub Action
 
-For controlled Action adoption, use a full reviewed commit SHA and update deliberately after reviewing release notes. The future `@v1` alias and `@v1.0.0` release reference are planned and unavailable until v1 publication. See the [Action tag policy](stability.md#action-version-tags) for update behavior and pinning limits.
+For controlled Action adoption, use a full reviewed commit SHA and update deliberately after reviewing release notes. The `@v1` alias and immutable `@v1.0.0` reference are available at stable commit `d5aa0b6223ed930adc753fe94aa212a9ba686c43`. See the [Action tag policy](stability.md#action-version-tags) for update behavior and pinning limits.
 
 The `format` input accepts `text`, `json`, `md`, `sarif`, or `regmap`; `fail-on` accepts `low`, `medium`, `high`, or `critical`. These inputs are passed to the CLI for validation. Unknown values exit with code 2 and fail the Action before any report is written.
 
-The development Action exposes three string outputs from the same check that creates the report:
+The Action exposes three string outputs from the same check that creates the report:
 
 | Output | Value |
 | --- | --- |
@@ -48,19 +48,19 @@ The development Action exposes three string outputs from the same check that cre
 | `highest-severity` | `low`, `medium`, `high`, `critical`, or `none` when there are no findings |
 | `exit-code` | `0` for a passing threshold, `1` for findings reaching it, `2` for an input or output error |
 
-Give the Action an `id: resilience` and read `${{ steps.resilience.outputs.findings }}`, `${{ steps.resilience.outputs.highest-severity }}` or `${{ steps.resilience.outputs.exit-code }}` in later steps. Set `continue-on-error: true` on the calling step when later steps must run after findings or invalid input. Counts and severity are empty on check errors; installation/runner failures may leave every output unset. Outputs do not change the Action's failing exit status. These outputs are not present in the published v0.4.0 tag; they will ship with the next release. See the [GitHub composite-output reference](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax#outputs-for-composite-actions) for output wiring.
+Give the Action an `id: resilience` and read `${{ steps.resilience.outputs.findings }}`, `${{ steps.resilience.outputs.highest-severity }}` or `${{ steps.resilience.outputs.exit-code }}` in later steps. Set `continue-on-error: true` on the calling step when later steps must run after findings or invalid input. Counts and severity are empty on check errors; installation/runner failures may leave every output unset. Outputs do not change the Action's failing exit status. See the [GitHub composite-output reference](https://docs.github.com/en/actions/reference/workflows-and-actions/metadata-syntax#outputs-for-composite-actions) for output wiring.
 
-The development version of the composite Action uses Node 24 and requires Actions Runner v2.327.1 or later. Update self-hosted runners before using it; GitHub-hosted runners are supported. The published `v0.4.0` examples below retain that release's dependencies.
+The composite Action uses Node 24 and requires Actions Runner v2.327.1 or later. Update self-hosted runners before using it; GitHub-hosted runners are supported.
 
 ```yaml
-- uses: actions/checkout@v4
-- uses: chriswayneh/resilint@v0.4.0
+- uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+- uses: chriswayneh/resilint@d5aa0b6223ed930adc753fe94aa212a9ba686c43 # v1.0.0
   with:
     file: vendors.yaml
     fail-on: high
 ```
 
-For code-scanning annotations, copy the [complete SARIF workflow](../examples/workflows/resilint-sarif.yml) into `.github/workflows/resilint.yml` and set the register path. It pins every Action to a full commit SHA, grants `security-events: write` only to the upload job, uploads reports after threshold findings, then restores the check's failing status. Invalid input skips upload and fails the final gate. The example currently pins the development commit that adds Action outputs; use the reviewed v1 release SHA when available.
+For code-scanning annotations, copy the [complete SARIF workflow](../examples/workflows/resilint-sarif.yml) into `.github/workflows/resilint.yml` and set the register path. It pins every Action to a full commit SHA, grants `security-events: write` only to the upload job, uploads reports after threshold findings, then restores the check's failing status. Invalid input skips upload and fails the final gate. The example pins the reviewed v1.0.0 release SHA.
 
 Uploading sends the report's vendor identifiers, finding messages and source locations to GitHub Code Scanning. Use it only for registers suitable for your repository's access policy. resilint itself still runs offline. Code-scanning availability and repository requirements are described in [GitHub's SARIF upload guide](https://docs.github.com/en/code-security/how-tos/find-and-fix-code-vulnerabilities/integrate-with-existing-tools/upload-sarif-file).
 
@@ -70,19 +70,19 @@ For GitLab, Azure Pipelines or another runner, see the [CI recipes](ci.md).
 
 ## Starter register
 
-**Development-only:** `init` and `explain` are on `main` and not in the v0.4.0 release.
+`init` and `explain` are included in v1.0.0.
 
-Use `resilint explain RL004` for a rule's description, illustrative fix and draft regulation references. All RL001–RL009 IDs are supported without a register or configuration file. Unknown IDs return 2. Examples must be replaced with actual evidence; this development command is not in the v0.4.0 release.
+Use `resilint explain RL004` for a rule's description, illustrative fix and draft regulation references. All RL001–RL009 IDs are supported without a register or configuration file. Unknown IDs return 2. Examples must be replaced with actual evidence.
 
-The development CLI can create a commented fictional starter with `resilint init` (default `vendors.yaml`) or `resilint init path/to/vendors.yaml`. The destination's parent directory must exist. It refuses to overwrite any existing file or symlink and respects `RESILINT_OUTPUT_ROOT`. Replace the example commitments before using it for real checks.
+The CLI can create a commented fictional starter with `resilint init` (default `vendors.yaml`) or `resilint init path/to/vendors.yaml`. The destination's parent directory must exist. It refuses to overwrite any existing file or symlink and respects `RESILINT_OUTPUT_ROOT`. Replace the example commitments before using it for real checks.
 
-Running `resilint check vendors.yaml` on the untouched starter intentionally reports RL004 (missing exit plan), RL005 (no resilience test date) and RL008 (unverified contacts), returning 1. Creation itself returns 0; a refused or failed write returns 2. The published v0.4.0 tag predates `init`.
+Running `resilint check vendors.yaml` on the untouched starter intentionally reports RL004 (missing exit plan), RL005 (no resilience test date) and RL008 (unverified contacts), returning 1. Creation itself returns 0; a refused or failed write returns 2.
 
 ## pre-commit
 
-**Development-only:** the hook is on `main`; the v0.4.0 tag predates it.
+The `resilint` hook is included in v1.0.0.
 
-The development hook `resilint` checks every selected register without changing it. It defaults to files named `vendors.yaml`, `vendors.yml` or `vendors.csv`; override `files` in your hook configuration for other names. Thresholds and ignores come from the repository's `.resilint.yaml`. Hook arguments are filenames; configure thresholds in that file instead of adding CLI flags to `args`.
+The hook `resilint` checks every selected register without changing it. It defaults to files named `vendors.yaml`, `vendors.yml` or `vendors.csv`; override `files` in your hook configuration for other names. Thresholds and ignores come from the repository's `.resilint.yaml`. Hook arguments are filenames; configure thresholds in that file instead of adding CLI flags to `args`.
 
 From a resilint checkout, try the hook without installing a Git hook:
 
@@ -91,7 +91,7 @@ pip install pre-commit
 pre-commit try-repo . resilint --files examples/vendors.yaml
 ```
 
-The fictional example intentionally has high findings, so this command runs successfully as a check and reports a failing hook. Clean registers pass; malformed registers fail. Multiple files are all checked, with errors taking precedence over threshold findings. pre-commit installs a Python environment on first use; subsequent checks run offline. See [pre-commit configuration](https://pre-commit.com/#pre-commit-configyaml---repos) to add this repository at a reviewed commit containing `.pre-commit-hooks.yaml`; the published v0.4.0 tag predates this hook.
+The fictional example intentionally has high findings, so this command runs successfully as a check and reports a failing hook. Clean registers pass; malformed registers fail. Multiple files are all checked, with errors taking precedence over threshold findings. pre-commit installs a Python environment on first use; subsequent checks run offline. See [pre-commit configuration](https://pre-commit.com/#pre-commit-configyaml---repos) to add this repository at a reviewed commit containing `.pre-commit-hooks.yaml`; the reviewed v1.0.0 commit is `d5aa0b6223ed930adc753fe94aa212a9ba686c43`.
 
 ## Input schema
 
@@ -195,7 +195,7 @@ Because the register lives in Git, every change has an author, a review, and a h
 
 ## Roadmap
 
-**[v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0)** (2026-10-24). See the [changelog](../CHANGELOG.md) for release notes.
+**[v1.0.0 released](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0)** (2026-11-04 Chicago). See the [changelog](../CHANGELOG.md) for release notes.
 
 | Version | Theme | Highlights |
 | --- | --- | --- |
@@ -207,6 +207,6 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-**Maintenance work is 4/4 complete.** All four tasks are merged; v0.4.1 is not released yet. **Hardening work is 10/10 complete.** **CI integration is 7/7 complete.** Next is `P-2`, reviewed release automation and publisher setup.
+All milestone work above is included in v1.0.0; the intermediate labels were not separate releases. v2/v3 are deferred. See the [actual release verification](../aidlc-docs/reviews/v1-release-verification.md).
 
 The [full roadmap](../ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](../roadmap/README.md).
