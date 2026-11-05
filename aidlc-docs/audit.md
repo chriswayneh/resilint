@@ -501,6 +501,48 @@
 - Full exact-diff security/privacy review: changes are version metadata, candidate status/notes, original task completion records and the narrow README metadata guard; no runtime feature, dependency, workflow, permission or account-trust change. No blocking author finding. Original acceptance criteria/dependencies and all non-R-1 task definitions are unchanged. Prospective 34/38 applies only on PR #55 merge.
 - Next permitted action: link/whitespace checks, commit/push this final R-1 head, require all hosted gates and accepted CodeQL/evidence self-test, then merge only if passing. Recheck merged-main gates and tag absence before a separately recorded candidate release execution under the user's actual v1 release authority. Preserve old candidates, private plans and artifacts; no cleanup or history rewrite.
 
+## DOC-FMT-02 — requested format, design decision and construction scope
+
+- Recorded: 2026-11-04T21:49:42-06:00. Actor: Codex, task designer; actual authorization is the user's current request to use DataGrant's format only. This is not a personal user approval of an unseen design or a delegated dot review.
+- Artifact: [design and execution plan](inception/doc-fmt-02-datagrant.md), based on main ed501a9ddc9f8e55f3a045ccad6a9aee733a1dd9 and DataGrant reference 2ab4ee601a979d9f05f707848256d412c0fc717f.
+- Decision: perform one presentation-only task in a separate branch. Retain the existing banner, align navigation, feature checklists and documentation links; use expandable details for long existing examples/context. Preserve content, compatibility anchors, release distinctions, fictional data and regulatory limitations.
+- Conditions: no application/workflow/dependency/version/settings/account/tag/release change; original 38 task counts and original/partial work remain. The user's earlier pause remains effective for release and security-remediation work. No independent approval is invented.
+- Next permitted action: construct this scoped format change, complete local gates, visual and exact-diff review, and prepare the reviewable result. This request does not start a release.
+
+## DOC-FMT-02 — user resumes v1 after presentation
+
+- Recorded: 2026-11-04T21:51:03-06:00. Actor: user, through a subsequent instruction to release v1 tonight and keep work going after the format fixes are in place; recorded by Codex. This is actual continuation authority, not a fabricated design or formal GitHub approval.
+- Decision: finish the bounded presentation task and its exact-head gates first, then resume the saved permissions-remediation and R-2/R-3/R-4/R-5 sequence under the user's existing v1 authority. The earlier pause is lifted subject to that order.
+- Conditions: retain truthful release state and all local/hosted review, publishing, provenance and protected-environment gates. No settings/access changes, history rewriting or gate bypass. A same-night release is a target, not evidence that acceptance criteria can be skipped.
+- Next permitted action: verify and land this presentation task after passing checks; continue to the separately designed permissions follow-up only after formatting is in place.
+
+## DOC-FMT-02 — construction evidence and author review
+
+- Recorded: 2026-11-05 03:53:50 UTC. Actor: Codex, author and complete-diff reviewer; not an independent dot or formal GitHub approval.
+- Artifact: README presentation only, task design/plan, documentation changelog and append-only audit. Current Resilint content and ten main section headings follow the DataGrant family; the existing banner is unchanged.
+- Verification: Ruff passes; mypy passes for 11 source files; full pytest 382 passed with six documented Windows privilege skips. Relative links passed for 50 tracked Markdown files before the new task record was staged; final staged links and metadata checks are required below. Fenced command/data/output examples are byte-identical as a collection, and all original heading and explicit compatibility anchors are preserved.
+- Visual evidence: GitHub GFM-rendered HTML was inspected in isolated desktop (1280px) and narrow (390px) browser contexts with a GitHub-like stylesheet. Document widths stay within their viewports; all five details elements render and a disclosure opens when clicked; badges occupy one row. The preview stylesheet is not GitHub's complete application, and the unchanged Mermaid source was not revalidated as a live GitHub diagram.
+- Security/privacy review: all changed product-facing material is existing public documentation rearranged into native Markdown/HTML. No executable scripts, external embedded assets, dependency/permission changes, new data collection or new vendor claims. Legal/draft/RoI limits, upload disclosure, fictional sample and released/development distinctions remain. Source/runtime security alerts are unchanged and remain release blockers.
+- Next permitted action: inspect the final staged exact diff, verify staged links, metadata and whitespace, commit/push one task PR, require all exact-head hosted gates, then merge under the actual v1 delegation only if passing. After formatting is in place, resume the separately designed permission fix; do not tag a release with unresolved confirmed findings.
+- Final staged verification recorded 2026-11-05 03:54:17 UTC: links pass for all 51 tracked Markdown files; four metadata tests pass; full staged diff and privacy/security review are complete; whitespace passes after removing the new task record's extra final blank line. No blocking presentation-task finding; pre-existing runtime alerts remain pending.
+
+## P-4 follow-up — private output design and construction decision
+
+- Recorded: 2026-11-05 04:00:07 UTC. Actor: Codex, designer/implementer under the user's actual direction to continue v1 after the format fix and prior v1 fix/merge delegation. This is not an independent or personal user design/GitHub approval.
+- Evidence/prerequisite: presentation PR #56 at 0c9566e8ba7d21ba0921360952d129490ff4373c passed all 28 exact-head hosted checks, then Codex merged it normally under delegation at 2026-11-05T03:58:18Z. Main is 07d90c5f8c380b2aff9cddee64c26e4dd0616414; history, settings and original task counts remain.
+- Artifact: [private output technical design and plan](inception/p4-private-output-design.md). Completed static triage found conditional POSIX disclosure in CodeQL #3/#1; empty sidecars #2/#4 carry no sensitive payload. No remote alert dismissal occurred.
+- Decision: one P-4 follow-up PR uses 0600 for newly created report/export/baseline/starter/lock files and replacement drill logs, with documented existing-output and Windows ACL semantics, synthetic POSIX regressions and existing platform/concurrency gates.
+- Conditions: preserve path/input/symlink protections, safe bounded parsing and offline operation; no dependency/workflow/version/account/settings/tag/release changes. This task does not advance R-2/R-3 or expand the 38-task denominator.
+- Next permitted action: implement this bounded fix, verify required gates and exact diff, publish one task PR, and merge only if all hosted checks pass. Inspect main full CodeQL afterward before candidate tagging.
+
+## P-4 follow-up — implementation evidence and exact-diff review
+
+- Recorded: 2026-11-05 04:01:56 UTC. Actor: Codex, author and complete exact-diff security reviewer; not an independent dot or formal GitHub approval.
+- Verification: Ruff passes after import-order correction; mypy passes for 11 files; full local pytest 382 passed, 17 skipped in 61.38 seconds. Skips are the six existing Windows privilege cases and eleven new POSIX-only permission cases; Linux/macOS execution of those new regressions remains required. Links pass for all 52 tracked Markdown files; staged whitespace passes.
+- Changes reviewed: three runtime mode changes (new ordinary output, new lock and replacement-log chmod), matching synthetic empty-lock fixture, eleven real-filesystem POSIX scenarios, usage/drill documentation and task records/changelog. Tests restore umask on every path, verify preserved register bytes, exercise all public writers, retain existing ordinary-output modes and make new/private/shared drill destinations private.
+- Security boundaries: no network, SQL, dependency, workflow/token privilege, account/settings or version changes. Safe parsing, bounds, path/symlink/input guards, atomic replacement and cooperating writer locks remain intact. Existing ordinary files are not retroactively privatized; deliberate sharing and Windows ACL limits are explicit. No blocking finding in this exact diff; hosted main full CodeQL remains the acceptance evidence for the earlier alerts.
+- Next permitted action: commit/push one P-4 follow-up PR, inspect all exact-head hosted gates including actual POSIX regression execution, merge only if passing, then verify main code-scanning results. Keep tags/releases gated; proceed with separately scoped R-2 work while checks run.
+
 ## R-3 — release validation inception plan
 
 - Recorded: 2026-11-05T03:14:20.804597+00:00. Actor: Codex preparing the user's authorized v1 validation work; no individual-document user review or independent review is claimed.

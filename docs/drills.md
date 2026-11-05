@@ -23,6 +23,8 @@ Only record an outcome once it occurred. The register is never rewritten. The lo
 
 Writers serialize through a persistent `LOG.lock` sidecar, using Windows byte-range locking or POSIX `flock`. A busy lock is retried for about two seconds, then returns exit 2. Successful writes replace the log through a temporary file in the same directory. Do not delete the sidecar while writers are active. Output-root, input-identity and symlink guards apply.
 
+On POSIX systems, replacement logs have owner-only read/write permissions (0600), including when replacing an existing shared log. New lock sidecars request 0600 as well. Sharing a log with another account requires an explicit permission decision after each replacement; writers under different accounts are not supported by these private defaults. Protect the parent directory and use suitable Windows ACLs: POSIX modes do not establish owner-only Windows access. See [file/output protections](usage.md#files-and-report-formats).
+
 Log-target validation, reading and replacement all occur while holding that lock, so cooperating writers do not inspect a Windows log during another writer's replacement. An unsuccessful record attempt can leave the persistent sidecar; validation failures do not modify the register or log.
 
 `check --drills LOG` applies records in date order. Passed/partial records can advance a vendor's effective `last_tested`; the latest failed drill raises RL009 for critical/high vendors. The original register stays unchanged. Config ignores and baselines apply after this evaluation. See [CLI usage](usage.md), [rules](rules.md) and [configuration](config.md).

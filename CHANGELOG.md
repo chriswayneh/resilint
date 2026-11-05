@@ -3,7 +3,9 @@
 ## [Unreleased]
 ### Added
 ### Changed
+- README presentation follows the DataGrant layout, with compact navigation, feature checklists, grouped documentation links and expandable examples/context.
 ### Security
+- New reports, baselines, exports, starters and lock sidecars use private POSIX creation modes; atomic drill-log replacement retains owner-only access instead of widening it to world-readable. Existing ordinary output-file permissions and Windows ACL limitations are documented.
 ### Fixed
 
 ## [1.0.0-rc1] - 2026-11-04

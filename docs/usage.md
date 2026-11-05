@@ -53,4 +53,6 @@ Text is readable in terminals; JSON is structured; Markdown and `regmap` carry d
 
 Output refuses input-file aliases and final symlinks. `RESILINT_OUTPUT_ROOT`, when set, constrains outputs to that directory tree; unset/empty allows ordinary filesystem destinations. The Action sets it to the workspace. Parent directories must exist. Normal reports and baselines are not atomic multi-file transactions; use version control or backups for recovery. Protection assumes trusted output parent directories, not concurrent hostile directory replacement.
 
+New report, baseline, export and starter files request owner-only read/write permissions (0600) on POSIX systems; a stricter umask can restrict them further. Overwriting an existing report/export/baseline file retains its current permissions, so make existing shared files private before writing sensitive data. Drill logs have separate [replacement semantics](drills.md). Windows file privacy depends on directory/file ACLs; these POSIX modes do not enforce an owner-only Windows ACL. Use an appropriately restricted output directory on every platform and share outputs deliberately.
+
 For the remaining commands and all their flags, see [drill records](drills.md) and [draft RoI exports](roi.md). See [rule guidance](rules.md), [configuration](config.md), [baselines](baseline.md) and [FAQ](faq.md).
