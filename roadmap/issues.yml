@@ -413,7 +413,7 @@ issues:
   - id: P-2
     title: Release workflow (PyPI Trusted Publishing)
     milestone: M4
-    status: planned
+    status: complete
     why: '`pip install resilint`'
     files: '`.github/workflows/release.yml`'
     acceptance: Triggered on `v*` tag only; OIDC trusted publisher (no API token secret); environment
@@ -421,6 +421,8 @@ issues:
     size: M
     depends_on:
       - P-1
+    completed_in:
+      - 47
 
   - id: P-3
     title: Provenance + SBOM
@@ -448,13 +450,15 @@ issues:
   - id: P-5
     title: Action version tags policy
     milestone: M4
-    status: planned
+    status: complete
     why: Users pin `@v1`
     files: '`docs/stability.md`, README'
     acceptance: Documents `@v1` moving tag + `@v1.0.0` + SHA pinning advice
     size: S
     depends_on:
       - D-2
+    completed_in:
+      - 48
 
   - id: P-6
     title: Install docs switch to PyPI
