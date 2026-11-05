@@ -26,9 +26,9 @@ Where resilint is going, and what is ready to work on.
 | [v0.6](#v06-ci-integration-and-developer-experience) | CI integration and developer experience | ✅ Complete (7/7 merged; unreleased) | 7 |
 | [v0.9](#v09-documentation-and-api-freeze) | Documentation and API freeze | ✅ Complete (6/6 merged; unreleased) | 6 |
 | [Before v1.0](#packaging-and-release-automation) | Packaging and release automation | ✅ Complete (6/6 merged; unreleased) | 6 |
-| [v1.0](#v10-stable-release) | Stable release | In progress (2/5 merged) | 5 |
+| [v1.0](#v10-stable-release) | Stable release | In progress (3/5 merged) | 5 |
 
-**38 tasks: 35 complete, 3 planned.** Completed work is merged; v0.4.1 is not released yet.
+**38 tasks: 36 complete, 2 planned.** Completed work is merged; v0.4.1 is not released yet.
 
 Full task details, including acceptance criteria and dependencies, are in [`roadmap/issues.yml`](roadmap/issues.yml). Contributor rules, the release checklist and earlier release notes are in the [working guide](roadmap/README.md).
 
@@ -53,7 +53,7 @@ Finish the maintenance work before the next release.
 
 Make large, messy vendor registers easier to validate and adopt.
 
-**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `R-2` and `R-3`**, candidate validation.
+**Status: complete (10/10 merged).** Test hardening, CSV/schema support, stable diagnostics, rule configuration, baselines and platform parity are in place. **Next: `R-4` and `R-5`**, final review and stable release.
 
 | ID | Task | Status |
 | --- | --- | --- |
@@ -122,13 +122,13 @@ Build, verify and publish reproducible release artifacts before v1.0.
 
 Prove the release candidate works from a fresh install, then complete the final reviews.
 
-Candidate source `v1.0.0-rc1` is prepared for validation. Published builds and release-stage execution are recorded under [Releases](https://github.com/chriswayneh/resilint/releases) and the [audit](aidlc-docs/audit.md); metadata preparation is not a publication claim.
+Candidate [v1.0.0-rc1](https://github.com/chriswayneh/resilint/releases/tag/v1.0.0-rc1) is published for validation on TestPyPI, with signed provenance, SBOM and checksums attached to its GitHub prerelease. Actual release-stage execution and install evidence are recorded in the [audit](aidlc-docs/audit.md).
 
 | ID | Task |
 | --- | --- |
 | `R-1` | v1.0.0-rc1 PR (version bump + CHANGELOG) ✅ — [#55](https://github.com/chriswayneh/resilint/pull/55) |
 | `R-2` | [Dogfood on a realistic synthetic register](examples/large/README.md) ✅ — [#58](https://github.com/chriswayneh/resilint/pull/58) |
-| `R-3` | Fresh-machine install test |
+| `R-3` | Fresh-machine install test ✅ — [#60](https://github.com/chriswayneh/resilint/pull/60) |
 | `R-4` | Final review and security review of the full diff since v0.4.0 |
 | `R-5` | Tag `v1.0.0` + release (maintainer only) |
 

@@ -506,13 +506,15 @@ issues:
   - id: R-3
     title: Fresh-machine install test
     milestone: M5
-    status: planned
+    status: complete
     why: Catch packaging misses
     acceptance: TestPyPI install on ubuntu/windows/macos runs the quick start verbatim
     size: S
     depends_on:
       - R-1
       - P-2
+    completed_in:
+      - 60
 
   - id: R-4
     title: Final review and security review of the full diff since v0.4.0
