@@ -207,6 +207,6 @@ Because the register lives in Git, every change has an author, a review, and a h
 | **Before v1.0** | Packaging and release automation | Wheels, PyPI publishing, provenance, SBOM and security scanning |
 | **v1.0** | Stable release | Release candidate, synthetic dogfooding, fresh-install tests and final reviews |
 
-All milestone work above is included in v1.0.0; the intermediate labels were not separate releases. v2/v3 are deferred. See the [actual release verification](../aidlc-docs/reviews/v1-release-verification.md).
+All milestone work above is included in v1.0.0; the intermediate labels were not separate releases. v2/v3 are deferred.
 
 The [full roadmap](../ROADMAP.md) has milestone summaries. Detailed tasks and acceptance criteria are in [`roadmap/`](../roadmap/README.md).
