@@ -1,0 +1,11 @@
+# R-1 candidate metadata and execution plan
+
+Plan only until all packaging prerequisites, including P-6, are merged. Preserve the older release-candidate draft. Prepare one R-1 PR for synchronized source/runtime 1.0.0-rc1 metadata, a dated CHANGELOG candidate entry with fresh Unreleased section, honest candidate-versus-stable documentation and the roadmap's candidate status. Keep the current README layout and accurately attributed historical demo output.
+
+The existing metadata test conflates a development candidate's source version with the latest published stable release. Refine only that test's README-reference guard so a strict X.Y.Z-rcN source may also reference the latest dated stable CHANGELOG version; unrelated or older versions still fail, and stable source versions retain the existing strict equality. Packaging/runtime/CHANGELOG synchronization checks remain mandatory. Do not claim a candidate is published before its immutable tag/release exists.
+
+After prerequisites merge, record the construction decision, implement metadata/docs/test changes, run all local gates plus real build/Twine/fresh-wheel checks and workflow evidence preparation, review the full exact-head diff for security/privacy, then require every hosted platform/coverage/scanner/CodeQL/evidence/Action check before merge. Preserve all original task criteria/dependencies.
+
+A candidate tag must point to the reviewed merged commit after its main checks pass, match metadata and be absent remotely before creation. Use the existing TestPyPI-first protected workflow; approve only the intended pending environment for that tag under actual release authorization. Candidate publication must not reach production PyPI. Verify actual signed subjects, TestPyPI install, provenance/source identity and attached assets; report any failure without moving tags or replacing published versions. Actual tags/publication remain separately recorded execution stages.
+
+R-2 and R-3 retain separate PRs and acceptance, followed by R-4 review of the full source diff and R-5 stable metadata/release. No runtime feature changes, repository settings, new account trust, history rewrite or cleanup. If runtime fixes are needed after candidate publication, use a new immutable candidate version.
