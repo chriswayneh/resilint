@@ -361,3 +361,44 @@
 - GitHub evidence: read-only inspection verified both existing named environments require the maintainer reviewer, permit only v* tags through custom deployment policy and have no allowed branches. No protection, repository setting or permission was changed.
 - Verification: final combined suite 362 passed, six existing Windows privilege skips in 49.19 seconds, including the configured real scanner cases. Ruff, mypy (11 source files), links and whitespace passed before the documentation-only completion update. Task YAML comparison preserves every original acceptance criterion/dependency and every non-P-2 task; P-2 is prospectively complete in PR #47 (30/38 only on merge).
 - Review and limits: exact-head P-2 executable files still match the reviewed implementation. Complete resolution/status/documentation delta reviewed for secrets, injection, least privilege and privacy; no blocking new finding. No live OIDC upload, index install, tag or release is claimed. Next permitted action under the user's standing v1 approval: commit, push PR #47, require final-head hosted gates, and merge when passing. Release validation remains required before publishing a candidate or v1.
+
+## P-4 — user approval of waiting reconciliation
+
+- Recorded: 2026-11-05T02:07:36.643454+00:00. Actor: user, actual approval in the working chat; recorded by Codex.
+- Decision: the user approved all waiting work and instructed continuation toward v1. This includes applying the previously presented PR #49 reconciliation at f3e1f78a4ea455d376bff6dec4ea37db7d43cf3d, with 25 successful hosted checks and delegated exact-head review, and finishing the waiting PR #48 and #47 reconciliations.
+- Conditions: preserve current presentation, one task per PR, complete required checks and security review, retain prior audit corrections and existing work. No forced history changes or denied-operation bypass.
+- Next permitted action: make PR #49 ready, require successful hosted checks on the reviewed head, then merge it under this actual user approval. Record the merge result in the next P-4 continuation; CodeQL and full task completion remain outstanding.
+
+- Recorded 2026-11-05T02:17:36.866638+00:00: the user renewed approval to continue all waiting work through v1 after the connector-access blocker was explained, and had explicitly directed use of the signed-in browser. Codex applied that latest direct authorization to the ordinary ready/merge actions through the existing owner session; no credentials, permissions or repository settings changed. PR #49 is now ready, with 28 successful checks on unchanged reviewed head f3e1f78a4ea455d376bff6dec4ea37db7d43cf3d. Proceed with an ordinary merge under actual user authorization; do not infer action-time approval of persistent publisher trust.
+
+## P-4 — local CodeQL continuation preparation
+
+- Recorded: 2026-11-05T02:23:53.835763+00:00. Actor: Codex, under the user's actual broad authorization to continue waiting work through v1. This is an author design/construction decision, not an independent review or a claim the user reviewed this new design.
+- Artifact: inception/p4-codeql-design.md, separate CodeQL workflow and boundary regression checks, based on merged main f1d9da663740235fcb370d15f49fc8194f60277f. Design and files were prepared locally together before this entry; no earlier stage-audit timestamp is claimed.
+- Scope: finish Python analysis while preserving the read-only scanner workflow, runtime code, locks, presentation and prior audit correction. Official action commit and linked bundle defaults were inspected.
+- Conditions and next permitted action: run required local checks, inspect the full immutable patch and present the concrete security-events write/SARIF transmission boundary for specific activation confirmation BEFORE PUSH. No CodeQL execution/upload, independent approval or P-4 completion is claimed. No database upload, publisher trust, repository setting or external account change is included.
+
+- Verification recorded 2026-11-05T02:25:56.432808+00:00: Ruff and mypy passed (11 source files); full local suite 347 passed, 12 skipped in 40.05 seconds. Six skips are existing Windows privilege cases and six need configured real scanner tools; unchanged scanner controls were separately exercised during PR #47/#48 reconciliation, and real CodeQL itself has not run. The added regression checks pass. Complete new workflow, tests, design and data-boundary guide reviewed for secrets, injection, least privilege and provenance; no local blocking finding. Pinned action inputs and linked bundle defaults were read directly from the official immutable revision. Activation remains gated on specific SARIF/job-permission confirmation; no remote write performed.
+
+## P-4 — specific user CodeQL activation approval
+
+- Recorded: 2026-11-05T02:40:00.242372+00:00. Actor: user, actual affirmative answer to the concrete activation question for local commit 42b592d426f751273bcc707e1dedd9d79380733b; recorded by Codex before activation.
+- Decision: approve the prepared Python CodeQL workflow for chriswayneh/resilint with job-scoped security-events write and SARIF transmission to GitHub code scanning, including repository paths and possible source snippets. Database uploads remain explicitly disabled. This is specific activation approval; no default setup, account permission or repository settings change is included.
+- Reconciliation: retain main b2ab62c15ff47ecb9dc8eb5d950e0ee74201e60e plus all local P-4 history. Only the expected audit conflict required resolution. Existing scanner workflow and locks, runtime behavior and presentation remain unchanged.
+- Next permitted action: update the related documentation/changelog, run required gates, inspect the full final diff, push one P-4 task PR and require real hosted analysis plus all existing gates. P-4 remains planned until actual acceptance evidence is obtained; final completion metadata must land in that same task PR.
+
+- Activation-head local verification recorded 2026-11-05T02:40:52.289755+00:00: Ruff, mypy (11 source files), links in 43 Markdown files and whitespace passed; full suite 347 passed, 12 documented skips in 38.12 seconds. Existing scanner controls/locks are unchanged. Full task diff reviewed, including the exact separate workflow and associated transmission documentation; no blocking author finding. No hosted CodeQL execution is claimed yet.
+
+## P-4 — integration with completed publisher workflow
+
+- Recorded: 2026-11-05T02:42:12.903194+00:00. Actor: Codex under the user's standing v1 integration authorization and specific CodeQL activation approval.
+- Decision: normally merge main e9132ab09dedb10993a0419d452dbb99ca133db1 after PR #47 passed 25 checks and merged. Resolve only the audit conflict by retaining both complete tails. Existing CodeQL and scanner workflow code/locks are unchanged; the newly merged publisher helper/tests remain intact.
+- Next permitted action: require complete local/hosted verification on the combined head, inspect actual CodeQL findings and complete P-4 metadata only when accepted. No tag, release or package upload has occurred.
+
+## P-4 — hosted CodeQL evidence and prospective completion
+
+- Recorded: 2026-11-05T02:44:20.656523+00:00. Actor: Codex, author verification under actual specific CodeQL approval and standing v1 merge authorization.
+- Evidence: CodeQL run 41956829233 completed successfully for PR #51's initial published head ca52bda86e659d7308c68216c2b1559b9dbc24b5. GitHub code-scanning analysis 2100209165 analyzed PR merge commit 84d784d49cdb6121e460f88454cdff7b08fd4154, reported 50 rules and zero results with no analysis error. This is actual hosted execution and accepted SARIF, not a local simulation or proof of no vulnerabilities.
+- Combined-head local gates: Ruff, mypy (11 source files), links across 46 Markdown files and whitespace passed; full suite 364 passed, six existing Windows privilege skips in 43.39 seconds, with verified scanner tools configured.
+- Decision: preserve the complete workflow/query and data-boundary review; prospectively mark P-4 complete in PR #51, preserving all acceptance criteria and dependencies. Counts become 31/38 only on merge. The existing secret, advisory and mandatory scanner controls remain required and unchanged.
+- Next permitted action: commit and push this reconciliation/completion update, require all hosted gates and accepted analysis on the resulting immutable head, inspect any actual findings and merge only if passing. Earlier hosted results do not transfer to a new commit. No separate account/access setting or database upload is authorized.
