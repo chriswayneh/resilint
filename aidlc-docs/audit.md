@@ -538,3 +538,10 @@
 - Evidence: R-1 merged at ed501a9ddc9f8e55f3a045ccad6a9aee733a1dd9 after all 28 checks; accepted PR CodeQL analysis 2100404407 returned zero results. Main contains synchronized 1.0.0-rc1 metadata and 34/38 completed tasks. P-2's confirmed publisher configuration is also merged. This is genuine prerequisite completion, not an unmerged local candidate.
 - Decision: normally incorporate main, retain both audit tails, and implement only the reviewed R-2 validation scope in its own PR. Runtime features remain frozen. A discovered runtime defect must receive a separate scoped fix/review.
 - Next permitted action: construct the task, run local/hosted gates and exact-diff security review. R-3 actual index-install execution/publication claims must wait for the candidate's real TestPyPI upload; local fixtures or mocked transport cannot count as that evidence. No tag, package publication, new account trust, settings or cleanup is included in these validation tasks.
+
+## R-2 — resumed completion after presentation
+
+- Recorded: 2026-11-05 04:03:51 UTC. Actor: Codex under the user's actual instruction to keep going toward v1 tonight after the format fixes.
+- Evidence: PR #56 is merged with all 28 exact-head checks; main 07d90c5f8c380b2aff9cddee64c26e4dd0616414 was ordinarily merged here, preserving both complete audit tails. Original source checkout and uncommitted R-2 fixtures remain preserved.
+- Decision: complete the existing nine acceptance scenarios and visibly fictional 500-vendor fixtures under the established R-2 design. P-4 permissions PR #57 remains separate; incorporate its accepted main changes before final combined gates and task acceptance. Do not treat its pending PR or zero-new-result scan as completed runtime remediation.
+- Next permitted action: validate fixture/source correspondence and targeted CLI scenarios, then run all final gates, publish one R-2 PR and record prospective 35/38 completion effective only on accepted merge. No candidate publication follows until the separate security/full-main release hold is cleared.
