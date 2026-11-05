@@ -160,14 +160,18 @@ def _replace(path: str, content: str) -> str | None:
 def _drill(args) -> int:
     log = args.log or os.path.join(os.path.dirname(args.file) or ".", "drills.yaml")
     lock_path = log + ".lock"
-    for path in (log, lock_path):
-        err = check_target(path, args.file, "--log")
-        if err:
-            return _error(err, path)
+    err = check_target(lock_path, args.file, "--log")
+    if err:
+        return _error(err, lock_path)
     lock = _lock(lock_path)
     if isinstance(lock, str):
         return _error(lock, lock_path)
     try:
+        # Windows target inspection can hold handles that block another writer's
+        # atomic replacement. Serialize log validation as well as log reads/writes.
+        err = check_target(log, args.file, "--log")
+        if err:
+            return _error(err, log)
         try:
             register = load(args.file, csv_delimiter=args.csv_delimiter)
             ids = {v["id"] for v in register["vendors"]}

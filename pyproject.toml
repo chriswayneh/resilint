@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "resilint"
-version = "0.4.0"
+version = "1.0.0-rc1"
 description = "Offline lint for critical-vendor resilience commitments (DORA, NIS2, PRA SS2/21 draft mapping)"
 readme = "README.md"
 license = "MIT"
