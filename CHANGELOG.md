@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- README terminal GIF replays actual v1.0.0 output for the fictional starter, with a rule explanation and a text reproduction guide.
 ### Changed
 - Release documentation records actual v1.0.0 publication, verified artifacts and stable Action references.
 ### Security
