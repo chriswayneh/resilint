@@ -467,7 +467,7 @@ issues:
   - id: P-6
     title: Install docs switch to PyPI
     milestone: M4
-    status: planned
+    status: complete
     why: Real-world install
     files: README, docs
     acceptance: '`pip install resilint==X` and `pipx install resilint` are documented; the git install
@@ -475,6 +475,8 @@ issues:
     size: S
     depends_on:
       - P-2
+    completed_in:
+      - 53
 
   - id: R-1
     title: v1.0.0-rc1 PR (version bump + CHANGELOG)

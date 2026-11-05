@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Installation guidance covers pinned PyPI packages and isolated pipx use after stable-v1 publication, retaining the current Git-release alternative and explicit availability limits.
 - Release preparation adds a minimal runtime CycloneDX SBOM, exact artifact checksums, isolated build provenance and verified GitHub release attachment; a read-only Linux self-test exercises evidence generation before release.
 - Tag-only release automation builds once, publishes candidates to TestPyPI, verifies a fresh install, and gates stable PyPI publication through an OIDC environment approval.
 - The planned Action tag policy describes the future stable-v1 alias, immutable version references and deliberate full-SHA pinning with its limits.
@@ -28,6 +29,7 @@
 - Reproducible Hypothesis tests exercise bounded YAML/CSV bytes, text, structured fields and valid registers through both the loader and CLI.
 - Repository metadata checks keep package/runtime versions, the latest released changelog entry, and README release references synchronized.
 ### Fixed
+- Drill writers validate log targets while holding the existing sidecar lock, preventing cooperating Windows writers from inspecting a log during another writer's atomic replacement.
 - Invalid YAML scalar dates and oversized numeric values, unsupported schema-version strings, and CSV parser/field-limit errors now return a diagnostic with exit 2 instead of an uncaught exception.
 - `drill record` now locks the log on Windows using a native byte-range lock, preventing concurrent writers from losing successful records. Linux/macOS retain their existing lock behavior and the same bounded wait.
 - Unexpected operating-system lock errors return exit 2 and close the lock file instead of raising a traceback.
