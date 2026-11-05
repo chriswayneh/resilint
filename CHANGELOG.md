@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- Read-only Linux/Windows/macOS TestPyPI install validation checks the exact wheel against canonical Git source before installation, then runs the documented installed quick start.
 ### Changed
 ### Security
 ### Fixed
