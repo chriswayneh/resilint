@@ -1,5 +1,0 @@
-# Packaging tools for hash-locked, non-isolated builds (see pyproject [build-system]).
-build
-setuptools>=61
-wheel
-twine
