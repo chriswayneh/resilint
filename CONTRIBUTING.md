@@ -41,3 +41,7 @@ Write tests for changed behavior and meaningful regressions. Review report snaps
 ## Review and releases
 
 Review the exact head before merging; code changes also receive security review. GitHub PR approval, merging, tags, releases and repository settings remain user-owned unless the user explicitly authorizes a scoped exception. A routine design or implementation-stage review is not a formal GitHub approval or permission for reserved actions; verify any bounded authorization at action time. Keep the roadmap's completion record in the same PR so it becomes true at merge. Release only after the [release checklist](roadmap/README.md#release-checklist) passes. The [stability policy](docs/stability.md) defines the v1 compatibility contract and deprecation requirements.
+
+## Proposed security checks
+
+The P-4 draft adds read-only secret-history and explicit runtime-lock audits. CodeQL is deferred, so P-4 remains incomplete. See [security CI scope and limits](docs/security-ci.md) before reviewing or authorizing execution. Scanner results do not replace security review; only fictional detector fixtures belong in tests.
