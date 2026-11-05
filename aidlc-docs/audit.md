@@ -402,3 +402,10 @@
 - Combined-head local gates: Ruff, mypy (11 source files), links across 46 Markdown files and whitespace passed; full suite 364 passed, six existing Windows privilege skips in 43.39 seconds, with verified scanner tools configured.
 - Decision: preserve the complete workflow/query and data-boundary review; prospectively mark P-4 complete in PR #51, preserving all acceptance criteria and dependencies. Counts become 31/38 only on merge. The existing secret, advisory and mandatory scanner controls remain required and unchanged.
 - Next permitted action: commit and push this reconciliation/completion update, require all hosted gates and accepted analysis on the resulting immutable head, inspect any actual findings and merge only if passing. Earlier hosted results do not transfer to a new commit. No separate account/access setting or database upload is authorized.
+
+## P-6 — inception and documentation construction decision
+
+- Recorded: 2026-11-05T02:56:50.359679+00:00. Actor: Codex, choosing the scoped implementation plan under the user's actual standing authorization to complete v1; no individual-document user review or independent review is claimed.
+- Artifact: inception/p6-install-design.md, based on main 2a172190e8d0678d06b412008d340b63f913ccec. P-2 and its specifically authorized publisher setup are complete.
+- Decision: document pinned PyPI and pipx installation after stable-v1 publication, retain the usable Git-release alternative, preserve current README layout and truthful availability. No runtime, workflow, dependency, account or settings change.
+- Next permitted action: implement only P-6 documentation/changelog/roadmap records, run gates and complete diff review, open one task PR and merge only with passing final-head checks. R-3 retains actual index-install validation.
