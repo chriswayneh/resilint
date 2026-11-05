@@ -1,5 +1,5 @@
 # Hash-locked packaging tools for clean, non-isolated builds.
-# Matches pyproject.toml [build-system] (setuptools>=61) plus build, wheel, twine.
+# Matches pyproject.toml [build-system] (setuptools>=61) plus pip, build, wheel, twine.
 # Generated for Python 3.12 / manylinux_2_28 x86_64 (CI package and release jobs):
 #   uv pip compile --generate-hashes --python-version 3.12 \
 #     --python-platform x86_64-manylinux_2_28 \
@@ -434,6 +434,10 @@ packaging==26.3 \
     #   build
     #   twine
     #   wheel
+pip==26.3 \
+    --hash=sha256:6c36ae7da8695be67e3cd9f7d87919667ced53f57ce2ede75d89b5912ed2bc4c \
+    --hash=sha256:f3b60b20ffaadd4415ed7957212a38ac63fa4c5fa375bd0f4a797777940fad13
+    # via -r requirements-build.in
 pycparser==3.12 \
     --hash=sha256:a076f3f489b39b43ed13563a1dafe42447445bec2e294154ec5c57fcdda4c85e \
     --hash=sha256:f03387877eab82ce01bbdfd0ba7252ee55a90b1c708d5129e2ce915475cf1db6

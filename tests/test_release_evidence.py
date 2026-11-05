@@ -100,14 +100,16 @@ def test_release_evidence_keeps_publication_permissions_isolated():
     assert workflow["permissions"] == {"contents": "read"}
     jobs = workflow["jobs"]
     assert jobs["testpypi"]["needs"] == ["build", "attest"]
+    assert jobs["attest"]["needs"] == ["test", "build", "evidence"]
     assert jobs["attest"]["permissions"] == {
         "contents": "read", "id-token": "write", "attestations": "write"}
     assert jobs["github-release"]["permissions"] == {
         "contents": "write", "attestations": "read"}
-    assert jobs["github-release"]["needs"] == ["build", "attest", "verify-testpypi", "pypi"]
+    assert jobs["github-release"]["needs"] == [
+        "test", "build", "evidence", "attest", "verify-testpypi", "pypi"]
     condition = jobs["github-release"]["if"]
     for guard in ("needs.attest.result == 'success'", "needs.verify-testpypi.result == 'success'",
-                  "needs.pypi.result == 'success'", "needs.build.outputs.stable != 'true'"):
+                  "needs.pypi.result == 'success'", "needs.test.outputs.stable != 'true'"):
         assert guard in condition
     for job in jobs.values():
         for step in job["steps"]:

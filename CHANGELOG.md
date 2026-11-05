@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Changed
 - Release and package CI install packaging tools from hash-locked `requirements-build-lock.txt` and build with `python -m build --no-isolation`.
+- Release workflow runs lint/tests, a clean hash-locked build job, and evidence generation as separate jobs; packaging tools include a pinned `pip`.
 ### Added
 - README terminal GIF replays actual v1.0.0 output for the fictional starter, with a rule explanation and a text reproduction guide.
 ### Changed

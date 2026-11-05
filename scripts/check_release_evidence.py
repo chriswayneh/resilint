@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def main() -> None:
     workflow = yaml.load((ROOT / ".github/workflows/release.yml").read_text(
         encoding="utf-8"), Loader=yaml.BaseLoader)
-    steps = [step for step in workflow["jobs"]["build"]["steps"]
+    steps = [step for step in workflow["jobs"]["evidence"]["steps"]
              if step.get("name") == "Generate and validate runtime-only release evidence"]
     if len(steps) != 1:
         raise SystemExit("Expected one release evidence preparation step")
