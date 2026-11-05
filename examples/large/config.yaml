@@ -1,0 +1,3 @@
+# FICTIONAL policy for the integrated CLI example, not operational advice.
+fail_on: critical
+max_critical: 10

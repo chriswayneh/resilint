@@ -1,0 +1,12 @@
+# FICTIONAL historical events for tests only; no real drill is claimed.
+drills:
+  - vendor: fictional-vendor-0000
+    date: '2000-01-01'
+    kind: tabletop
+    result: fail
+    notes: Fictional failure used to exercise RL009
+  - vendor: fictional-vendor-0001
+    date: '2000-01-01'
+    kind: test
+    result: partial
+    notes: Fictional partial result used for overlay coverage
