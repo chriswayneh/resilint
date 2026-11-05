@@ -2,6 +2,7 @@
 
 ## [Unreleased]
 ### Added
+- The planned Action tag policy describes the future stable-v1 alias, immutable version references and deliberate full-SHA pinning with its limits.
 - Prepared read-only secret-history and runtime-dependency CI checks with verified scanner tooling, constrained audit inputs and explicit data-handling limits; CodeQL remains deferred.
 - CI builds source/wheel distributions, validates metadata with Twine and smoke-tests an installed wheel outside the checkout, including the packaged starter template.
 - Contributor guidance and issue/PR templates include validation gates, exact-head review expectations and the fictional-data-only rule.

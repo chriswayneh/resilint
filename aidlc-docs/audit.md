@@ -231,3 +231,55 @@
 - Verification: Ruff passed; mypy passed for 11 source files; link checker passed across 39 Markdown files with zero errors; whitespace checks passed. Full local suite: 351 passed, 6 existing Windows skips in 52.32 seconds. Separately, all six real scanner controls passed in 11.92 seconds, with collection and every setup/call/teardown phase passing and no skips.
 - Review: scanner workflow, scripts, tests and locks are unchanged from the independently reviewed original PR head; all task files except this audit are identical to that head. README, banner and presentation documentation match main. Complete reconciliation and task diffs reviewed for secrets, input validation, least privilege, injection, dependency safety and public-record privacy; no new blocking issue found. Existing static security review is reused by exact file identity, not represented as a new independent review. SQL controls are inapplicable.
 - Limits and next action: create the ordinary immutable local merge commit and export review patches/checksums, then return for dot review. Existing hosted results apply only to the original published head; this local merge has no hosted exact-head results. No push or hosted run is authorized while Actions usage eligibility is being checked. CodeQL and final P-4 completion remain deferred. No remote mutation, release, trust registration, settings change or cleanup performed.
+
+## P-5 — delegated inception approval and isolated draft delivery
+
+- Received and recorded: 2026-11-03T00:56:13.906206+00:00.
+- Actual reviewer: dot, delegated routine AI-DLC reviewer; not personal user review or formal GitHub approval.
+- Artifact: complete P-5 technical design and seven-step execution plan. Live main reverified at 0c82503ce1fa737276be6c70c0230335c8b8406f; a new isolated branch starts at that exact base.
+- Decision: approve construction of only the specified P-5 documentation scope, followed by all local gates and complete scope/security/privacy review. Authorize one isolated branch push and one draft PR under the user's scoped request for separate v1 drafts, with project quality prioritized over timing. This does not authorize any other branch or bulk push.
+- Conditions: future v1 references remain explicitly planned/unavailable; preserve usable examples, use the existing release checklist and make no claims about unmerged P-2 workflows. Preserve original task definitions/governance and all unrelated branches, stash, private planning and generated artifacts. Only prospective P-5 completion metadata may change.
+- Next permitted action: construct the approved README/stability/changelog and P-5 inception/audit scope, validate, publish one draft and return immutable exact-head evidence for independent implementation review. No merge, formal approval, tag mutation, publication, permissions/access/settings changes, workflow activation, cleanup or denied-action retry. Reserved-action authority is not renewed or broadened.
+
+## P-5 — construction verification and implementation-review handoff
+
+- Recorded: 2026-11-03T00:57:28.524190+00:00.
+- Actor: Codex, author and manual documentation/security reviewer; not independent implementation approval.
+- Artifact: isolated PR #48 based on main 0c82503ce1fa737276be6c70c0230335c8b8406f. Only the eight approved P-5 documentation/record/metadata files are included; inherited P-2/P-3/P-4 commits are absent.
+- Local validation: Ruff passes; mypy passes for 11 source files; pytest 300 passed, six local Windows privilege skips in 37.74 seconds; links in 34 tracked Markdown files and whitespace pass. Live remote lookup found no v1 or v1.0.0 tags. Documentation uses the existing release checklist, marks those references future/unavailable and preserves prior examples. Roadmap comparison proves only P-5 status/completion reference changes, with original definitions/governance preserved. Prospective 29/38 completion takes effect only on merge.
+- Security/privacy review: complete documentation diff reviewed for misleading availability/authority, private information and accidental executable changes; no blocking author findings. No runtime, workflow, dependency, permission, account/access, tag or release changes. SQL/executable-input controls are inapplicable. Existing draft branches, stash, private combined records and generated artifacts are preserved.
+- Next permitted action: push the final scoped draft and return immutable base/head diff plus actual hosted results for independent implementation review. Do not merge or perform reserved actions. P-2 remains a separate draft and incomplete; no release or authority renewal is implied.
+
+## P-5 — delegated implementation-stage approval
+
+- Received and recorded: 2026-11-03T01:01:41.314852+00:00.
+- Actual reviewer: dot, delegated routine reviewer; not personal user review, formal GitHub approval or merge permission.
+- Reviewed artifact: all eight file diffs and full base/head contents for PR #48, head 2840cbeed2ff4427560e34b2c55ccbc2679ca08c versus base 0c82503ce1fa737276be6c70c0230335c8b8406f.
+- Decision: implementation stage approved with no blockers. Independent review confirms original 38 task definitions preserved except prospective P-5 completion, accurate future-reference policy/links/authority and no runtime, workflow, access or privacy changes.
+- Evidence: reviewer independently verified all ten jobs in CI run 41556504350 and Action self-test run 41556504354 passed at the reviewed head. Review was static plus hosted evidence; local 300 tests and six Windows privilege skips remain author-reported and were not independently rerun.
+- Next permitted action: append only this P-5 decision, verify the audit-only delta, push only that update on the existing isolated PR #48 branch, and verify all hosted gates on the resulting new head. Old-head CI does not transfer. Keep PR #48 draft and unmerged.
+- Boundaries: no formal GitHub approval, merge, tags, publication, settings/access/workflow changes, cleanup, denied-action retry, PR #47 changes or other construction. Preserve all existing drafts/artifacts and scope. No deadline pressure or authority expansion.
+
+## P-5 — delegated local conflict-reconciliation decision
+
+- Recorded: 2026-11-03T10:21:53.115930+00:00. Actual reviewer: dot, delegated routine reviewer; not personal user or formal GitHub approval.
+- Decision: reconcile PR #48 only, locally, against verified main b58fd6fb5d3e0cf9b197ac21877e12408538e480, starting at b7d4abf16515aa056892c68d133702b73e75247a. Preserve the DataGrant-style presentation, move the Action-reference policy to the relocated reference section, preserve all audit entries, task definitions and prospective P-5 completion metadata.
+- Plan: isolated worktree, ordinary main merge without rebase/force-push, explicit README/audit resolution, full local gates and content/anchor/roadmap checks, complete diff/security/privacy review, immutable local merge commit and patch evidence.
+- Limits: return for independent review BEFORE PUSH. No remote mutation, formal approval, PR merge, tags, settings, publishing/trust changes, cleanup or denied-operation retry; preserve other branches, PRs and local work.
+
+## P-5 — local reconciliation verification
+
+- Recorded: 2026-11-03T10:23:14.544111+00:00. Actor: Codex, reconciliation author; independent implementation review remains pending.
+- Resolution: retain main README/banner/CI documentation unchanged; move the original P-5 adoption paragraph into docs/reference.md under GitHub Action, changing only its relative stability-policy link. Preserve all main and original P-5 audit entries; retain future v1 availability, immutable-version policy and SHA/transitive-dependency limits.
+- Targeted checks: exact content equality for README/banner and unchanged presentation sections, reference differs from main only by the relocated paragraph, both audit histories retained, and all 38 original task definitions preserved with only P-5 prospective completion/reference changed. Counts remain 28/38 on main and become 29/38 only if P-5 is merged.
+- Local gates: Ruff passed; mypy passed for 11 files; 300 tests passed with six existing Windows privilege skips in 39.27 seconds; relative Markdown links in 37 files and whitespace passed. No new executable tests were added for this documentation resolution.
+- Full task/resolution diff reviewed for security/privacy and scope; no blocking author finding. No runtime, dependency, workflow, settings, credentials or actual tag changes. Public records exclude private local evidence paths. Hosted checks for this new head have not run; prior-head results do not transfer.
+- Next permitted action: create an immutable ordinary local merge commit and complete patch evidence for dot review before any push. No remote action or other-PR work is granted by this handoff.
+
+## P-5 — integration after security merge
+
+- Recorded: 2026-11-05T02:18:46.976722+00:00. Actor: Codex under the user's actual renewed approval to apply waiting work and continue through v1, including the explicitly requested signed-in browser route after connector limitations were explained. No new account permission or repository setting is needed for these ordinary owner actions.
+- Evidence: PR #49 merged at f1d9da663740235fcb370d15f49fc8194f60277f after 28 successful checks on its reviewed head. Preserve all prior P-4 audit records, including the correction of unverified approval claims.
+- Decision and resolution: ordinary merge of that main commit into PR #48; retain both audit histories and both changelog bullets. Preserve current presentation and prior task behavior. Run full local gates and require current hosted checks before merge. No publisher registration, environment approval, tag, package publication, settings change or history rewrite is inferred.
+
+- Verification recorded 2026-11-05T02:20:36.132652+00:00: Ruff, mypy (11 source files), links and whitespace passed. Full suite: 345 passed, 12 skipped in 66.87 seconds; six skips require Windows privileges and six scanner cases require external tool configuration. Separately configured strict scanner lane: all six real cases passed all phases without skips in 10.27 seconds. All task files except combined changelog/audit match the prior reviewed head; scanner code/locks and presentation are inherited unchanged from main. Complete final delta reviewed for security and privacy; no blocking new finding. Hosted results on this new merge commit are required before integration.
