@@ -1,6 +1,6 @@
 # Installation
 
-These guides describe the development version being prepared for v1. The latest published release is v0.4.0; `init`, `explain`, configuration, baselines and Action outputs are development features until the next release.
+These guides describe the source prepared for `v1.0.0-rc1`. See [Releases](https://github.com/chriswayneh/resilint/releases) for published candidate builds. The latest published stable release is v0.4.0; `init`, `explain`, configuration, baselines and Action outputs are included in candidate source and remain unavailable in that older stable release.
 
 Use Python 3.10 or newer. CI covers Python 3.10, 3.12 and 3.13 on Linux, Windows and macOS. Installation can access package indexes; checks and exports run offline.
 

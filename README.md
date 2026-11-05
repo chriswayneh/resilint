@@ -14,7 +14,7 @@
 
 An open-source command-line tool and GitHub Action that reads your critical-vendor register from a YAML or CSV file in Git and flags missing or inconsistent resilience commitments, mapped to DORA, NIS2, and the UK PRA's SS2/21.
 
-**Status:** [v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) (2026-10-24), adding drill records and failed-drill findings. It includes SARIF, regulation mapping reports, and draft register-of-information export. v1 is in development and is not released; resilint is not published on PyPI. Features marked **development-only** are on `main` and are not in v0.4.0. See the [roadmap](ROADMAP.md).
+**Status:** Candidate source `v1.0.0-rc1` is prepared for validation; see [Releases](https://github.com/chriswayneh/resilint/releases) for published builds. The latest stable release remains [v0.4.0 released](https://github.com/chriswayneh/resilint/releases/tag/v0.4.0) (2026-10-24), adding drill records and failed-drill findings. It includes SARIF, regulation mapping reports, and draft register-of-information export. v1 is in development and is not released; resilint is not published on PyPI. Features marked **development-only** are on `main` and are not in v0.4.0. See the [roadmap](ROADMAP.md).
 
 After stable v1 publication, install with `python -m pip install "resilint==1.0.0"` or `pipx install resilint`. See the [installation guide](docs/install.md) for version pinning, isolated environments and the current Git-release alternative.
 
